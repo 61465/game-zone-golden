@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GAME ZONE: GOLDEN ARENA 50</title>
+    <title>GAME ZONE: GOLDEN ARENA 120</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Orbitron:wght@400;900&family=Cairo:wght@400;700&display=swap');
-        :root { --bg: #050505; --gold: #d4af37; --gold-glow: #ffcc33; --neon-blue: #00ffcc; }
+        :root { --bg: #050505; --gold: #d4af37; --gold-glow: #ffcc33; --neon-blue: #00ffcc; --peak-red: #ff3333; }
         body { background: var(--bg); color: #e0e0e0; font-family: 'Cairo', sans-serif; margin: 0; overflow-x: hidden; }
         
-        /* زر الترجمة */
         button.lang { 
             position: fixed; bottom: 20px; left: 20px; z-index: 3000;
             width: 50px; height: 50px; border-radius: 50%;
@@ -22,47 +21,23 @@
         }
         button.lang:active { box-shadow: 0 2px #003cb3; transform: translateY(3px); }
         
-        /* تصميم زر الأرشيف */
         .archive-exit-btn {
-            position: fixed;
-            top: 20px;
-            right: 20px; /* الزاوية العلوية اليمنى */
-            z-index: 3000;
-            background: #111;
-            color: #d4af37; /* اللون الذهبي */
-            border: 1px solid #333;
-            padding: 10px 18px;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.75rem;
-            letter-spacing: 2px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            border-radius: 4px;
-            text-decoration: none; /* إزالة الخط تحت الرابط */
-            transition: 0.3s;
+            position: fixed; top: 20px; right: 20px; z-index: 3000;
+            background: #111; color: #d4af37; border: 1px solid #333;
+            padding: 10px 18px; font-family: 'Orbitron', sans-serif;
+            font-size: 0.75rem; letter-spacing: 2px; cursor: pointer;
+            display: flex; align-items: center; gap: 10px; border-radius: 4px;
+            text-decoration: none; transition: 0.3s;
         }
-        .archive-exit-btn:hover {
-            border-color: #d4af37;
-            box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
-        }
+        .archive-exit-btn:hover { border-color: #d4af37; box-shadow: 0 0 15px rgba(212, 175, 55, 0.3); }
         
-        /* اللمبة المنيرة (LED) */
         .led-light {
-            width: 9px;
-            height: 9px;
-            background-color: #ff0000; /* نبض أحمر كلاسيكي */
-            border-radius: 50%;
-            box-shadow: 0 0 10px #ff0000;
+            width: 9px; height: 9px; background-color: #ff0000;
+            border-radius: 50%; box-shadow: 0 0 10px #ff0000;
             animation: blink-red 1.5s infinite;
         }
         
-        /* حركة الوميض */
-        @keyframes blink-red {
-            0%, 100% { opacity: 1; box-shadow: 0 0 10px #ff0000; }
-            50% { opacity: 0.3; box-shadow: 0 0 2px #ff0000; }
-        }
+        @keyframes blink-red { 0%, 100% { opacity: 1; box-shadow: 0 0 10px #ff0000; } 50% { opacity: 0.3; box-shadow: 0 0 2px #ff0000; } }
 
         nav { 
             background: rgba(0,0,0,0.95); padding: 15px; text-align: center; 
@@ -85,16 +60,112 @@
         .card:hover { border-color: var(--gold); transform: translateY(-5px); }
         .card.selected { border-color: var(--gold); box-shadow: 0 0 20px rgba(212, 175, 55, 0.3); background: #0f0f0f; }
         
+        /* بطاقات الذروة - Peak */
+        .card.peak { 
+            background: linear-gradient(45deg, #0a0a0a, #1a0a0a, #0a0a0a);
+            border: 2px solid rgba(255, 50, 0, 0.5);
+            animation: peak-border 3s infinite linear;
+            position: relative; overflow: hidden;
+        }
+        .card.peak::before {
+            content: ''; position: absolute; top: -10px; left: -10px; right: -10px; bottom: -10px;
+            background: linear-gradient(45deg, rgba(255, 0, 0, 0.1), rgba(255, 50, 0, 0.3), rgba(255, 0, 0, 0.1));
+            z-index: -1; border-radius: 8px; animation: peak-glow 2s infinite alternate;
+        }
+        .card.peak:hover { 
+            border-color: var(--peak-red); 
+            transform: translateY(-8px) scale(1.03);
+            box-shadow: 0 15px 30px rgba(255, 0, 0, 0.4);
+        }
+        .card.peak.selected {
+            border-color: var(--peak-red) !important;
+            box-shadow: 0 0 25px rgba(255, 0, 0, 0.5), 0 0 50px rgba(255, 50, 0, 0.3) !important;
+        }
+        
+        @keyframes peak-border { 0%, 100% { border-color: rgba(255, 0, 0, 0.3); } 50% { border-color: rgba(255, 50, 0, 0.7); } }
+        @keyframes peak-glow { 0% { opacity: 0.3; box-shadow: 0 0 15px rgba(255, 0, 0, 0.3); } 100% { opacity: 0.7; box-shadow: 0 0 30px rgba(255, 0, 0, 0.6); } }
+        
         .type-badge { position: absolute; top: 0; left: 0; font-size: 0.5rem; padding: 3px 7px; background: var(--gold); color: #000; font-family: 'Orbitron'; font-weight: 900; }
+        .card.peak .type-badge {
+            background: linear-gradient(45deg, #ff0000, #ff3333, #ff0000);
+            color: white; animation: badge-glow 2s infinite linear;
+            background-size: 200% 100%;
+        }
+        @keyframes badge-glow { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+        
         .hero-icon-container { font-size: 1.5rem; color: #555; margin: 10px 0; }
         .card.selected .hero-icon-container { color: var(--gold); }
+        .card.peak .hero-icon-container { 
+            color: var(--peak-red) !important;
+            filter: drop-shadow(0 0 10px rgba(255, 0, 0, 0.7));
+            animation: icon-float 3s infinite ease-in-out;
+        }
+        @keyframes icon-float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-5px); } }
         
         .controls { display: flex; gap: 15px; margin-top: 40px; justify-content: center; display: none; }
         #win-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 2000; display: none; flex-direction: column; justify-content: center; align-items: center; padding: 20px; border: 8px solid var(--gold); overflow-y: auto; }
         
+        /* تأثيرات التشويق */
+        .countdown {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 5rem;
+            font-family: 'Orbitron';
+            color: var(--gold);
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.8);
+            animation: countdown-pulse 1s infinite;
+            z-index: 3000;
+            display: none;
+        }
+
+        @keyframes countdown-pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.7; }
+        }
+
+        .intensity-label {
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            font-family: 'Orbitron';
+            margin-top: 5px;
+            display: inline-block;
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .easy-battle { background: rgba(0, 255, 0, 0.2); color: #00ff00; border: 1px solid #00ff00; }
+        .medium-battle { background: rgba(255, 165, 0, 0.2); color: #ffa500; border: 1px solid #ffa500; }
+        .hard-battle { background: rgba(255, 0, 0, 0.2); color: #ff0000; border: 1px solid #ff0000; }
+        .extreme-battle { background: rgba(255, 0, 255, 0.2); color: #ff00ff; border: 1px solid #ff00ff; animation: extreme-glow 1s infinite; }
+
+        @keyframes extreme-glow {
+            0%, 100% { box-shadow: 0 0 5px rgba(255, 0, 255, 0.5); }
+            50% { box-shadow: 0 0 15px rgba(255, 0, 255, 0.8); }
+        }
+
+        /* تأثير ظهور النقاط */
         .stats-table { width: 100%; max-width: 500px; margin: 20px 0; border-collapse: collapse; font-family: 'Orbitron'; font-size: 0.8rem; }
         .stats-table th { color: var(--gold); padding: 10px; border-bottom: 1px solid #333; }
-        .stats-table td { padding: 12px; text-align: center; border-bottom: 1px solid #111; }
+        .stats-table td { padding: 12px; text-align: center; border-bottom: 1px solid #111; transition: all 0.5s ease; position: relative; }
+        .stats-table td.animate-score {
+            animation: score-pop 0.6s ease-out;
+            color: var(--gold) !important;
+            font-weight: bold;
+            font-size: 1.2rem !important;
+        }
+
+        @keyframes score-pop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); color: #fff; }
+            100% { transform: scale(1); }
+        }
+
         .vs-circle { background: var(--gold); color: #000; border-radius: 50%; padding: 5px; font-weight: 900; }
 
         .hp-outer { width: 100%; max-width: 400px; height: 8px; background: #111; border: 1px solid #333; margin: 15px 0; }
@@ -107,7 +178,6 @@
         .rps-box { display: flex; gap: 20px; margin: 20px 0; font-size: 2rem; }
         .rps-btn { background: #111; border: 1px solid var(--gold); color: var(--gold); padding: 10px 20px; cursor: pointer; border-radius: 8px; }
 
-        /* ستايل المخطوطة */
         #manuscript-page { display: none; padding: 40px 10px; }
         .manuscript-card {
             background: #f2e8c9; background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png');
@@ -118,20 +188,29 @@
         .m-content { font-family: 'Amiri', serif; font-size: 1.4rem; line-height: 1.8; text-align: justify; }
         .drop-cap { float: right; font-size: 4rem; line-height: 0.8; padding: 5px 0 5px 15px; color: #8b4513; font-weight: bold; }
         
-        /* تعديل للمخطوطة عند اللغة الإنجليزية */
         body[lang="en"] .drop-cap { float: left; padding: 5px 15px 5px 0; }
         body[lang="en"] .m-content { text-align: left; font-family: 'Georgia', serif; }
         
-        /* زر المناقشة الجديد */
         .btn-discuss { border-color: var(--neon-blue) !important; color: var(--neon-blue) !important; }
         .btn-discuss:hover { background: var(--neon-blue) !important; color: #000 !important; box-shadow: 0 0 15px rgba(0, 255, 204, 0.5); }
+        
+        /* علامة الذروة */
+        .peak-label {
+            position: absolute; bottom: 5px; right: 5px; font-size: 0.5rem;
+            background: var(--peak-red); color: white; padding: 2px 6px;
+            border-radius: 3px; font-weight: 900; font-family: 'Orbitron';
+            animation: peak-flash 1s infinite;
+        }
+        @keyframes peak-flash { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
     </style>
 </head>
 <body id="main-body" lang="ar" dir="rtl">
 
     <button class="lang" onclick="toggleLanguage()">EN</button>
     
-    <!-- زر الأرشيف المنير -->
+    <!-- عنصر العد التنازلي -->
+    <div id="countdown-overlay" class="countdown">3</div>
+    
     <a href="https://61465.github.io/game-zone-archive/" class="archive-exit-btn" target="_blank">
         <div class="led-light"></div>
         ARCHIVE
@@ -139,7 +218,7 @@
 
     <nav>
         <span class="project-title" id="txt-project">GAME ZONE PRESENTS</span>
-        <h1 class="main-logo">GOLDEN ARENA 50</h1>
+        <h1 class="main-logo">GOLDEN ARENA 120</h1>
         <div class="nav-tabs">
             <button class="tab-btn active" id="btn-arena" onclick="showTab('arena')">ميدان القتال</button>
             <button class="tab-btn" id="btn-lore" onclick="showTab('lore')">المخطوطات الملكية</button>
@@ -154,6 +233,7 @@
                 <button class="filter-btn" onclick="filterHeroes('series', this)" id="f-series">مسلسلات</button>
                 <button class="filter-btn" onclick="filterHeroes('movie', this)" id="f-movie">أفلام</button>
                 <button class="filter-btn" onclick="filterHeroes('anime', this)" id="f-anime">أنمي</button>
+                <button class="filter-btn" onclick="filterHeroes('peak', this)" id="f-peak">الأساطير 🔥</button>
             </div>
             <div class="grid" id="hero-grid"></div>
             <div class="controls" id="battle-controls">
@@ -183,7 +263,7 @@
                     <tr><th id="h1-name">---</th><th><span class="vs-circle">VS</span></th><th id="h2-name">---</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td id="h1-p">0</td><td style="color:#555" id="txt-lore-label">OVERALL LORE</td><td id="h2-p">0</td></tr>
+                    <tr><td id="h1-p">?</td><td style="color:#555" id="txt-lore-label">OVERALL LORE</td><td id="h2-p">?</td></tr>
                     <tr><td id="h1-ability" style="font-size: 0.7rem; color: var(--gold);">---</td><td style="color:#555" id="txt-ability-label">PRIMARY ABILITY</td><td id="h2-ability" style="font-size: 0.7rem; color: var(--gold);">---</td></tr>
                 </tbody>
             </table>
@@ -200,12 +280,9 @@
             <div id="rps-story" style="margin-top: 20px; color: var(--gold); font-weight: bold;"></div>
         </div>
         
-        <!-- الأزرار التوجيهية المحسنة -->
         <div style="margin-top: 25px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
             <button class="btn-action" onclick="location.reload()" id="txt-new-battle">نزال جديد</button>
-            
             <a href="https://61465.github.io/game-zone-archive/" target="_blank" class="btn-action" id="txt-archive">سجل الأبطال 📜</a>
-            
             <a href="https://61465.github.io/GAME-ZONE-CHAT/" target="_blank" class="btn-action" style="border-color: #00ffcc; color: #00ffcc;" id="txt-discuss">ناقش القوة 💬</a>
         </div>
     </div>
@@ -213,73 +290,137 @@
     <script>
         let currentLang = 'ar';
         const heroes = [
-            // --- المجموعة الأصلية (1-25) ---
-            { id: 1, type: "game", p: 100, icon: '<i class="fa-solid fa-fire"></i>', source: "God of War", ar: { name: "كراتوس", ability: "إبادة الآلهة", lore: "مِن غياهبِ سبارتا، نهضَ محاربٌ حطمَ قيودَ القدر؛ لم يكن مجردَ منتقمٍ فحسب، بل صارَ أباً يحملُ ندوبَ الماضي ليحميَ المستقبل، بسيفٍ لا يهدأ." }, en: { name: "KRATOS", ability: "God Slayer", lore: "From the shadows of Sparta, a warrior rose to shatter the chains of fate. No longer a mere vessel of vengeance, he is a father bearing the scars of the past to safeguard the future." } },
-            { id: 2, type: "game", p: 99, icon: '<i class="fa-solid fa-biohazard"></i>', source: "DOOM", ar: { name: "دوم سلاير", ability: "الإبادة المطلقة", lore: "الكيانُ الذي تخشاهُ الجحيمُ وتصلي لئلا تلمحَه. هو الإرادةُ التي لا تُقهر، يسيرُ وسط النيران ليطهرَ العوالمَ مِن دنسِ الشرِّ بيقينٍ حديديّ." }, en: { name: "DOOM SLAYER", ability: "Unstoppable Will", lore: "The entity Hell fears and prays never to encounter. He is the indomitable will, traversing through infernos to purge the realms of evil with an iron resolve." } },
-            { id: 3, type: "movie", p: 99, icon: '<i class="fa-solid fa-gem"></i>', source: "Avengers", ar: { name: "ثانوس", ability: "التوازن الكوني", lore: "التايتن المجنونُ الذي رأى في الفناءِ نجاةً. بفرقعةِ إصبعٍ، يستطيعُ إعادةَ تشكيلِ الوجودِ وفقَ رؤيتِه القاسيةِ للعدالةِ الكونية." }, en: { name: "THANOS", ability: "Cosmic Equilibrium", lore: "The Mad Titan who perceived salvation in annihilation. With a snap of his fingers, he reshapes existence according to his ruthless vision of universal justice." } },
-            { id: 4, type: "series", p: 97, icon: '<i class="fa-solid fa-bolt"></i>', source: "The Boys", ar: { name: "هوملاندر", ability: "الهيمنة الزائفة", lore: "إلهٌ يمشي بين البشرِ، يخفي خلفَ ابتسامتِه رعباً كونياً. يرى العالمَ مجردَ دميةٍ، ممتلكاً من القوةِ ما يجعلُه فوقَ المحاسبةِ والقانون." }, en: { name: "HOMELANDER", ability: "False Sovereignty", lore: "A god walking among mortals, concealing cosmic horror behind a manufactured smile. He views the world as a mere plaything, possessing power that transcends any law." } },
-            { id: 5, type: "game", p: 96, icon: '<i class="fa-solid fa-shield-halved"></i>', source: "HALO", ar: { name: "ماستر شيف", ability: "الأمل الأخير", lore: "سايبورغ صامت يحملُ ثقلَ النجومِ على كتفيهِ. ليس مجردَ جنديّ، بل هو أسطورةٌ حيّةٌ تقلبُ موازينَ الحروبِ بذكاءٍ تكتيكيٍّ لا يخطئ." }, en: { name: "MASTER CHIEF", ability: "The Last Hope", lore: "A silent cyborg carrying the weight of the stars. More than a soldier, he is a living legend who alters the tide of interstellar wars with unfailing tactical brilliance." } },
-            { id: 6, type: "game", p: 95, icon: '<i class="fa-solid fa-microchip"></i>', source: "Cyberpunk", ar: { name: "V", ability: "التسريع السيبراني", lore: "مرتزقٌ في مدينة 'نايت سيتي' يتحدى الموتَ بتقنياتٍ مزروعةٍ. بلمحةِ عينٍ، يتباطأُ الزمنُ حولَه، ليصبحَ السيدَ الوحيدَ في عالمٍ من السكون." }, en: { name: "V", ability: "Cybernetic Dilation", lore: "A mercenary in Night City defying death with implanted tech. In the blink of an eye, time dissolves around him, leaving him the sole master of a frozen world." } },
-            { id: 7, type: "game", p: 94, icon: '<i class="fa-solid fa-spider"></i>', source: "Spiderman", ar: { name: "سبايدر مان", ability: "الحسّ الفائق", lore: "ابنُ نيويورك الذي يحملُ مسؤوليةً تضاهي قوتَه. برشاقةٍ مذهلةٍ وحسٍّ سادسٍ يسبقُ الخطرَ، يثبتُ أنَّ القلبَ القويَّ هو أمضى سلاح." }, en: { name: "SPIDER-MAN", ability: "Spider-Sense", lore: "New York's prodigal son who bears responsibility equal to his power. With stunning agility and a danger-sensing instinct, he proves a resolute heart is the sharpest weapon." } },
-            { id: 8, type: "game", p: 93, icon: '<i class="fa-solid fa-khanda"></i>', source: "Witcher 3", ar: { name: "جيرالت", ability: "نصل السحر", lore: "الذئبُ الأبيضُ الذي صِيغَ في كيمياءِ التحولِ. صائدُ وحوشٍ يجوبُ القارةَ، حاملاً سيفينِ: أحدُهما للبشرِ والآخرُ للمسوخِ، بعينينِ تريانِ الحقيقة." }, en: { name: "GERALT", ability: "Alchemy & Blade", lore: "The White Wolf, forged in the fires of mutation. A monster hunter roaming the Continent with two blades: one for men, and one for beasts, with eyes that pierce the veil of lies." } },
-            { id: 9, type: "game", p: 92, icon: '<i class="fa-solid fa-eye"></i>', source: "Deus Ex", ar: { name: "آدم جينسن", ability: "التسلل التقني", lore: "مزيجٌ بين البشرِ والآلةِ، يتسللُ كالظلِ عبرَ الحصونِ. ممتلكٌ لرؤيةٍ تقنيةٍ تخترقُ الجدرانَ وتكشفُ الأسرارَ التي أرادَ العالمُ دفنَها." }, en: { name: "ADAM JENSEN", ability: "Augmented Infiltration", lore: "A fusion of man and machine, slipping through fortresses like a shadow. He possesses a technical vision that pierces walls and unearths secrets the world intended to bury." } },
-            { id: 10, type: "game", p: 89, icon: '<i class="fa-solid fa-bullseye"></i>', source: "Horizon", ar: { name: "إيلوي", ability: "قنص الثغرات", lore: "منبوذةٌ أصبحت منقذةَ العوالمِ. بذكاءٍ بدائيٍّ وتكنولوجيا مفقودةٍ، تصطادُ الآلاتِ العملاقةَ بسهمٍ واحدٍ يصيبُ مكمنَ الطاقةِ بدقةٍ متناهية." }, en: { name: "ALOY", ability: "Weak-Point Precision", lore: "An outcast turned savior of worlds. Combining primal intuition with lost technology, she hunts titanic machines with arrows that strike energy cores with unerring precision." } },
-            { id: 11, type: "movie", p: 92, icon: '<i class="fa-solid fa-mask"></i>', source: "Dark Knight", ar: { name: "باتمان", ability: "سيد الاستراتيجية", lore: "إنسانٌ هزمَ الآلهةَ بالعقلِ والتحضيرِ. فارسُ الظلامِ الذي يزرعُ الرعبَ في قلوبِ المجرمينَ، محولاً جراحَ الماضي إلى درعٍ يحمي 'غوثام'." }, en: { name: "BATMAN", ability: "Master Strategist", lore: "A mortal who defeated gods through intellect and preparation. The Dark Knight instills terror in the hearts of criminals, forging the scars of his past into a shield for Gotham." } },
-            { id: 12, type: "movie", p: 89, icon: '<i class="fa-solid fa-gun"></i>', source: "John Wick", ar: { name: "جون ويك", ability: "الإرادة المحضة", lore: "الرجلُ الذي ترسلُه لقتلِ 'البعبع'. يمتلكُ تركيزاً لا يتزحزحُ، محولاً أيَّ أداةٍ في يدِه إلى سلاحٍ فتاكٍ في رقصةِ موتٍ لا تنتهي." }, en: { name: "JOHN WICK", ability: "Pure Focus", lore: "The man you send to kill the 'Boogeyman.' He possesses an unshakeable focus, turning any tool into a lethal weapon in a never-ending dance of death." } },
-            { id: 13, type: "game", p: 88, icon: '<i class="fa-solid fa-user-ninja"></i>', source: "AC II", ar: { name: "إيتسيو", ability: "النصل الخفي", lore: "سليلُ النبلاءِ الذي صارَ سيداً للمغتالينَ. بينَ أزقةِ إيطاليا، كانَ خنجرُه هو العدالةَ الصامتةَ التي تطيحُ بالفسادِ وتمنحُ الشعوبَ حريتَها." }, en: { name: "EZIO AUDITORE", ability: "Hidden Blade", lore: "A nobleman's son who ascended as a Master Assassin. Within the alleys of Italy, his blade was the silent justice that toppled corruption and restored freedom to the people." } },
-            { id: 14, type: "game", p: 87, icon: '<i class="fa-solid fa-hat-cowboy"></i>', source: "RDR 2", ar: { name: "آرثر مورغان", ability: "عين الصقر", lore: "خارجٌ عن القانونِ يبحثُ عن الخلاصِ في عالمٍ يحتضرُ. يملكُ أسرعَ يدٍ على الزنادِ، وقلباً يصارعُ بينَ الوفاء للعصابةِ ونداء الضمير." }, en: { name: "ARTHUR MORGAN", ability: "Dead Eye", lore: "An outlaw seeking redemption in a dying world. He possesses the fastest hand on the trigger and a heart torn between gang loyalty and the call of conscience." } },
-            { id: 15, type: "game", p: 86, icon: '<i class="fa-solid fa-bomb"></i>', source: "GTA V", ar: { name: "تريفور", ability: "الهيجان الجنوني", lore: "الفوضى المتجسدةُ في هيئةِ رجلٍ. لا يعرفُ الخوفَ ولا يتبعُ القوانينَ، ينفجرُ كقنبلةٍ موقوتةٍ في وجهِ كلِّ مَن يجرؤُ على اعتراضِ طريقِه." }, en: { name: "TREVOR PHILIPS", ability: "Psychotic Rage", lore: "Chaos personified in the form of a man. Fearless and lawless, he erupts like a time bomb in the face of anyone who dares to cross his path." } },
-            { id: 16, type: "series", p: 85, icon: '<i class="fa-solid fa-snowflake"></i>', source: "GoT", ar: { name: "جون سنو", ability: "الوفاء الشمالي", lore: "الملكُ الذي لا يبتغي العرشَ. حارسُ الجدارِ الذي واجهَ الموتَ وعادَ، ليقفَ كخطِّ دفاعٍ أخيرٍ ضدَّ الشتاءِ الأبديِّ وجيوشِ الموتى." }, en: { name: "JON SNOW", ability: "Northern Loyalty", lore: "The King who never craved the throne. A guardian of the Wall who faced death and returned to stand as the final bastion against the eternal winter." } },
-            { id: 17, type: "series", p: 80, icon: '<i class="fa-solid fa-flask"></i>', source: "Breaking Bad", ar: { name: "والتر وايت", ability: "الكيمياء القاتلة", lore: "المعلمُ الذي تحولَ إلى إمبراطورٍ للجريمةِ. استخدمَ العلمَ كخنجرٍ مسمومٍ، ليثبتَ أنَّ العقلَ هو أخطرُ سلاحٍ حينما يفقدُ المرءُ كلَّ شيءٍ." }, en: { name: "WALTER WHITE", ability: "Chemical Brilliance", lore: "A teacher transformed into a criminal emperor. He wielded science like a poisoned dagger, proving the mind is the deadliest weapon when a man has nothing left to lose." } },
-            { id: 18, type: "game", p: 75, icon: '<i class="fa-solid fa-leaf"></i>', source: "TLOU 2", ar: { name: "إيلي", ability: "غريزة البقاء", lore: "فتاةٌ صقلتْها الخسارةُ في عالمٍ محطمٍ. تحولتْ إلى مفترسٍ لا يرحمُ، تقودُها رحلةُ انتقامٍ مريرةٍ في سعيِها لإيجادِ معنى وسطَ الركامِ." }, en: { name: "ELLIE", ability: "Survival Instinct", lore: "A girl forged by loss in a broken world. She evolved into a ruthless predator, driven by a bitter quest for vengeance in her search for meaning amidst the ruins." } },
-            { id: 19, type: "anime", p: 105, icon: '<i class="fa-solid fa-hand-back-fist"></i>', source: "One Punch Man", ar: { name: "سايتاما", ability: "اللكمة القاضية", lore: "البطلُ الذي يعاني مللَ القوةِ المطلقةِ. ينهي أعظمَ التهديداتِ بضربةٍ واحدةٍ، باحثاً عن خصمٍ يوقظُ في قلبِه حرارةَ النزالِ من جديدٍ." }, en: { name: "SAITAMA", ability: "One Punch", lore: "The hero suffering from the boredom of absolute power. He eradicates the greatest threats with a single blow, searching for an opponent to reignite the fire of battle." } },
-            { id: 20, type: "game", p: 98, icon: '<i class="fa-solid fa-clover"></i>', source: "Elden Ring", ar: { name: "مالينيا", ability: "التعفن الأحمر", lore: "نصلُ ميكيلا التي لم تعرفْ الهزيمةَ قط. بجمالٍ قاتلٍ وسرعةٍ خاطفةٍ، تنشرُ نصلَها الذهبيَّ وتعفنَها في الأرضِ، واهبةً أعداءَها موتاً حتمياً." }, en: { name: "MALENIA", ability: "Scarlet Rot", lore: "The Blade of Miquella, who has never known defeat. With lethal grace and blinding speed, she unleashes her golden blade and rot upon the land, granting enemies an inevitable end." } },
-            { id: 21, type: "anime", p: 104, icon: '<i class="fa-solid fa-hurricane"></i>', source: "Dragon Ball", ar: { name: "غوكو", ability: "الغريزة الفائقة", lore: "محاربُ السايان الذي يتخطى حدودَه مع كلِّ صرخةٍ. بروحٍ نقيةٍ وسعيٍ دائمٍ، وصلَ لمرتبةِ الآلهةِ، محولاً جسدَه إلى سلاحٍ كونيٍّ لا يُهزم." }, en: { name: "GOKU", ability: "Ultra Instinct", lore: "The Saiyan warrior who transcends his limits with every roar. With a pure spirit and endless pursuit, he attained the status of gods, turning his body into an invincible cosmic weapon." } },
-            { id: 22, type: "anime", p: 88, icon: '<i class="fa-solid fa-wind"></i>', source: "Attack on Titan", ar: { name: "ليفاي", ability: "الإعصار الأسود", lore: "أقوى جنديٍّ في تاريخِ البشريةِ. إعصارٌ من النصالِ يمزقُ العمالقةَ في ثوانٍ، مخلصاً لرفاقِه الذين سقطوا، وحاملاً أملَ الإنسانيةِ فوقَ جناحيهِ." }, en: { name: "LEVI ACKERMAN", ability: "Steel Whirlwind", lore: "Humanity's strongest soldier. A whirlwind of steel that shreds titans in seconds, remaining loyal to fallen comrades and carrying the hope of humanity on his wings." } },
-            { id: 23, type: "series", p: 88, icon: '<i class="fa-solid fa-dragon"></i>', source: "House of Dragon", ar: { name: "ديمون تارغارين", ability: "نصل التنين", lore: "الأميرُ المارقُ الذي يمتطي نيرانَ التنانينِ. بمزاجٍ متقلبٍ وشجاعةٍ انتحاريةٍ، يفرضُ سطوتَه بسيفه 'الأخت المظلمة' كرمزٍ لسيادةِ الدمِ والنارِ." }, en: { name: "DAEMON TARGARYEN", ability: "Dragon's Blood", lore: "The Rogue Prince who rides the fires of dragons. With a volatile temper and suicidal bravery, he asserts dominance with his blade, 'Dark Sister', as a symbol of blood and fire." } },
-            { id: 24, type: "series", p: 78, icon: '<i class="fa-solid fa-magnifying-glass"></i>', source: "Sherlock", ar: { name: "شيرلوك", ability: "العقل التحليلي", lore: "العقلُ الذي يرى ما وراءَ الحجبِ. ليس محارباً بالجسدِ، بل هو قناصُ حقائقَ يفككُ أعقدَ الجرائمِ بلمحةٍ، محولاً مسرحَ الجريمةِ إلى خريطةٍ جليةٍ." }, en: { name: "SHERLOCK HOLMES", ability: "Deductive Mastery", lore: "The mind that perceives what lies beyond the veil. Not a warrior of flesh, but a hunter of truths who dismantles the complex crimes in a glance, turning a crime scene into a clear map." } },
-            { id: 25, type: "series", p: 82, icon: '<i class="fa-solid fa-user-tie"></i>', source: "Peaky Blinders", ar: { name: "تومي شيلبي", ability: "الدهاء العظيم", lore: "سيدُ برمنغهام الذي لا ينامُ. بخطواتٍ محسوبةٍ ونظرةٍ ثاقبةٍ، يطوعُ السياسةَ والقوةَ، ليكسرَ إرادةَ خصومِه قبلَ أن تبدأَ الحربُ الفعليةُ." }, en: { name: "TOMMY SHELBY", ability: "Mastermind Cunning", lore: "The sleepless lord of Birmingham. With calculated steps and a piercing gaze, he bends politics and power, breaking his enemies' will before the physical war even begins." } },
+            // === الشخصيات الأساسية (1-70) ===
+            { id: 1, type: "game", p: 96, icon: '<i class="fa-solid fa-fire"></i>', source: "God of War", ar: { name: "كراتوس", ability: "إبادة الآلهة", lore: "مِن غياهبِ سبارتا، نهضَ محاربٌ حطمَ قيودَ القدر؛ لم يكن مجردَ منتقمٍ فحسب، بل صارَ أباً يحملُ ندوبَ الماضي ليحميَ المستقبل، بسيفٍ لا يهدأ." }, en: { name: "KRATOS", ability: "God Slayer", lore: "From the shadows of Sparta, a warrior rose to shatter the chains of fate. No longer a mere vessel of vengeance, he is a father bearing the scars of the past to safeguard the future." } },
+            { id: 2, type: "game", p: 95, icon: '<i class="fa-solid fa-biohazard"></i>', source: "DOOM", ar: { name: "دوم سلاير", ability: "الإبادة المطلقة", lore: "الكيانُ الذي تخشاهُ الجحيمُ وتصلي لئلا تلمحَه. هو الإرادةُ التي لا تُقهر، يسيرُ وسط النيران ليطهرَ العوالمَ مِن دنسِ الشرِّ بيقينٍ حديديّ." }, en: { name: "DOOM SLAYER", ability: "Unstoppable Will", lore: "The entity Hell fears and prays never to encounter. He is the indomitable will, traversing through infernos to purge the realms of evil with an iron resolve." } },
+            { id: 3, type: "movie", p: 94, icon: '<i class="fa-solid fa-gem"></i>', source: "Avengers", ar: { name: "ثانوس", ability: "التوازن الكوني", lore: "التايتن المجنونُ الذي رأى في الفناءِ نجاةً. بفرقعةِ إصبعٍ، يستطيعُ إعادةَ تشكيلِ الوجودِ وفقَ رؤيتِه القاسيةِ للعدالةِ الكونية." }, en: { name: "THANOS", ability: "Cosmic Equilibrium", lore: "The Mad Titan who perceived salvation in annihilation. With a snap of his fingers, he reshapes existence according to his ruthless vision of universal justice." } },
+            { id: 4, type: "series", p: 92, icon: '<i class="fa-solid fa-bolt"></i>', source: "The Boys", ar: { name: "هوملاندر", ability: "الهيمنة الزائفة", lore: "إلهٌ يمشي بين البشرِ، يخفي خلفَ ابتسامتِه رعباً كونياً. يرى العالمَ مجردَ دميةٍ، ممتلكاً من القوةِ ما يجعلُه فوقَ المحاسبةِ والقانون." }, en: { name: "HOMELANDER", ability: "False Sovereignty", lore: "A god walking among mortals, concealing cosmic horror behind a manufactured smile. He views the world as a mere plaything, possessing power that transcends any law." } },
+            { id: 5, type: "game", p: 91, icon: '<i class="fa-solid fa-shield-halved"></i>', source: "HALO", ar: { name: "ماستر شيف", ability: "الأمل الأخير", lore: "سايبورغ صامت يحملُ ثقلَ النجومِ على كتفيهِ. ليس مجردَ جنديّ، بل هو أسطورةٌ حيّةٌ تقلبُ موازينَ الحروبِ بذكاءٍ تكتيكيٍّ لا يخطئ." }, en: { name: "MASTER CHIEF", ability: "The Last Hope", lore: "A silent cyborg carrying the weight of the stars. More than a soldier, he is a living legend who alters the tide of interstellar wars with unfailing tactical brilliance." } },
+            { id: 6, type: "game", p: 89, icon: '<i class="fa-solid fa-microchip"></i>', source: "Cyberpunk", ar: { name: "V", ability: "التسريع السيبراني", lore: "مرتزقٌ في مدينة 'نايت سيتي' يتحدى الموتَ بتقنياتٍ مزروعةٍ. بلمحةِ عينٍ، يتباطأُ الزمنُ حولَه، ليصبحَ السيدَ الوحيدَ في عالمٍ من السكون." }, en: { name: "V", ability: "Cybernetic Dilation", lore: "A mercenary in Night City defying death with implanted tech. In the blink of an eye, time dissolves around him, leaving him the sole master of a frozen world." } },
+            { id: 7, type: "game", p: 88, icon: '<i class="fa-solid fa-spider"></i>', source: "Spiderman", ar: { name: "سبايدر مان", ability: "الحسّ الفائق", lore: "ابنُ نيويورك الذي يحملُ مسؤوليةً تضاهي قوتَه. برشاقةٍ مذهلةٍ وحسٍّ سادسٍ يسبقُ الخطرَ، يثبتُ أنَّ القلبَ القويَّ هو أمضى سلاح." }, en: { name: "SPIDER-MAN", ability: "Spider-Sense", lore: "New York's prodigal son who bears responsibility equal to his power. With stunning agility and a danger-sensing instinct, he proves a resolute heart is the sharpest weapon." } },
+            { id: 8, type: "game", p: 87, icon: '<i class="fa-solid fa-khanda"></i>', source: "Witcher 3", ar: { name: "جيرالت", ability: "نصل السحر", lore: "الذئبُ الأبيضُ الذي صِيغَ في كيمياءِ التحولِ. صائدُ وحوشٍ يجوبُ القارةَ، حاملاً سيفينِ: أحدُهما للبشرِ والآخرُ للمسوخِ، بعينينِ تريانِ الحقيقة." }, en: { name: "GERALT", ability: "Alchemy & Blade", lore: "The White Wolf, forged in the fires of mutation. A monster hunter roaming the Continent with two blades: one for men, and one for beasts, with eyes that pierce the veil of lies." } },
+            { id: 9, type: "game", p: 85, icon: '<i class="fa-solid fa-eye"></i>', source: "Deus Ex", ar: { name: "آدم جينسن", ability: "التسلل التقني", lore: "مزيجٌ بين البشرِ والآلةِ، يتسللُ كالظلِ عبرَ الحصونِ. ممتلكٌ لرؤيةٍ تقنيةٍ تخترقُ الجدرانَ وتكشفُ الأسرارَ التي أرادَ العالمُ دفنَها." }, en: { name: "ADAM JENSEN", ability: "Augmented Infiltration", lore: "A fusion of man and machine, slipping through fortresses like a shadow. He possesses a technical vision that pierces walls and unearths secrets the world intended to bury." } },
+            { id: 10, type: "game", p: 83, icon: '<i class="fa-solid fa-bullseye"></i>', source: "Horizon", ar: { name: "إيلوي", ability: "قنص الثغرات", lore: "منبوذةٌ أصبحت منقذةَ العوالمِ. بذكاءٍ بدائيٍّ وتكنولوجيا مفقودةٍ، تصطادُ الآلاتِ العملاقةَ بسهمٍ واحدٍ يصيبُ مكمنَ الطاقةِ بدقةٍ متناهية." }, en: { name: "ALOY", ability: "Weak-Point Precision", lore: "An outcast turned savior of worlds. Combining primal intuition with lost technology, she hunts titanic machines with arrows that strike energy cores with unerring precision." } },
+            { id: 11, type: "movie", p: 86, icon: '<i class="fa-solid fa-mask"></i>', source: "Dark Knight", ar: { name: "باتمان", ability: "سيد الاستراتيجية", lore: "إنسانٌ هزمَ الآلهةَ بالعقلِ والتحضيرِ. فارسُ الظلامِ الذي يزرعُ الرعبَ في قلوبِ المجرمينَ، محولاً جراحَ الماضي إلى درعٍ يحمي 'غوثام'." }, en: { name: "BATMAN", ability: "Master Strategist", lore: "A mortal who defeated gods through intellect and preparation. The Dark Knight instills terror in the hearts of criminals, forging the scars of his past into a shield for Gotham." } },
+            { id: 12, type: "movie", p: 84, icon: '<i class="fa-solid fa-gun"></i>', source: "John Wick", ar: { name: "جون ويك", ability: "الإرادة المحضة", lore: "الرجلُ الذي ترسلُه لقتلِ 'البعبع'. يمتلكُ تركيزاً لا يتزحزحُ، محولاً أيَّ أداةٍ في يدِه إلى سلاحٍ فتاكٍ في رقصةِ موتٍ لا تنتهي." }, en: { name: "JOHN WICK", ability: "Pure Focus", lore: "The man you send to kill the 'Boogeyman.' He possesses an unshakeable focus, turning any tool into a lethal weapon in a never-ending dance of death." } },
+            { id: 13, type: "game", p: 83, icon: '<i class="fa-solid fa-user-ninja"></i>', source: "AC II", ar: { name: "إيتسيو", ability: "النصل الخفي", lore: "سليلُ النبلاءِ الذي صارَ سيداً للمغتالينَ. بينَ أزقةِ إيطاليا، كانَ خنجرُه هو العدالةَ الصامتةَ التي تطيحُ بالفسادِ وتمنحُ الشعوبَ حريتَها." }, en: { name: "EZIO AUDITORE", ability: "Hidden Blade", lore: "A nobleman's son who ascended as a Master Assassin. Within the alleys of Italy, his blade was the silent justice that toppled corruption and restored freedom to the people." } },
+            { id: 14, type: "game", p: 82, icon: '<i class="fa-solid fa-hat-cowboy"></i>', source: "RDR 2", ar: { name: "آرثر مورغان", ability: "عين الصقر", lore: "خارجٌ عن القانونِ يبحثُ عن الخلاصِ في عالمٍ يحتضرُ. يملكُ أسرعَ يدٍ على الزنادِ، وقلباً يصارعُ بينَ الوفاء للعصابةِ ونداء الضمير." }, en: { name: "ARTHUR MORGAN", ability: "Dead Eye", lore: "An outlaw seeking redemption in a dying world. He possesses the fastest hand on the trigger and a heart torn between gang loyalty and the call of conscience." } },
+            { id: 15, type: "game", p: 80, icon: '<i class="fa-solid fa-bomb"></i>', source: "GTA V", ar: { name: "تريفور", ability: "الهيجان الجنوني", lore: "الفوضى المتجسدةُ في هيئةِ رجلٍ. لا يعرفُ الخوفَ ولا يتبعُ القوانينَ، ينفجرُ كقنبلةٍ موقوتةٍ في وجهِ كلِّ مَن يجرؤُ على اعتراضِ طريقِه." }, en: { name: "TREVOR PHILIPS", ability: "Psychotic Rage", lore: "Chaos personified in the form of a man. Fearless and lawless, he erupts like a time bomb in the face of anyone who dares to cross his path." } },
+            { id: 16, type: "series", p: 81, icon: '<i class="fa-solid fa-snowflake"></i>', source: "GoT", ar: { name: "جون سنو", ability: "الوفاء الشمالي", lore: "الملكُ الذي لا يبتغي العرشَ. حارسُ الجدارِ الذي واجهَ الموتَ وعادَ، ليقفَ كخطِّ دفاعٍ أخيرٍ ضدَّ الشتاءِ الأبديِّ وجيوشِ الموتى." }, en: { name: "JON SNOW", ability: "Northern Loyalty", lore: "The King who never craved the throne. A guardian of the Wall who faced death and returned to stand as the final bastion against the eternal winter." } },
+            { id: 17, type: "series", p: 78, icon: '<i class="fa-solid fa-flask"></i>', source: "Breaking Bad", ar: { name: "والتر وايت", ability: "الكيمياء القاتلة", lore: "المعلمُ الذي تحولَ إلى إمبراطورٍ للجريمةِ. استخدمَ العلمَ كخنجرٍ مسمومٍ، ليثبتَ أنَّ العقلَ هو أخطرُ سلاحٍ حينما يفقدُ المرءُ كلَّ شيءٍ." }, en: { name: "WALTER WHITE", ability: "Chemical Brilliance", lore: "A teacher transformed into a criminal emperor. He wielded science like a poisoned dagger, proving the mind is the deadliest weapon when a man has nothing left to lose." } },
+            { id: 18, type: "game", p: 79, icon: '<i class="fa-solid fa-leaf"></i>', source: "TLOU 2", ar: { name: "إيلي", ability: "غريزة البقاء", lore: "فتاةٌ صقلتْها الخسارةُ في عالمٍ محطمٍ. تحولتْ إلى مفترسٍ لا يرحمُ، تقودُها رحلةُ انتقامٍ مريرةٍ في سعيِها لإيجادِ معنى وسطَ الركامِ." }, en: { name: "ELLIE", ability: "Survival Instinct", lore: "A girl forged by loss in a broken world. She evolved into a ruthless predator, driven by a bitter quest for vengeance in her search for meaning amidst the ruins." } },
+            { id: 19, type: "anime", p: 90, icon: '<i class="fa-solid fa-hand-back-fist"></i>', source: "One Punch Man", ar: { name: "سايتاما", ability: "اللكمة القاضية", lore: "البطلُ الذي يعاني مللَ القوةِ المطلقةِ. ينهي أعظمَ التهديداتِ بضربةٍ واحدةٍ، باحثاً عن خصمٍ يوقظُ في قلبِه حرارةَ النزالِ من جديدٍ." }, en: { name: "SAITAMA", ability: "One Punch", lore: "The hero suffering from the boredom of absolute power. He eradicates the greatest threats with a single blow, searching for an opponent to reignite the fire of battle." } },
+            { id: 20, type: "game", p: 88, icon: '<i class="fa-solid fa-clover"></i>', source: "Elden Ring", ar: { name: "مالينيا", ability: "التعفن الأحمر", lore: "نصلُ ميكيلا التي لم تعرفْ الهزيمةَ قط. بجمالٍ قاتلٍ وسرعةٍ خاطفةٍ، تنشرُ نصلَها الذهبيَّ وتعفنَها في الأرضِ، واهبةً أعداءَها موتاً حتمياً." }, en: { name: "MALENIA", ability: "Scarlet Rot", lore: "The Blade of Miquella, who has never known defeat. With lethal grace and blinding speed, she unleashes her golden blade and rot upon the land, granting enemies an inevitable end." } },
+            { id: 21, type: "anime", p: 89, icon: '<i class="fa-solid fa-hurricane"></i>', source: "Dragon Ball", ar: { name: "غوكو", ability: "الغريزة الفائقة", lore: "محاربُ السايان الذي يتخطى حدودَه مع كلِّ صرخةٍ. بروحٍ نقيةٍ وسعيٍ دائمٍ، وصلَ لمرتبةِ الآلهةِ، محولاً جسدَه إلى سلاحٍ كونيٍّ لا يُهزم." }, en: { name: "GOKU", ability: "Ultra Instinct", lore: "The Saiyan warrior who transcends his limits with every roar. With a pure spirit and endless pursuit, he attained the status of gods, turning his body into an invincible cosmic weapon." } },
+            { id: 22, type: "anime", p: 83, icon: '<i class="fa-solid fa-wind"></i>', source: "Attack on Titan", ar: { name: "ليفاي", ability: "الإعصار الأسود", lore: "أقوى جنديٍّ في تاريخِ البشريةِ. إعصارٌ من النصالِ يمزقُ العمالقةَ في ثوانٍ، مخلصاً لرفاقِه الذين سقطوا، وحاملاً أملَ الإنسانيةِ فوقَ جناحيهِ." }, en: { name: "LEVI ACKERMAN", ability: "Steel Whirlwind", lore: "Humanity's strongest soldier. A whirlwind of steel that shreds titans in seconds, remaining loyal to fallen comrades and carrying the hope of humanity on his wings." } },
+            { id: 23, type: "series", p: 82, icon: '<i class="fa-solid fa-dragon"></i>', source: "House of Dragon", ar: { name: "ديمون تارغارين", ability: "نصل التنين", lore: "الأميرُ المارقُ الذي يمتطي نيرانَ التنانينِ. بمزاجٍ متقلبٍ وشجاعةٍ انتحاريةٍ، يفرضُ سطوتَه بسيفه 'الأخت المظلمة' كرمزٍ لسيادةِ الدمِ والنارِ." }, en: { name: "DAEMON TARGARYEN", ability: "Dragon's Blood", lore: "The Rogue Prince who rides the fires of dragons. With a volatile temper and suicidal bravery, he asserts dominance with his blade, 'Dark Sister', as a symbol of blood and fire." } },
+            { id: 24, type: "series", p: 77, icon: '<i class="fa-solid fa-magnifying-glass"></i>', source: "Sherlock", ar: { name: "شيرلوك", ability: "العقل التحليلي", lore: "العقلُ الذي يرى ما وراءَ الحجبِ. ليس محارباً بالجسدِ، بل هو قناصُ حقائقَ يفككُ أعقدَ الجرائمِ بلمحةٍ، محولاً مسرحَ الجريمةِ إلى خريطةٍ جليةٍ." }, en: { name: "SHERLOCK HOLMES", ability: "Deductive Mastery", lore: "The mind that perceives what lies beyond the veil. Not a warrior of flesh, but a hunter of truths who dismantles the complex crimes in a glance, turning a crime scene into a clear map." } },
+            { id: 25, type: "series", p: 79, icon: '<i class="fa-solid fa-user-tie"></i>', source: "Peaky Blinders", ar: { name: "تومي شيلبي", ability: "الدهاء العظيم", lore: "سيدُ برمنغهام الذي لا ينامُ. بخطواتٍ محسوبةٍ ونظرةٍ ثاقبةٍ، يطوعُ السياسةَ والقوةَ، ليكسرَ إرادةَ خصومِه قبلَ أن تبدأَ الحربُ الفعليةُ." }, en: { name: "TOMMY SHELBY", ability: "Mastermind Cunning", lore: "The sleepless lord of Birmingham. With calculated steps and a piercing gaze, he bends politics and power, breaking his enemies' will before the physical war even begins." } },
             
-            // --- المجموعة الثانية المضافة (26-50) مع التصحيحات ---
-            { id: 26, type: "anime", p: 96, icon: '<i class="fa-solid fa-wind"></i>', source: "Naruto", ar: { name: "ناروتو أوزوماكي", ability: "طور الكيوبي", lore: "اليتيم الذي أصبح الهوكاجي ووحّد عالم الشينوبي بإرادة النار." }, en: { name: "NARUTO", ability: "Nine-Tails Mode", lore: "The orphan who became Hokage and unified the Shinobi world." } },
-            { id: 27, type: "anime", p: 95, icon: '<i class="fa-solid fa-anchor"></i>', source: "One Piece", ar: { name: "لوفي", ability: "المحرك الخامس", lore: "ملك القراصنة المستقبلي الذي يقاتل من أجل الحرية المطلقة." }, en: { name: "LUFFY", ability: "Gear 5", lore: "The future Pirate King fighting for ultimate freedom." } },
-            { id: 28, type: "anime", p: 90, icon: '<i class="fa-solid fa-skull"></i>', source: "AOT", ar: { name: "إيرين ييغر", ability: "العملاق المهاجم", lore: "الباحث عن الحرية الذي قرر دك العالم لينهي معاناة شعبه." }, en: { name: "EREN YEAGER", ability: "Attack Titan", lore: "The seeker of freedom who decided to rumble the world to end his people's suffering." } },
-            { id: 29, type: "game", p: 84, icon: '<i class="fa-solid fa-person-hiking"></i>', source: "Tomb Raider", ar: { name: "لارا كروفت", ability: "غريزة البقاء", lore: "مستكشفة القبور التي صقلتها المخاطر في أقسى بقاع الأرض." }, en: { name: "LARA CROFT", ability: "Survival Instinct", lore: "The tomb raider forged by danger in the harshest places on Earth." } },
-            { id: 30, type: "movie", p: 94, icon: '<i class="fa-solid fa-code"></i>', source: "The Matrix", ar: { name: "نيو", ability: "شفرة المختار", lore: "المختار الذي كسر حدود الواقع الرقمي ليتحكم في قوانين الفيزياء." }, en: { name: "NEO", ability: "The One", lore: "The Chosen One who broke digital reality to control the laws of physics." } },
-            { id: 31, type: "series", p: 87, icon: '<i class="fa-solid fa-syringe"></i>', source: "Dexter", ar: { name: "ديكستر مورغان", ability: "الراكب المظلم", lore: "القاتل المنظم الذي يطارد الأشرار ببرود جراحي وكود صارم." }, en: { name: "DEXTER MORGAN", ability: "Dark Passenger", lore: "The organized killer hunting the wicked with surgical coldness." } },
-            { id: 32, type: "series", p: 89, icon: '<i class="fa-solid fa-mask"></i>', source: "Hannibal", ar: { name: "هانيبال ليكتر", ability: "التلاعب النفسي", lore: "الطبيب الفنان الذي يفكك عقول خصومه قبل أجسادهم بذكاء مرعب." }, en: { name: "HANNIBAL LECTER", ability: "Psychological Manipulation", lore: "The artist doctor who dismantles enemies' minds with terrifying intellect." } },
-            { id: 33, type: "anime", p: 97, icon: '<i class="fa-solid fa-droplet"></i>', source: "Hellsing", ar: { name: "ألوكارد", ability: "ملك الدماء", lore: "مصاص الدماء الخالد الذي يحمل في دمه جيشاً من الأرواح المعذبة." }, en: { name: "ALUCARD", ability: "Release Level 0", lore: "The immortal vampire carrying an army of tormented souls in his blood." } },
-            { id: 34, type: "game", p: 91, icon: '<i class="fa-solid fa-rocket"></i>', source: "Metroid", ar: { name: "ساموس آران", ability: "البدلة القتالية", lore: "صائدة الجوائز التي تطهر الكواكب من التهديدات الفضائية بمفردها." }, en: { name: "SAMUS ARAN", ability: "Power Suit", lore: "The bounty hunter purging planets of alien threats alone." } },
+            // شخصيات 26-50
+            { id: 26, type: "anime", p: 86, icon: '<i class="fa-solid fa-wind"></i>', source: "Naruto", ar: { name: "ناروتو أوزوماكي", ability: "طور الكيوبي", lore: "اليتيم الذي أصبح الهوكاجي ووحّد عالم الشينوبي بإرادة النار." }, en: { name: "NARUTO", ability: "Nine-Tails Mode", lore: "The orphan who became Hokage and unified the Shinobi world." } },
+            { id: 27, type: "anime", p: 85, icon: '<i class="fa-solid fa-anchor"></i>', source: "One Piece", ar: { name: "لوفي", ability: "المحرك الخامس", lore: "ملك القراصنة المستقبلي الذي يقاتل من أجل الحرية المطلقة." }, en: { name: "LUFFY", ability: "Gear 5", lore: "The future Pirate King fighting for ultimate freedom." } },
+            { id: 28, type: "anime", p: 84, icon: '<i class="fa-solid fa-skull"></i>', source: "AOT", ar: { name: "إيرين ييغر", ability: "العملاق المهاجم", lore: "الباحث عن الحرية الذي قرر دك العالم لينهي معاناة شعبه." }, en: { name: "EREN YEAGER", ability: "Attack Titan", lore: "The seeker of freedom who decided to rumble the world to end his people's suffering." } },
+            { id: 29, type: "game", p: 81, icon: '<i class="fa-solid fa-person-hiking"></i>', source: "Tomb Raider", ar: { name: "لارا كروفت", ability: "غريزة البقاء", lore: "مستكشفة القبور التي صقلتها المخاطر في أقسى بقاع الأرض." }, en: { name: "LARA CROFT", ability: "Survival Instinct", lore: "The tomb raider forged by danger in the harshest places on Earth." } },
+            { id: 30, type: "movie", p: 87, icon: '<i class="fa-solid fa-code"></i>', source: "The Matrix", ar: { name: "نيو", ability: "شفرة المختار", lore: "المختار الذي كسر حدود الواقع الرقمي ليتحكم في قوانين الفيزياء." }, en: { name: "NEO", ability: "The One", lore: "The Chosen One who broke digital reality to control the laws of physics." } },
+            { id: 31, type: "series", p: 80, icon: '<i class="fa-solid fa-syringe"></i>', source: "Dexter", ar: { name: "ديكستر مورغان", ability: "الراكب المظلم", lore: "القاتل المنظم الذي يطارد الأشرار ببرود جراحي وكود صارم." }, en: { name: "DEXTER MORGAN", ability: "Dark Passenger", lore: "The organized killer hunting the wicked with surgical coldness." } },
+            { id: 32, type: "series", p: 82, icon: '<i class="fa-solid fa-mask"></i>', source: "Hannibal", ar: { name: "هانيبال ليكتر", ability: "التلاعب النفسي", lore: "الطبيب الفنان الذي يفكك عقول خصومه قبل أجسادهم بذكاء مرعب." }, en: { name: "HANNIBAL LECTER", ability: "Psychological Manipulation", lore: "The artist doctor who dismantles enemies' minds with terrifying intellect." } },
+            { id: 33, type: "anime", p: 87, icon: '<i class="fa-solid fa-droplet"></i>', source: "Hellsing", ar: { name: "ألوكارد", ability: "ملك الدماء", lore: "مصاص الدماء الخالد الذي يحمل في دمه جيشاً من الأرواح المعذبة." }, en: { name: "ALUCARD", ability: "Release Level 0", lore: "The immortal vampire carrying an army of tormented souls in his blood." } },
+            { id: 34, type: "game", p: 84, icon: '<i class="fa-solid fa-rocket"></i>', source: "Metroid", ar: { name: "ساموس آران", ability: "البدلة القتالية", lore: "صائدة الجوائز التي تطهر الكواكب من التهديدات الفضائية بمفردها." }, en: { name: "SAMUS ARAN", ability: "Power Suit", lore: "The bounty hunter purging planets of alien threats alone." } },
+            { id: 35, type: "anime", p: 82, icon: '<i class="fa-solid fa-hand-sparkles"></i>', source: "FMA", ar: { name: "إدوارد إلريك", ability: "الخيمياء الفولاذية", lore: "الخيميائي الذي تحدى قوانين الطبيعة لاستعادة ما فقده." }, en: { name: "EDWARD ELRIC", ability: "Alchemy", lore: "The alchemist who defied nature's laws to regain what he lost." } },
+            { id: 36, type: "movie", p: 79, icon: '<i class="fa-solid fa-hat-wizard"></i>', source: "Harry Potter", ar: { name: "هاري بوتر", ability: "الصبي الذي عاش", lore: "الساحر الذي هزم الظلام بقوة الحب والشجاعة." }, en: { name: "HARRY POTTER", ability: "The Boy Who Lived", lore: "The wizard who defeated darkness through love and courage." } },
+            { id: 37, type: "series", p: 85, icon: '<i class="fa-solid fa-clock"></i>', source: "Doctor Who", ar: { name: "دكتور هو", ability: "سيد الزمن", lore: "المسافر عبر الزمكان الذي يهزم الجيوش بعقله وتلاعبه بالتاريخ." }, en: { name: "DOCTOR WHO", ability: "Time Lord", lore: "The time traveler who defeats armies through intellect and time manipulation." } },
+            { id: 38, type: "movie", p: 81, icon: '<i class="fa-solid fa-gun"></i>', source: "007", ar: { name: "جيمس بوند", ability: "أناقة القتل", lore: "العميل السري الذي لا يخطئ، يجمع بين الدهاء وأحدث التقنيات." }, en: { name: "JAMES BOND", ability: "007 Tactics", lore: "The unerring secret agent, combining wit with cutting-edge tech." } },
+            { id: 39, type: "game", p: 82, icon: '<i class="fa-solid fa-fan"></i>', source: "Mortal Kombat", ar: { name: "كيتانا", ability: "مراوح الموت", lore: "أميرة إيدينيا المقاتلة التي تدمج بين الجمال والفتك في القتال." }, en: { name: "KITANA", ability: "Steel Fans", lore: "The Edenian princess combining beauty and lethality in combat." } },
+            { id: 40, type: "anime", p: 81, icon: '<i class="fa-solid fa-fire"></i>', source: "Demon Slayer", ar: { name: "تانيجيرو", ability: "أنفاس الشمس", lore: "صائد الشياطين الذي يحول إرادته ونبله إلى نصل يقطع الظلام." }, en: { name: "TANJIRO", ability: "Sun Breathing", lore: "The demon slayer turning will and nobility into a blade of light." } },
+            { id: 41, type: "game", p: 80, icon: '<i class="fa-solid fa-laptop-code"></i>', source: "Watch Dogs", ar: { name: "أيدن بيرس", ability: "القرصنة الشاملة", lore: "الهكر الذي حول المدينة بأكملها إلى سلاح فتاك تحت سيطرته." }, en: { name: "AIDEN PEARCE", ability: "System Hacking", lore: "The hacker who turned an entire city into a deadly weapon." } },
+            { id: 42, type: "movie", p: 80, icon: '<i class="fa-solid fa-dna"></i>', source: "Alien", ar: { name: "إلين ريبلي", ability: "إرادة البقاء", lore: "الناجية التي واجهت أهوال الفضاء وانتصرت بعزيمتها." }, en: { name: "ELLEN RIPLEY", ability: "Survivor Will", lore: "The survivor who faced space horrors and won through sheer resolve." } },
+            { id: 43, type: "series", p: 81, icon: '<i class="fa-solid fa-mask"></i>', source: "Titans", ar: { name: "ديك غرايسون", ability: "بهلوانية الظلام", lore: "نايتوينج الذي يجمع بين مهارات السيرك وعدالة الشوارع الصارمة." }, en: { name: "DICK GRAYSON", ability: "Nightwing Skills", lore: "Nightwing, combining circus skills with strict street justice." } },
+            { id: 44, type: "game", p: 83, icon: '<i class="fa-solid fa-shadows"></i>', source: "Dishonored", ar: { name: "كورفو أتانو", ability: "السحر المظلم", lore: "القاتل المقنع الذي يتلاعب بالزمن والظلال لينتقم للعرش." }, en: { name: "CORVO ATTANO", ability: "Blink Mastery", lore: "The masked assassin manipulating time and shadows for revenge." } },
+            { id: 45, type: "movie", p: 81, icon: '<i class="fa-solid fa-sword"></i>', source: "Kill Bill", ar: { name: "بيل", ability: "نصل الانتقام", lore: "العروس التي عادت من القبر لتكتب بدم أعدائها ملحمة انتقام." }, en: { name: "BEATRIX KIDDO", ability: "Katana Master", lore: "The Bride who returned from the grave for a bloody epic of revenge." } },
+            { id: 46, type: "game", p: 84, icon: '<i class="fa-solid fa-magic"></i>', source: "Bayonetta", ar: { name: "بايونيتا", ability: "سحر الأومبرا", lore: "الساحرة التي تستدعي شياطين الجحيم وتتلاعب بالوقت." }, en: { name: "BAYONETTA", ability: "Witch Time", lore: "The witch summoning demons and manipulating time." } },
+            { id: 47, type: "game", p: 82, icon: '<i class="fa-solid fa-user-secret"></i>', source: "Metal Gear", ar: { name: "سوليد سنيك", ability: "التسلل التكتيكي", lore: "الجندي الأسطوري خبير الحروب الصامتة ومواجهة الآلات." }, en: { name: "SOLID SNAKE", ability: "Tactical Stealth", lore: "The legendary soldier, expert in silent warfare and machine combat." } },
+            { id: 48, type: "anime", p: 84, icon: '<i class="fa-solid fa-eye-slash"></i>', source: "Naruto", ar: { name: "كاكاشي هاتاكي", ability: "شارينغان النسخ", lore: "نينجا النسخ الذي يتقن ألف تقنية ويقود الجيل الجديد بحكمة." }, en: { name: "KAKASHI HATAKE", ability: "Copy Ninja", lore: "The Copy Ninja who mastered a thousand techniques and leads the new generation with wisdom." } },
+            { id: 49, type: "series", p: 80, icon: '<i class="fa-solid fa-user-ninja"></i>', source: "GoT", ar: { name: "أريا ستارك", ability: "وجه لا أحد", lore: "الفتاة التي أصبحت الموت المتجسد لتنهي ليالي الشتاء الطويلة." }, en: { name: "ARYA STARK", ability: "Faceless Assassin", lore: "The girl who became death itself to end the Long Night." } },
+            { id: 50, type: "series", p: 78, icon: '<i class="fa-solid fa-chess-king"></i>', source: "The Witcher", ar: { name: "ديكسترا", ability: "العقل المدبر", lore: "رئيس المخابرات الذي يحرك خيوط الممالك ويقلب العروش من الظلال." }, en: { name: "DIJKSTRA", ability: "Mastermind", lore: "The spymaster pulling kingdom strings and toppling thrones from the shadows." } },
             
-            // الشخصية رقم 35 المصححة: إدوارد إلريك
-            { id: 35, type: "anime", p: 88, icon: '<i class="fa-solid fa-hand-sparkles"></i>', source: "FMA", ar: { name: "إدوارد إلريك", ability: "الخيمياء الفولاذية", lore: "الخيميائي الذي تحدى قوانين الطبيعة لاستعادة ما فقده." }, en: { name: "EDWARD ELRIC", ability: "Alchemy", lore: "The alchemist who defied nature's laws to regain what he lost." } },
-            
-            { id: 36, type: "movie", p: 82, icon: '<i class="fa-solid fa-hat-wizard"></i>', source: "Harry Potter", ar: { name: "هاري بوتر", ability: "الصبي الذي عاش", lore: "الساحر الذي هزم الظلام بقوة الحب والشجاعة." }, en: { name: "HARRY POTTER", ability: "The Boy Who Lived", lore: "The wizard who defeated darkness through love and courage." } },
-            { id: 37, type: "series", p: 93, icon: '<i class="fa-solid fa-clock"></i>', source: "Doctor Who", ar: { name: "دكتور هو", ability: "سيد الزمن", lore: "المسافر عبر الزمكان الذي يهزم الجيوش بعقله وتلاعبه بالتاريخ." }, en: { name: "DOCTOR WHO", ability: "Time Lord", lore: "The time traveler who defeats armies through intellect and time manipulation." } },
-            { id: 38, type: "movie", p: 85, icon: '<i class="fa-solid fa-gun"></i>', source: "007", ar: { name: "جيمس بوند", ability: "أناقة القتل", lore: "العميل السري الذي لا يخطئ، يجمع بين الدهاء وأحدث التقنيات." }, en: { name: "JAMES BOND", ability: "007 Tactics", lore: "The unerring secret agent, combining wit with cutting-edge tech." } },
-            { id: 39, type: "game", p: 88, icon: '<i class="fa-solid fa-fan"></i>', source: "Mortal Kombat", ar: { name: "كيتانا", ability: "مراوح الموت", lore: "أميرة إيدينيا المقاتلة التي تدمج بين الجمال والفتك في القتال." }, en: { name: "KITANA", ability: "Steel Fans", lore: "The Edenian princess combining beauty and lethality in combat." } },
-            
-            // الشخصية رقم 40 المصححة: تانيجيرو
-            { id: 40, type: "anime", p: 87, icon: '<i class="fa-solid fa-fire"></i>', source: "Demon Slayer", ar: { name: "تانيجيرو", ability: "أنفاس الشمس", lore: "صائد الشياطين الذي يحول إرادته ونبله إلى نصل يقطع الظلام." }, en: { name: "TANJIRO", ability: "Sun Breathing", lore: "The demon slayer turning will and nobility into a blade of light." } },
-            
-            { id: 41, type: "game", p: 83, icon: '<i class="fa-solid fa-laptop-code"></i>', source: "Watch Dogs", ar: { name: "أيدن بيرس", ability: "القرصنة الشاملة", lore: "الهكر الذي حول المدينة بأكملها إلى سلاح فتاك تحت سيطرته." }, en: { name: "AIDEN PEARCE", ability: "System Hacking", lore: "The hacker who turned an entire city into a deadly weapon." } },
-            { id: 42, type: "movie", p: 84, icon: '<i class="fa-solid fa-dna"></i>', source: "Alien", ar: { name: "إلين ريبلي", ability: "إرادة البقاء", lore: "الناجية التي واجهت أهوال الفضاء وانتصرت بعزيمتها." }, en: { name: "ELLEN RIPLEY", ability: "Survivor Will", lore: "The survivor who faced space horrors and won through sheer resolve." } },
-            { id: 43, type: "series", p: 87, icon: '<i class="fa-solid fa-mask"></i>', source: "Titans", ar: { name: "ديك غرايسون", ability: "بهلوانية الظلام", lore: "نايتوينج الذي يجمع بين مهارات السيرك وعدالة الشوارع الصارمة." }, en: { name: "DICK GRAYSON", ability: "Nightwing Skills", lore: "Nightwing, combining circus skills with strict street justice." } },
-            { id: 44, type: "game", p: 90, icon: '<i class="fa-solid fa-shadows"></i>', source: "Dishonored", ar: { name: "كورفو أتانو", ability: "السحر المظلم", lore: "القاتل المقنع الذي يتلاعب بالزمن والظلال لينتقم للعرش." }, en: { name: "CORVO ATTANO", ability: "Blink Mastery", lore: "The masked assassin manipulating time and shadows for revenge." } },
-            { id: 45, type: "movie", p: 86, icon: '<i class="fa-solid fa-sword"></i>', source: "Kill Bill", ar: { name: "بيل", ability: "نصل الانتقام", lore: "العروس التي عادت من القبر لتكتب بدم أعدائها ملحمة انتقام." }, en: { name: "BEATRIX KIDDO", ability: "Katana Master", lore: "The Bride who returned from the grave for a bloody epic of revenge." } },
-            { id: 46, type: "game", p: 93, icon: '<i class="fa-solid fa-magic"></i>', source: "Bayonetta", ar: { name: "بايونيتا", ability: "سحر الأومبرا", lore: "الساحرة التي تستدعي شياطين الجحيم وتتلاعب بالوقت." }, en: { name: "BAYONETTA", ability: "Witch Time", lore: "The witch summoning demons and manipulating time." } },
-            { id: 47, type: "game", p: 89, icon: '<i class="fa-solid fa-user-secret"></i>', source: "Metal Gear", ar: { name: "سوليد سنيك", ability: "التسلل التكتيكي", lore: "الجندي الأسطوري خبير الحروب الصامتة ومواجهة الآلات." }, en: { name: "SOLID SNAKE", ability: "Tactical Stealth", lore: "The legendary soldier, expert in silent warfare and machine combat." } },
-            
-            // الشخصية رقم 48 المعدلة: كاكاشي هاتاكي (بدلاً من ليفي أكرمان المتكرر)
-            { id: 48, type: "anime", p: 91, icon: '<i class="fa-solid fa-eye-slash"></i>', source: "Naruto", ar: { name: "كاكاشي هاتاكي", ability: "شارينغان النسخ", lore: "نينجا النسخ الذي يتقن ألف تقنية ويقود الجيل الجديد بحكمة." }, en: { name: "KAKASHI HATAKE", ability: "Copy Ninja", lore: "The Copy Ninja who mastered a thousand techniques and leads the new generation with wisdom." } },
-            
-            { id: 49, type: "series", p: 86, icon: '<i class="fa-solid fa-user-ninja"></i>', source: "GoT", ar: { name: "أريا ستارك", ability: "وجه لا أحد", lore: "الفتاة التي أصبحت الموت المتجسد لتنهي ليالي الشتاء الطويلة." }, en: { name: "ARYA STARK", ability: "Faceless Assassin", lore: "The girl who became death itself to end the Long Night." } },
-            { id: 50, type: "series", p: 82, icon: '<i class="fa-solid fa-chess-king"></i>', source: "The Witcher", ar: { name: "ديكسترا", ability: "العقل المدبر", lore: "رئيس المخابرات الذي يحرك خيوط الممالك ويقلب العروش من الظلال." }, en: { name: "DIJKSTRA", ability: "Mastermind", lore: "The spymaster pulling kingdom strings and toppling thrones from the shadows." } }
+            // شخصيات جديدة 51-70 (بدون بيك)
+            { id: 51, type: "movie", p: 83, icon: '<i class="fa-solid fa-dragon"></i>', source: "The Hobbit", ar: { name: "سموغ", ability: "نيران التنين", lore: "التنين الجشع الذي يحرس كنوزه في الجبل الوحيد." }, en: { name: "SMAUG", ability: "Dragon Fire", lore: "The greedy dragon guarding his treasures in the Lonely Mountain." } },
+            { id: 52, type: "anime", p: 85, icon: '<i class="fa-solid fa-moon"></i>', source: "Sailor Moon", ar: { name: "سيلور مون", ability: "قمر العدالة", lore: "المحاربة القمرية التي تحمي الأرض من قوى الظلام." }, en: { name: "SAILOR MOON", ability: "Moon Power", lore: "The lunar warrior protecting Earth from dark forces." } },
+            { id: 53, type: "game", p: 82, icon: '<i class="fa-solid fa-chess-knight"></i>', source: "Dark Souls", ar: { name: "فارس الجمرة", ability: "إشعال النار", lore: "الخالد الذي يسعى لإشعال النار الأولى للحفاظ على العمر الناري." }, en: { name: "CHOSEN UNDEAD", ability: "Kindling", lore: "The immortal seeking to kindle the First Flame to preserve the Age of Fire." } },
+            { id: 54, type: "movie", p: 84, icon: '<i class="fa-solid fa-jedi"></i>', source: "Star Wars", ar: { name: "دارث فيدر", ability: "قوة الجانب المظلم", lore: "سيد السيث الذي تخلى عن أنكين سكاي ووكر ليبحث عن القوة المطلقة." }, en: { name: "DARTH VADER", ability: "Dark Side", lore: "The Sith Lord who abandoned Anakin Skywalker to seek absolute power." } },
+            { id: 55, type: "anime", p: 83, icon: '<i class="fa-solid fa-skull-crossbones"></i>', source: "Bleach", ar: { name: "إيتشيغو كوروساكي", ability: "مطلق الـزانباكتو", lore: "بدل الموت الذي يحمي البشر من الأرواح الشريرة." }, en: { name: "ICHIGO KUROSAKI", ability: "Bankai", lore: "The Substitute Shinigami protecting humans from evil spirits." } },
+            { id: 56, type: "game", p: 81, icon: '<i class="fa-solid fa-paw"></i>', source: "Sonic", ar: { name: "سونيك", ability: "السرعة الفائقة", lore: "القنفذ الأزرق الذي يجري بسرعة الصوت لإنقاذ العالم." }, en: { name: "SONIC", ability: "Super Speed", lore: "The blue hedgehog running at supersonic speed to save the world." } },
+            { id: 57, type: "movie", p: 82, icon: '<i class="fa-solid fa-robot"></i>', source: "Transformers", ar: { name: "أوبتيموس برايم", ability: "التحول", lore: "قائد الأوتوبوتس الذي يحارب لحماية الأرض من الديسيبتيكون." }, en: { name: "OPTIMUS PRIME", ability: "Transformation", lore: "The Autobots leader fighting to protect Earth from Decepticons." } },
+            { id: 58, type: "anime", p: 86, icon: '<i class="fa-solid fa-dragon"></i>', source: "Fairy Tail", ar: { name: "ناتسو دراغنيل", ability: "سحر تنين النار", lore: "ساحر نقابة الخرافة الذي يستخدم سحر تنين النار." }, en: { name: "NATSU DRAGNEEL", ability: "Fire Dragon Slayer", lore: "Fairy Tail wizard using Fire Dragon Slayer magic." } },
+            { id: 59, type: "game", p: 83, icon: '<i class="fa-solid fa-ghost"></i>', source: "Overwatch", ar: { name: "رايبر", ability: "الظل القاتل", lore: "القاتل المتشبح الذي يعمل في الظلال لتحقيق أهدافه." }, en: { name: "REAPER", ability: "Wraith Form", lore: "The ghostly assassin working in shadows to achieve his goals." } },
+            { id: 60, type: "series", p: 79, icon: '<i class="fa-solid fa-user-injured"></i>', source: "Daredevil", ar: { name: "ديرديفل", ability: "الحواس الفائقة", lore: "المحامي الأعمى الذي يحارب الجريمة في الجانب المظلم من نيويورك." }, en: { name: "DAREDEVIL", ability: "Enhanced Senses", lore: "The blind lawyer fighting crime in New York's dark side." } },
+            { id: 61, type: "movie", p: 85, icon: '<i class="fa-solid fa-meteor"></i>', source: "Superman", ar: { name: "سوبرمان", ability: "القوة الخارقة", lore: "البطل الخارق من كريبتون، يحمي الأرض بقوته وسرعته الخارقة." }, en: { name: "SUPERMAN", ability: "Super Strength", lore: "The superhero from Krypton, protecting Earth with his superhuman strength and speed." } },
+            { id: 62, type: "movie", p: 84, icon: '<i class="fa-solid fa-robot"></i>', source: "Iron Man", ar: { name: "آيرون مان", ability: "الدرع المتطور", lore: "توني ستارك العبقري الذي يصنع دروعاً متطورة لمحاربة الشر." }, en: { name: "IRON MAN", ability: "Advanced Armor", lore: "Genius Tony Stark who creates advanced armors to fight evil." } },
+            { id: 63, type: "movie", p: 83, icon: '<i class="fa-solid fa-hammer"></i>', source: "Thor", ar: { name: "ثور", ability: "إله الرعد", lore: "إله الرعد النوردي، يحمل مطرقة ميجولنير ويحارب من أجل العدالة." }, en: { name: "THOR", ability: "God of Thunder", lore: "The Norse god of thunder, wielding Mjolnir and fighting for justice." } },
+            { id: 64, type: "comic", p: 86, icon: '<i class="fa-solid fa-flash"></i>', source: "The Flash", ar: { name: "ذا فلاش", ability: "سرعة الضوء", lore: "أسرع رجل على قيد الحياة، يستخدم سرعته الخارقة لإنقاذ العالم." }, en: { name: "THE FLASH", ability: "Light Speed", lore: "The fastest man alive, using his super speed to save the world." } },
+            { id: 65, type: "comic", p: 85, icon: '<i class="fa-solid fa-water"></i>', source: "Aquaman", ar: { name: "أكوا مان", ability: "ملك المحيطات", lore: "ملك أطلانتس، يتحكم بالمحيطات ومخلوقاتها لحماية الأرض." }, en: { name: "AQUAMAN", ability: "Ocean King", lore: "King of Atlantis, controlling oceans and their creatures to protect Earth." } },
+            { id: 66, type: "anime", p: 84, icon: '<i class="fa-solid fa-ghost"></i>', source: "Bleach", ar: { name: "رُوكيا كوتشيكي", ability: "سيباكي", lore: "بدل الموت التي أعطت إيتشيغو قواها ودربته ليصبح محارباً." }, en: { name: "RUKIA KUCHIKI", ability: "Shibakai", lore: "The Shinigami who gave Ichigo his powers and trained him to become a warrior." } },
+            { id: 67, type: "anime", p: 82, icon: '<i class="fa-solid fa-fire"></i>', source: "Demon Slayer", ar: { name: "زنيتسو", ability: "أنفاس الرعد", lore: "صائد الشياطين الذي يستخدم أنفاس الرعد بسرعة مذهلة." }, en: { name: "ZENITSU", ability: "Thunder Breathing", lore: "The demon slayer using Thunder Breathing with incredible speed." } },
+            { id: 68, type: "anime", p: 81, icon: '<i class="fa-solid fa-spider"></i>', source: "Demon Slayer", ar: { name: "إينوسوكي", ability: "أنفاس الوحش", lore: "صائد الشياطين الغاضب الذي يستخدم أنفاس الوحش في قتاله." }, en: { name: "INOSUKE", ability: "Beast Breathing", lore: "The angry demon slayer using Beast Breathing in his fights." } },
+            { id: 69, type: "game", p: 83, icon: '<i class="fa-solid fa-skull"></i>', source: "Dark Souls", ar: { name: "سولير من أستورا", ability: "محارب الشمس", lore: "محارب الشمس الأسطوري الذي يساعد اللاعبين في رحلتهم الصعبة." }, en: { name: "SOLAIRE", ability: "Sun Warrior", lore: "The legendary Sun Warrior who helps players in their difficult journey." } },
+            { id: 70, type: "game", p: 82, icon: '<i class="fa-solid fa-mask"></i>', source: "Persona 5", ar: { name: "جوكر", ability: "أرسين", lore: "قائد فرقة اللصوص الشبحية الذي يسرق قلوب الأشرار." }, en: { name: "JOKER", ability: "Arsene", lore: "Leader of the Phantom Thieves who steals the hearts of the wicked." } },
+
+            // === النسخ الذروية (Peak Forms) - فقط للشخصيات الخيالية ===
+            { id: 71, type: "game", p: 101, isPeak: true, icon: '<i class="fa-solid fa-crown"></i>', source: "God of War Ragnarok", ar: { name: "كراتوس (إله الحرب)", ability: "الغضب الكوني", lore: "كراتوس في ذروة قوته كإله حرب، يحمل غضباً كونياً يمكنه تحطيم الآلهة والأبعاد." }, en: { name: "KRATOS (God of War)", ability: "Cosmic Rage", lore: "Kratos at his peak as God of War, wielding cosmic rage capable of shattering gods and dimensions." } },
+            { id: 72, type: "anime", p: 104, isPeak: true, icon: '<i class="fa-solid fa-fist-raised"></i>', source: "One Punch Man", ar: { name: "سايتاما (النمو الأسي)", ability: "اللكمة المطلقة", lore: "سايتاما في حالة النمو الأسي، حيث تزداد قوته بشكل لا نهائي مع كل معركة." }, en: { name: "SAITAMA (Exponential)", ability: "Absolute Punch", lore: "Saitama in exponential growth state, where his power increases infinitely with every battle." } },
+            { id: 73, type: "anime", p: 104, isPeak: true, icon: '<i class="fa-solid fa-star"></i>', source: "Dragon Ball Super", ar: { name: "غوكو (الغريزة الفائقة)", ability: "إتقان الغريزة", lore: "غوكو أتقن الغريزة الفائقة بالكامل، حالة الكمال القتالي حيث يتحرك الجسم دون تفكير." }, en: { name: "GOKU (Ultra Instinct)", ability: "Instinct Mastery", lore: "Goku fully mastering Ultra Instinct, the state of combat perfection where the body moves without thought." } },
+            { id: 74, type: "movie", p: 101, isPeak: true, icon: '<i class="fa-solid fa-infinity"></i>', source: "Avengers", ar: { name: "ثانوس (القفاز الكامل)", ability: "المحو الكوني", lore: "ثانوس مع قفاز Infinity الكامل، قادر على تغيير الواقع ومحو نصف الكون." }, en: { name: "THANOS (Full Gauntlet)", ability: "Cosmic Erasure", lore: "Thanos with the complete Infinity Gauntlet, capable of altering reality and erasing half the universe." } },
+            { id: 75, type: "anime", p: 100, isPeak: true, icon: '<i class="fa-solid fa-fox"></i>', source: "Naruto Shippuden", ar: { name: "ناروتو (Baryon Mode)", ability: "اندماج الجزيئات", lore: "ناروتو في وضع الباريون، اندماج تشاكرا ناروتو وكوراما الذي يدمر المادة على المستوى الجزيئي." }, en: { name: "NARUTO (Baryon Mode)", ability: "Molecular Fusion", lore: "Naruto in Baryon Mode, fusion of Naruto and Kurama's chakra that destroys matter at molecular level." } },
+            { id: 76, type: "anime", p: 100, isPeak: true, icon: '<i class="fa-solid fa-sun"></i>', source: "One Piece", ar: { name: "لوفي (Gear 5)", ability: "إله الشمس نيكا", lore: "استيقاظ فاكهة الشيطان، يحول لوفي إلى إله الشمس نيكا، مع القدرة على جعل العالم مرناً كالمطاط." }, en: { name: "LUFFY (Gear 5)", ability: "Sun God Nika", lore: "Awakening of the Devil Fruit, transforming Luffy into the Sun God Nika, able to make the world rubber-like." } },
+            { id: 77, type: "anime", p: 97, isPeak: true, icon: '<i class="fa-solid fa-mountain"></i>', source: "Attack on Titan", ar: { name: "إرين ييغر (المؤسس)", ability: "الدمدمة", lore: "إرين بصلة مؤسس التيتاني، يتحكم بكل العمالقة في التاريخ لسحق العالم." }, en: { name: "EREN YEAGER (Founder)", ability: "The Rumbling", lore: "Eren wielding the Founder Titan's power, controlling all titans in history to crush the world." } },
+            { id: 78, type: "anime", p: 100, isPeak: true, icon: '<i class="fa-solid fa-crown"></i>', source: "Dragon Ball Super", ar: { name: "فيجيتا (Ultra Ego)", ability: "الغرور الفائق", lore: "فيجيتا في حالة الغرور الفائق، حيث يتحول كبرياؤه إلى مصدر قوة لا نهائي." }, en: { name: "VEGETA (Ultra Ego)", ability: "Ultimate Pride", lore: "Vegeta in Ultra Ego state, where his pride transforms into an infinite power source." } },
+            { id: 79, type: "game", p: 103, isPeak: true, icon: '<i class="fa-solid fa-skull"></i>', source: "DOOM Eternal", ar: { name: "دوم سلاير (الغضب الأبدي)", ability: "الغضب الأبدي", lore: "دوم سلاير في ذروة غضبه، محارب لا يعرف الرحمة يسحق الشياطين عبر الأبعاد." }, en: { name: "DOOM SLAYER (Eternal)", ability: "Eternal Rage", lore: "Doom Slayer at his angriest, a merciless warrior crushing demons across dimensions." } },
+            { id: 80, type: "comic", p: 105, isPeak: true, icon: '<i class="fa-solid fa-sun"></i>', source: "DC Comics", ar: { name: "سوبرمان (One Million)", ability: "الجوهر الذهبي", lore: "سوبرمان بعد امتصاص طاقة الشمس لمليون سنة، أصبح كائناً كونياً قادراً على خلق النجوم." }, en: { name: "SUPERMAN (One Million)", ability: "Golden Sun", lore: "Superman after absorbing solar energy for a million years, becoming a cosmic entity capable of creating stars." } },
+            { id: 81, type: "comic", p: 100, isPeak: true, icon: '<i class="fa-solid fa-helmet-battle"></i>', source: "DC Comics", ar: { name: "باتمان (Hellbat)", ability: "درع الجحيم", lore: "باتمان مرتدياً درع Hellbat المصنوع في أبوكوليبس، يمنحه قوة خارقة لمحاربة الكيانات الكونية." }, en: { name: "BATMAN (Hellbat)", ability: "Hell Armor", lore: "Batman wearing Hellbat armor forged in Apokolips, granting him superhuman power to fight cosmic entities." } },
+            { id: 82, type: "comic", p:101, isPeak: true, icon: '<i class="fa-solid fa-robot"></i>', source: "Marvel Comics", ar: { name: "آيرون مان (Godkiller)", ability: "مبيد الآلهة", lore: "توني ستارك في درع Godkiller، المصمم خصيصاً لمواجهة الكيانات الإلهية." }, en: { name: "IRON MAN (Godkiller)", ability: "God Slayer", lore: "Tony Stark in Godkiller armor, specifically designed to combat divine entities." } },
+            { id: 83, type: "comic", p: 103, isPeak: true, icon: '<i class="fa-solid fa-bolt"></i>', source: "Marvel Comics", ar: { name: "ثور (ملك الآلهة)", ability: "سيد الصواعق", lore: "ثور في ذروة قوته كملك للآلهة، يتحكم في العواصف والبرق الكوني." }, en: { name: "THOR (All-Father)", ability: "Storm King", lore: "Thor at his peak as All-Father, controlling cosmic storms and lightning." } },
+            { id: 84, type: "comic", p: 102, isPeak: true, icon: '<i class="fa-solid fa-radiation"></i>', source: "Marvel Comics", ar: { name: "هالك (World Breaker)", ability: "الزلازل الكونية", lore: "هالك في ذروة غضبه، قادر على تدمير الكواكب بمجهادات قدميه." }, en: { name: "HULK (World Breaker)", ability: "Cosmic Tremors", lore: "Hulk at his angriest, capable of destroying planets with his footsteps." } },
+            { id: 85, type: "movie", p: 91, isPeak: true, icon: '<i class="fa-solid fa-code"></i>', source: "The Matrix", ar: { name: "نيو (The One)", ability: "سيد المصفوفة", lore: "نيو المختار الذي يستطيع رؤية شفرة المصفوفة والتلاعب بها." }, en: { name: "NEO (The One)", ability: "Matrix Master", lore: "Neo The One who can see and manipulate the Matrix's code." } },
+            { id: 86, type: "anime", p: 93, isPeak: true, icon: '<i class="fa-solid fa-eye"></i>', source: "Jujutsu Kaisen", ar: { name: "غوجو ساتورو", ability: "اللانهاية المطلقة", lore: "غوجو في ذروة قوته، تقنية 'اللانهاية' تمنع أي هجوم من الوصول إليه على الإطلاق." }, en: { name: "GOJO SATORU", ability: "Absolute Limitless", lore: "Gojo at his peak, 'Limitless' technique prevents any attack from ever reaching him." } },
+            { id: 87, type: "game", p: 98, isPeak: true, icon: '<i class="fa-solid fa-skull"></i>', source: "Cyberpunk 2077", ar: { name: "V (أسطورة نايت سيتي)", ability: "الكروم الأسود", lore: "V بعد أن أصبح أسطورة حية في نايت سيتي، مع أفضل التعديلات السيبرانية." }, en: { name: "V (Night City Legend)", ability: "Black Chrome", lore: "V after becoming a living legend in Night City, with the best cybernetic enhancements." } },
+            { id: 88, type: "game", p: 97, isPeak: true, icon: '<i class="fa-solid fa-shield-halved"></i>', source: "HALO Infinite", ar: { name: "ماستر شيف (Spartan 117)", ability: "الدرع المثالي", lore: "ماستر شيف في ذروة كفاءته القتالية، مع أحدث درع سبارتان." }, en: { name: "MASTER CHIEF (Spartan 117)", ability: "Perfect Shield", lore: "Master Chief at peak combat efficiency, with the latest Spartan armor." } },
+            { id: 89, type: "comic", p: 101, isPeak: true, icon: '<i class="fa-solid fa-spider"></i>', source: "Marvel Comics", ar: { name: "سبايدر مان (Cosmic)", ability: "قوة الإنيغما", lore: "سبايدر مان عندما يكتسب قوة الإنيغما الكونية، مما يجعله كائناً شبه إلهي." }, en: { name: "SPIDER-MAN (Cosmic)", ability: "Enigma Force", lore: "Spider-Man imbued with the cosmic Enigma Force, making him a near-deity." } },
+            { id: 90, type: "game", p: 96, isPeak: true, icon: '<i class="fa-solid fa-wolf"></i>', source: "Witcher 3", ar: { name: "جيرالت (سيد الوحوش)", ability: "إتقان التحول", lore: "جيرالت في ذروة مهاراته، يجمع بين السيوف، الكيمياء، والسحر لمواجهة أي تهديد." }, en: { name: "GERALT (Master Witcher)", ability: "Mutation Mastery", lore: "Geralt at his peak skills, combining swords, alchemy, and signs to face any threat." } },
+            { id: 91, type: "series", p: 98, isPeak: true, icon: '<i class="fa-solid fa-flag-usa"></i>', source: "The Boys", ar: { name: "هوملاندر (الهيمنة الكاملة)", ability: "القوة المطلقة", lore: "هوملاندر في ذروة قوته، لا يعترف بأي قانون أو سلطة فوق قوته." }, en: { name: "HOMELANDER (Absolute)", ability: "Absolute Power", lore: "Homelander at his peak power, recognizing no law or authority above his strength." } },
+            { id: 92, type: "anime", p: 93, isPeak: true, icon: '<i class="fa-solid fa-droplet"></i>', source: "Hellsing", ar: { name: "ألوكارد (المستوى 0)", ability: "جيش الدم", lore: "ألوكارد يطلق العنان لجيش كامل من الأرواح المعذبة المحبوسة في دمه." }, en: { name: "ALUCARD (Level 0)", ability: "Blood Army", lore: "Alucard unleashing an entire army of tormented souls imprisoned within his blood." } },
+            { id: 93, type: "comic", p: 96, isPeak: true, icon: '<i class="fa-solid fa-hat-wizard"></i>', source: "Marvel Comics", ar: { name: "دكتور سترينج (الساحر الأعظم)", ability: "السحر المطلق", lore: "دكتور سترينج الساحر الأعظم للأرض، يتقن جميع فنون السحر." }, en: { name: "DR. STRANGE (Supreme)", ability: "Absolute Sorcery", lore: "Dr. Strange as Earth's Sorcerer Supreme, mastering all mystic arts." } },
+            { id: 94, type: "movie", p: 95, isPeak: true, icon: '<i class="fa-solid fa-staff"></i>', source: "Lord of the Rings", ar: { name: "قاندالف الأبيض", ability: "الحكمة القديمة", lore: "قاندالف الأبيض أقوى مايا في الأرض الوسطى، عاد من الموت أكثر قوة." }, en: { name: "GANDALF (White)", ability: "Ancient Wisdom", lore: "Gandalf the White, the most powerful Maia in Middle-earth." } },
+            { id: 95, type: "movie", p: 89, isPeak: true, icon: '<i class="fa-solid fa-scroll"></i>', source: "Harry Potter", ar: { name: "هاري بوتر (سيد الموت)", ability: "المقدسات الثلاثة", lore: "هاري بعد جمع عصا الصلح، حجر القيامة، وعباءة الإخفاء." }, en: { name: "HARRY POTTER (Master)", ability: "Deathly Hallows", lore: "Harry after uniting the Elder Wand, Resurrection Stone, and Invisibility Cloak." } },
+            { id: 96, type: "comic", p: 105, isPeak: true, icon: '<i class="fa-solid fa-ghost"></i>', source: "DC Comics", ar: { name: "سبيكتير", ability: "القضاء الإلهي", lore: "تجسيد غضب الإله في الكون، يمتلك قوة غير محدودة لفرض العدالة." }, en: { name: "THE SPECTRE", ability: "Divine Judgment", lore: "Embodiment of God's wrath in the universe, possessing unlimited power to enforce justice." } },
+            { id: 97, type: "series", p: 104, isPeak: true, icon: '<i class="fa-solid fa-alien"></i>', source: "Ben 10", ar: { name: "بين 10 (Alien X)", ability: "إعادة كتابة الكون", lore: "بين عندما يتحول إلى ألين إكس، الكائن الذي يقرر مصير الكون." }, en: { name: "BEN 10 (Alien X)", ability: "Universe Rewrite", lore: "Ben transforming into Alien X, the being who decides the universe's fate." } },
+            { id: 98, type: "game", p: 92, isPeak: true, icon: '<i class="fa-solid fa-robot"></i>', source: "Cyberpunk 2077", ar: { name: "آدم سماشر (Dragoon)", ability: "البروتوكول النهائي", lore: "آدم سماشر في تحول Dragoon الكامل، آلة قتل لا ترحم." }, en: { name: "ADAM SMASHER (Dragoon)", ability: "Final Protocol", lore: "Adam Smasher in full Dragoon conversion, a merciless killing machine." } },
+            { id: 99, type: "anime", p: 92, isPeak: true, icon: '<i class="fa-solid fa-crow"></i>', source: "Naruto", ar: { name: "إيتاتشي (سوسانو الكامل)", ability: "تسوكيومي المطلق", lore: "إيتاتشي بسوسانو الكامل وتسوكيومي الذي يحبس الخصوم في وهم زمني." }, en: { name: "ITACHI (Full Susanoo)", ability: "Absolute Tsukuyomi", lore: "Itachi with full Susanoo and Tsukuyomi trapping opponents in temporal illusions." } },
+            { id: 100, type: "anime", p: 89, isPeak: true, icon: '<i class="fa-solid fa-swords"></i>', source: "One Piece", ar: { name: "زورو (ملك السيوف)", ability: "أسلوب السيوف الإلهي", lore: "زورو في ذروة مهارته، يتقن أسلوب القتال بثلاث سيوف ببراعة مطلقة." }, en: { name: "ZORO (Sword King)", ability: "Divine 3-Sword", lore: "Zoro at peak skill, mastering three-sword style combat with absolute brilliance." } },
+            { id: 101, type: "game", p: 94, isPeak: true, icon: '<i class="fa-solid fa-gun"></i>', source: "Devil May Cry", ar: { name: "دانتي (Devil Trigger)", ability: "التحول الشيطاني", lore: "دانتي يتحول إلى شيطان كامل لإطلاق العنان لقوته الحقيقية." }, en: { name: "DANTE (Devil Trigger)", ability: "Full Devil", lore: "Dante transforming into a full demon to unleash his true power." } },
+            { id: 102, type: "game", p: 94, isPeak: true, icon: '<i class="fa-solid fa-fire"></i>', source: "Tekken", ar: { name: "كازويا (جين الشيطان الكامل)", ability: "الشيطان المطلق", lore: "كازويا مع جين الشيطان الكامل، قوة شيطانية لا حدود لها." }, en: { name: "KAZUYA (Full Devil)", ability: "Absolute Devil", lore: "Kazuya with full Devil Gene, possessing limitless demonic power." } },
+            { id: 103, type: "anime", p: 93, isPeak: true, icon: '<i class="fa-solid fa-wind"></i>', source: "Attack on Titan", ar: { name: "ليفاي (إعصار الموت)", ability: "سرعة البرق المطلق", lore: "ليفاي في ذروة سرعته، إعصار من النصال يمزق العمالقة في ثوان." }, en: { name: "LEVI (Death Whirlwind)", ability: "Absolute Speed", lore: "Levi at peak speed, a whirlwind of steel shredding titans in seconds." } },
+            { id: 104, type: "series", p: 93, isPeak: true, icon: '<i class="fa-solid fa-moon"></i>', source: "Marvel", ar: { name: "مون نايت (فاتح خونشو)", ability: "قوة القمر الكاملة", lore: "مون نايت كفاتح كامل لخونشو، قوى تزداد تحت ضوء القمر." }, en: { name: "MOON KNIGHT (Fist of Khonshu)", ability: "Full Moon Power", lore: "Moon Knight as full Fist of Khonshu, powers increasing under moonlight." } },
+            { id: 105, type: "movie", p: 92, isPeak: true, icon: '<i class="fa-solid fa-cat"></i>', source: "Marvel Cinematic", ar: { name: "بلاك بانثر (الفايبرانيوم الحي)", ability: "تقنية القلب الحي", lore: "بلاك بانثر مع تقنية الفايبرانيوم الحي الكاملة." }, en: { name: "BLACK PANTHER (Living Vibranium)", ability: "Living Heart", lore: "Black Panther with full living vibranium technology." } },
+            { id: 106, type: "series", p: 91, isPeak: true, icon: '<i class="fa-solid fa-brain"></i>', source: "Stranger Things", ar: { name: "إليفن (القدرات الكاملة)", ability: "التحريك الذهني المطلق", lore: "إليفن في ذروة قدراتها النفسية، تستطيع فتح بوابات للعالم المقلوب." }, en: { name: "ELEVEN (Full Power)", ability: "Absolute Telekinesis", lore: "Eleven at peak psychic powers, able to open gates to the Upside Down." } },
+            { id: 107, type: "game", p: 95, isPeak: true, icon: '<i class="fa-solid fa-skull"></i>', source: "Mortal Kombat", ar: { name: "سكوربيون (نيران الجحيم)", ability: "سلاسل العالم السفلي", lore: "سكوربيون يستدعي سلاسل من العالم السفلي ويسافر بين الأبعاد." }, en: { name: "SCORPION (Hellfire)", ability: "Underworld Chains", lore: "Scorpion summoning chains from the underworld and traveling between dimensions." } },
+            { id: 108, type: "game", p: 86, isPeak: true, icon: '<i class="fa-solid fa-dagger"></i>', source: "Assassin's Creed", ar: { name: "إيزيو (سيد القتلة الأعظم)", ability: "النصل الخفي المطلق", lore: "إيزيو في ذروة مهاراته كسيد قتلة." }, en: { name: "EZIO (Grand Master)", ability: "Absolute Hidden Blade", lore: "Ezio at peak skills as Grand Master Assassin." } },
+            { id: 109, type: "game", p: 88, isPeak: true, icon: '<i class="fa-solid fa-ghost"></i>', source: "Ghost of Tsushima", ar: { name: "جين ساكاي (الشبح المطلق)", ability: "رعب الشبح الكامل", lore: "جين ساكاي كشبح مطلق، يستخدم تكتيكات الخوف والحرب النفسية." }, en: { name: "JIN SAKAI (The Ghost)", ability: "Absolute Ghost", lore: "Jin Sakai as The Ghost, using fear tactics and psychological warfare." } },
+            { id: 110, type: "game", p: 88, isPeak: true, icon: '<i class="fa-solid fa-virus-slash"></i>', source: "Resident Evil", ar: { name: "ألبيرت ويسكر (الكمال التطوري)", ability: "السرعة المتطورة المطلق", lore: "ويسكر بعد تحقيق الكمال عبر فيروس T، سرعة خارقة." }, en: { name: "ALBERT WESKER (Perfected)", ability: "Absolute Evolution", lore: "Wesker after achieving perfection through T-Virus, superhuman speed." } },
+            { id: 111, type: "game", p: 89, isPeak: true, icon: '<i class="fa-solid fa-magic"></i>', source: "Bayonetta", ar: { name: "بايونيتا (ساحرة الأومبرا)", ability: "سحر الوقت المطلق", lore: "بايونيتا في ذروة قوتها السحرية، تستدعي شياطين الجحيم." }, en: { name: "BAYONETTA (Umbra Witch)", ability: "Absolute Witch Time", lore: "Bayonetta at peak magical power, summoning demons from Hell." } },
+            { id: 112, type: "series", p: 85, isPeak: true, icon: '<i class="fa-solid fa-clock"></i>', source: "Doctor Who", ar: { name: "دكتور هو (سيد الزمن)", ability: "التلاعب الزمني المطلق", lore: "دكتور هو سيد الزمن الكامل، يهزم الجيوش بعقله." }, en: { name: "DOCTOR WHO (Time Lord)", ability: "Absolute Time Manipulation", lore: "Doctor Who full Time Lord, defeating armies through intellect." } },
+            { id: 113, type: "anime", p: 91, isPeak: true, icon: '<i class="fa-solid fa-eye-slash"></i>', source: "Naruto", ar: { name: "كاكاشي (الشارينغان المزدوج)", ability: "نسخ التقنيات المطلق", lore: "كاكاشي بشارينغان مزدوج، يتقن ألف تقنية." }, en: { name: "KAKASHI (Dual Sharingan)", ability: "Absolute Copy", lore: "Kakashi with dual Sharingan, mastering a thousand techniques." } },
+            { id: 114, type: "anime", p: 90, isPeak: true, icon: '<i class="fa-solid fa-hand-sparkles"></i>', source: "FMA", ar: { name: "إدوارد إلريك (الحجر الفلسفي)", ability: "الخيمياء المطلقة", lore: "إدوارد إلريك مع الحجر الفلسفي، خيمياء لا حدود لها." }, en: { name: "EDWARD ELRIC (Philosopher's Stone)", ability: "Absolute Alchemy", lore: "Edward Elric with Philosopher's Stone, alchemy without limits." } },
+            { id: 115, type: "game", p: 87, isPeak: true, icon: '<i class="fa-solid fa-fan"></i>', source: "Mortal Kombat", ar: { name: "كيتانا (أميرة إيدينيا)", ability: "مراوح الموت المطلقة", lore: "كيتانا في ذروة قوتها، تدمج بين الجمال والفتك." }, en: { name: "KITANA (Edenian Princess)", ability: "Absolute Steel Fans", lore: "Kitana at peak power, combining beauty and lethality." } },
+            { id: 116, type: "anime", p: 86, isPeak: true, icon: '<i class="fa-solid fa-fire"></i>', source: "Demon Slayer", ar: { name: "تانيجيرو (أنفاس الشمس الكاملة)", ability: "الشمس المطلقة", lore: "تانيجيرو يتقن أنفاس الشمس الكاملة، نصل من نور." }, en: { name: "TANJIRO (Complete Sun Breathing)", ability: "Absolute Sun", lore: "Tanjiro mastering complete Sun Breathing, a blade of pure light." } },
+            { id: 117, type: "game", p: 86, isPeak: true, icon: '<i class="fa-solid fa-user-secret"></i>', source: "Metal Gear", ar: { name: "سوليد سنيك (التسلل المطلق)", ability: "التسلل الكامل", lore: "سوليد سنيك خبير الحرب الصامتة، يتسلل دون أن يترك أثراً." }, en: { name: "SOLID SNAKE (Absolute Stealth)", ability: "Complete Infiltration", lore: "Solid Snake expert in silent warfare, infiltrating without leaving a trace." } },
+            { id: 118, type: "series", p: 85, isPeak: true, icon: '<i class="fa-solid fa-user-ninja"></i>', source: "GoT", ar: { name: "أريا ستارك (وجه لا أحد المطلق)", ability: "الوجه المطلق", lore: "أريا ستارك تتقن فن وجه لا أحد بالكامل." }, en: { name: "ARYA STARK (Faceless One)", ability: "Absolute Face", lore: "Arya Stark fully mastering the art of being Faceless." } },
+            { id: 119, type: "game", p: 87, isPeak: true, icon: '<i class="fa-solid fa-shadows"></i>', source: "Dishonored", ar: { name: "كورفو أتانو (سيد الظلال)", ability: "السحر المظلم المطلق", lore: "كورفو أتانو في ذروة قدراته، يتلاعب بالزمن والظلال." }, en: { name: "CORVO ATTANO (Shadow Master)", ability: "Absolute Dark Magic", lore: "Corvo Attano at peak abilities, manipulating time and shadows." } },
+            { id: 120, type: "movie", p: 92, isPeak: true, icon: '<i class="fa-solid fa-jedi"></i>', source: "Star Wars", ar: { name: "دارث فيدر (سيد السيث)", ability: "الجانب المظلم المطلق", lore: "دارث فيدر في ذروة قوته كسيد للسيث." }, en: { name: "DARTH VADER (Sith Lord)", ability: "Absolute Dark Side", lore: "Darth Vader at peak power as Sith Lord." } }
         ];
 
         let selected = [];
 
-        // دالة تبديل اللغة
         function toggleLanguage() {
             currentLang = (currentLang === 'ar' ? 'en' : 'ar');
             const body = document.getElementById('main-body');
@@ -310,6 +451,7 @@
             document.getElementById('f-series').innerText = "Series";
             document.getElementById('f-movie').innerText = "Movies";
             document.getElementById('f-anime').innerText = "Anime";
+            document.getElementById('f-peak').innerText = "LEGENDS 🔥";
             document.getElementById('txt-analyze').innerText = "ANALYZE POWER ⚔️";
             document.getElementById('txt-luck').innerText = "LUCK CHALLENGE 🎲";
             document.getElementById('txt-close-lore').innerText = "CLOSE MANUSCRIPT";
@@ -330,6 +472,7 @@
             document.getElementById('f-series').innerText = "مسلسلات";
             document.getElementById('f-movie').innerText = "أفلام";
             document.getElementById('f-anime').innerText = "أنمي";
+            document.getElementById('f-peak').innerText = "الأساطير 🔥";
             document.getElementById('txt-analyze').innerText = "تحليل القوة ⚔️";
             document.getElementById('txt-luck').innerText = "تحدي الحظ 🎲";
             document.getElementById('txt-close-lore').innerText = "إغلاق المخطوطة";
@@ -352,11 +495,30 @@
         function renderGrid(filter) {
             const grid = document.getElementById('hero-grid');
             grid.innerHTML = '';
-            let filtered = filter === 'all' ? [...heroes] : heroes.filter(h => h.type === filter);
+            
+            let filtered;
+            if (filter === 'peak') {
+                filtered = heroes.filter(h => h.isPeak === true);
+            } else if (filter === 'all') {
+                filtered = [...heroes];
+            } else {
+                filtered = heroes.filter(h => h.type === filter);
+            }
+            
             filtered.forEach(h => {
                 const card = document.createElement('div');
-                card.className = `card ${selected.find(s => s.id === h.id) ? 'selected' : ''}`;
-                card.innerHTML = `<span class="type-badge">${h.type.toUpperCase()}</span><div class="hero-icon-container">${h.icon}</div><div style="font-weight:900;">${h[currentLang].name}</div><div style="font-size:0.6rem; color:var(--gold);">${h.source}</div>`;
+                card.className = `card ${selected.find(s => s.id === h.id) ? 'selected' : ''} ${h.isPeak ? 'peak' : ''}`;
+                
+                const peakBadge = h.isPeak ? '<div class="peak-label">PEAK</div>' : '';
+                
+                // إزالة عرض نقاط القوة من البطاقة
+                card.innerHTML = `
+                    <span class="type-badge">${h.type.toUpperCase()}</span>
+                    <div class="hero-icon-container">${h.icon}</div>
+                    <div style="font-weight:900; margin-bottom:5px;">${h[currentLang].name}</div>
+                    <div style="font-size:0.6rem; color:${h.isPeak ? 'var(--peak-red)' : 'var(--gold)'};">${h.source}</div>
+                    ${peakBadge}
+                `;
                 card.onclick = () => selectHero(card, h);
                 grid.appendChild(card);
             });
@@ -369,8 +531,13 @@
             document.getElementById('manuscript-viewer').style.display = 'none';
             heroes.forEach(h => {
                 const card = document.createElement('div');
-                card.className = 'card';
-                card.innerHTML = `<div class="hero-icon-container" style="color:var(--gold)">${h.icon}</div><div style="font-weight:900;">${h[currentLang].name}</div><small style="color:#555">${currentLang === 'ar' ? 'اقرأ المخطوطة' : 'Read Lore'}</small>`;
+                card.className = `card ${h.isPeak ? 'peak' : ''}`;
+                card.innerHTML = `
+                    <div class="hero-icon-container" style="color:${h.isPeak ? 'var(--peak-red)' : 'var(--gold)'}">${h.icon}</div>
+                    <div style="font-weight:900;">${h[currentLang].name}</div>
+                    <small style="color:#555">${currentLang === 'ar' ? 'اقرأ المخطوطة' : 'Read Lore'}</small>
+                    ${h.isPeak ? '<div class="peak-label" style="bottom:20px; right:5px;">PEAK</div>' : ''}
+                `;
                 card.onclick = () => openLore(h);
                 list.appendChild(card);
             });
@@ -379,7 +546,7 @@
         function openLore(hero) {
             document.getElementById('manuscript-list').style.display = 'none';
             document.getElementById('manuscript-viewer').style.display = 'block';
-            document.getElementById('m-name').innerText = hero[currentLang].name;
+            document.getElementById('m-name').innerText = hero[currentLang].name + (hero.isPeak ? " (PEAK FORM)" : "");
             const text = hero[currentLang].lore;
             document.getElementById('m-text').innerHTML = `<span class="drop-cap">${text.charAt(0)}</span>${text.substring(1)}`;
         }
@@ -405,34 +572,165 @@
             const winner = h1.p >= h2.p ? h1 : h2;
             const loser = winner === h1 ? h2 : h1;
             const diff = Math.abs(h1.p - h2.p);
+            
+            // تحديد شدة المعركة
+            let intensity, intensityClass, intensityText;
+            let showCountdown = false;
+            let delayTime = 0;
+            
+            if (diff <= 3) {
+                intensity = "extreme";
+                intensityClass = "extreme-battle";
+                intensityText = currentLang === 'ar' ? "🔥 معركة ملحمية!" : "🔥 EPIC BATTLE!";
+                showCountdown = true;
+                delayTime = 3000;
+            } else if (diff <= 10) {
+                intensity = "hard";
+                intensityClass = "hard-battle";
+                intensityText = currentLang === 'ar' ? "⚡ معركة صعبة!" : "⚡ HARD BATTLE!";
+                showCountdown = true;
+                delayTime = 2000;
+            } else if (diff <= 20) {
+                intensity = "medium";
+                intensityClass = "medium-battle";
+                intensityText = currentLang === 'ar' ? "⚔️ معركة متوسطة" : "⚔️ MEDIUM BATTLE";
+                showCountdown = false;
+                delayTime = 1000;
+            } else {
+                intensity = "easy";
+                intensityClass = "easy-battle";
+                intensityText = currentLang === 'ar' ? "🎯 معركة سهلة" : "🎯 EASY BATTLE";
+                showCountdown = false;
+                delayTime = 500;
+            }
+            
+            // إعداد عناصر العرض
             document.getElementById('h1-name').innerText = h1[currentLang].name;
             document.getElementById('h2-name').innerText = h2[currentLang].name;
-            document.getElementById('h1-p').innerText = h1.p;
-            document.getElementById('h2-p').innerText = h2.p;
+            
+            document.getElementById('h1-p').innerText = "?";
+            document.getElementById('h2-p').innerText = "?";
+            
             document.getElementById('h1-ability').innerText = h1[currentLang].ability;
             document.getElementById('h2-ability').innerText = h2[currentLang].ability;
+            
             document.getElementById('win-overlay').style.display = 'flex';
-            document.getElementById('winner-name').innerText = winner[currentLang].name + (currentLang === 'ar' ? " ينتصر" : " WINS");
-            document.getElementById('simulation-result').style.display = 'flex';
+            document.getElementById('winner-name').innerText = currentLang === 'ar' ? "جاري التحليل..." : "ANALYZING...";
+            document.getElementById('simulation-result').style.display = 'none';
             document.getElementById('luck-result').style.display = 'none';
             
-            let story = currentLang === 'ar' 
-                ? (diff <= 5 ? `[GAME ZONE]: معركة شرسة. ${winner[currentLang].name} انتزع الفوز بفضل ${winner[currentLang].ability}.` : `[GAME ZONE]: هيمنة تامة. ${winner[currentLang].ability} سحقت دفاعات الخصم.`)
-                : (diff <= 5 ? `[GAME ZONE]: Fierce battle! ${winner[currentLang].name} won using ${winner[currentLang].ability}.` : `[GAME ZONE]: Absolute dominance. ${winner[currentLang].ability} crushed the opponent.`);
+            // إضافة مؤشر شدة المعركة
+            const intensityElement = document.createElement('div');
+            intensityElement.className = `intensity-label ${intensityClass}`;
+            intensityElement.innerText = intensityText;
+            intensityElement.style.position = 'absolute';
+            intensityElement.style.top = '20px';
+            intensityElement.style.left = '50%';
+            intensityElement.style.transform = 'translateX(-50%)';
+            document.getElementById('win-overlay').appendChild(intensityElement);
             
-            document.getElementById('battle-story').innerText = story;
-            setTimeout(() => { document.getElementById('winner-hp').style.width = "85%"; }, 200);
+            // دالة عرض النتائج النهائية
+            function showFinalResults() {
+                // إزالة مؤشر الشدة
+                if (intensityElement.parentNode) {
+                    intensityElement.parentNode.removeChild(intensityElement);
+                }
+                
+                document.getElementById('winner-name').innerText = winner[currentLang].name + (currentLang === 'ar' ? " ينتصر" : " WINS");
+                document.getElementById('simulation-result').style.display = 'flex';
+                
+                // إظهار النقاط مع تأثير
+                const h1Score = document.getElementById('h1-p');
+                const h2Score = document.getElementById('h2-p');
+                
+                h1Score.innerText = h1.p;
+                h2Score.innerText = h2.p;
+                
+                h1Score.classList.add('animate-score');
+                h2Score.classList.add('animate-score');
+                
+                setTimeout(() => {
+                    h1Score.classList.remove('animate-score');
+                    h2Score.classList.remove('animate-score');
+                }, 600);
+                
+                // إظهار قصة المعركة بناءً على الشدة
+                let story;
+                if (intensity === "extreme") {
+                    story = currentLang === 'ar' 
+                        ? `[GAME ZONE]: معركة تاريخية! ${winner[currentLang].name} انتصر بفارق ${diff} نقطة فقط! ${winner[currentLang].ability} صنع الفارق في اللحظات الأخيرة.`
+                        : `[GAME ZONE]: HISTORIC BATTLE! ${winner[currentLang].name} won by only ${diff} points! ${winner[currentLang].ability} made the difference at the last moment.`;
+                } else if (intensity === "hard") {
+                    story = currentLang === 'ar' 
+                        ? `[GAME ZONE]: قتال شرس! ${winner[currentLang].name} انتصر بفارق ${diff} نقاط. ${winner[currentLang].ability} كان الحاسم في هذا النزال.`
+                        : `[GAME ZONE]: FIERCE COMBAT! ${winner[currentLang].name} won by ${diff} points. ${winner[currentLang].ability} was decisive in this duel.`;
+                } else if (intensity === "medium") {
+                    story = currentLang === 'ar' 
+                        ? `[GAME ZONE]: نزال متوازن! ${winner[currentLang].name} تفوق بـ ${diff} نقطة بفضل ${winner[currentLang].ability}.`
+                        : `[GAME ZONE]: BALANCED DUEL! ${winner[currentLang].name} outperformed by ${diff} points thanks to ${winner[currentLang].ability}.`;
+                } else {
+                    story = currentLang === 'ar' 
+                        ? `[GAME ZONE]: سيطرة كاملة! ${winner[currentLang].name} هيمن بفارق ${diff} نقطة. ${winner[currentLang].ability} كان ساحقاً.`
+                        : `[GAME ZONE]: TOTAL DOMINANCE! ${winner[currentLang].name} dominated by ${diff} points. ${winner[currentLang].ability} was overwhelming.`;
+                }
+                
+                document.getElementById('battle-story').innerText = story;
+                
+                // تحريك شريط الحياة
+                let winPercentage;
+                if (intensity === "extreme") winPercentage = 51 + (diff * 0.5);
+                else if (intensity === "hard") winPercentage = 60 + (diff * 0.4);
+                else if (intensity === "medium") winPercentage = 70 + (diff * 0.3);
+                else winPercentage = 85 + (diff * 0.2);
+                
+                winPercentage = Math.min(winPercentage, 100);
+                
+                setTimeout(() => { 
+                    document.getElementById('winner-hp').style.width = winPercentage + "%"; 
+                }, 200);
+            }
+            
+            // عرض العد التنازلي للمعارك الصعبة
+            if (showCountdown) {
+                const countdownElement = document.getElementById('countdown-overlay');
+                countdownElement.style.display = 'block';
+                
+                let count = 3;
+                countdownElement.innerText = count;
+                
+                const countdownInterval = setInterval(() => {
+                    count--;
+                    if (count > 0) {
+                        countdownElement.innerText = count;
+                    } else {
+                        clearInterval(countdownInterval);
+                        countdownElement.style.display = 'none';
+                        showFinalResults();
+                    }
+                }, 1000);
+            } else {
+                // للمعارك السهلة والمتوسطة، عرض النتائج مباشرة مع تأخير بسيط
+                if (intensity === "easy") {
+                    document.getElementById('winner-name').innerText = currentLang === 'ar' ? "نتيجة سريعة..." : "QUICK RESULT...";
+                } else {
+                    document.getElementById('winner-name').innerText = currentLang === 'ar' ? "جاري التحليل..." : "ANALYZING...";
+                }
+                
+                setTimeout(() => {
+                    showFinalResults();
+                }, delayTime);
+            }
         }
 
         function startLuckBattle() {
             document.getElementById('win-overlay').style.display = 'flex';
-            document.getElementById('winner-name').innerText = "BATTLE OF LUCK";
+            document.getElementById('winner-name').innerText = currentLang === 'ar' ? "معركة الحظ" : "BATTLE OF LUCK";
             document.getElementById('simulation-result').style.display = 'none';
             document.getElementById('luck-result').style.display = 'block';
         }
 
         function playRPS(userChoice) {
-            const options = ['حجرة', 'ورقة', 'مقص'];
+            const options = currentLang === 'ar' ? ['حجرة', 'ورقة', 'مقص'] : ['Rock', 'Paper', 'Scissors'];
             const botChoice = options[Math.floor(Math.random() * 3)];
             let res = userChoice === botChoice 
                 ? (currentLang === 'ar' ? "تعادل!" : "Draw!") 
@@ -450,4 +748,3 @@
     </script>
 </body>
 </html>
-
