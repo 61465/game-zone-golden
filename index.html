@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GAME ZONE: GOLDEN ARENA 120</title>
+    <title>GAME ZONE: GOLDEN ARENA 200</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Orbitron:wght@400;900&family=Cairo:wght@400;700&display=swap');
@@ -38,6 +38,115 @@
         }
         
         @keyframes blink-red { 0%, 100% { opacity: 1; box-shadow: 0 0 10px #ff0000; } 50% { opacity: 0.3; box-shadow: 0 0 2px #ff0000; } }
+
+        /* زر المساعدة الذهبي */
+        /* زر المساعدة الذهبي - على اليسار */
+.golden-helper {
+    position: fixed;
+    top: 90px; /* مسافة من الأعلى (تحت زر EN) */
+    left: 20px; /* على اليسار */
+    right: auto;
+    transform: none;
+    background: linear-gradient(135deg, #b8860b 0%, #ffd700 50%, #b8860b 100%);
+    background-size: 200% 200%;
+    color: #000;
+    text-decoration: none;
+    padding: 12px 30px;
+    border-radius: 50px;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: bold;
+    font-size: 1rem;
+    letter-spacing: 1px;
+    z-index: 4000;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.7), 0 0 40px rgba(255, 215, 0, 0.4), 0 0 60px rgba(255, 215, 0, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(2px);
+    opacity: 0;
+    transform: scale(0.8);
+    animation: golden-appear 0.5s ease forwards, golden-pulse 2s infinite 0.5s, golden-shine 3s infinite linear 0.5s;
+}
+
+.golden-helper:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.9), 0 0 60px rgba(255, 215, 0, 0.6), 0 0 90px rgba(255, 215, 0, 0.3);
+    background: linear-gradient(135deg, #daa520 0%, #fff7b0 50%, #daa520 100%);
+    background-size: 200% 200%;
+}
+
+.golden-helper .helper-text {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 5px 15px;
+    border-radius: 30px;
+    border-right: 2px solid rgba(255, 255, 255, 0.8);
+}
+
+.golden-helper .helper-icon {
+    font-size: 1.3rem;
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.8));
+    animation: icon-spin 3s infinite;
+}
+
+@keyframes golden-pulse {
+    0%, 100% {
+        opacity: 1;
+        box-shadow: 0 0 20px rgba(255, 215, 0, 0.7), 0 0 40px rgba(255, 215, 0, 0.4), 0 0 60px rgba(255, 215, 0, 0.2);
+    }
+    50% {
+        opacity: 0.9;
+        box-shadow: 0 0 30px rgba(255, 215, 0, 0.9), 0 0 60px rgba(255, 215, 0, 0.6), 0 0 90px rgba(255, 215, 0, 0.3);
+        transform: scale(1.02);
+    }
+}
+
+@keyframes golden-shine {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes icon-spin {
+    0%, 100% { transform: rotate(0deg) scale(1); }
+    25% { transform: rotate(15deg) scale(1.2); }
+    75% { transform: rotate(-15deg) scale(1.2); }
+}
+
+@keyframes golden-appear {
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@media (max-width: 768px) {
+    .golden-helper {
+        padding: 8px 20px;
+        font-size: 0.8rem;
+        top: 80px;
+        left: 10px;
+    }
+}
+
+body:has(.golden-helper:hover)::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 50% 10%, rgba(255, 215, 0, 0.1), transparent 70%);
+    pointer-events: none;
+    z-index: 3999;
+    animation: golden-aura 2s infinite;
+}
+
+@keyframes golden-aura {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 0.8; }
+}
 
         nav { 
             background: rgba(0,0,0,0.95); padding: 15px; text-align: center; 
@@ -211,6 +320,12 @@
     <!-- عنصر العد التنازلي -->
     <div id="countdown-overlay" class="countdown">3</div>
     
+    <!-- زر المساعدة الذهبي -->
+    <a href="https://61465.github.io/game-zone-CONFIGURATOR/" target="_blank" class="golden-helper">
+        <span class="helper-text">لنساعدك على الاختيار</span>
+        <span class="helper-icon">⚡</span>
+    </a>
+    
     <a href="https://61465.github.io/game-zone-archive/" class="archive-exit-btn" target="_blank">
         <div class="led-light"></div>
         ARCHIVE
@@ -218,7 +333,7 @@
 
     <nav>
         <span class="project-title" id="txt-project">GAME ZONE PRESENTS</span>
-        <h1 class="main-logo">GOLDEN ARENA 120</h1>
+        <h1 class="main-logo">GOLDEN ARENA 200</h1>
         <div class="nav-tabs">
             <button class="tab-btn active" id="btn-arena" onclick="showTab('arena')">ميدان القتال</button>
             <button class="tab-btn" id="btn-lore" onclick="showTab('lore')">المخطوطات الملكية</button>
@@ -290,7 +405,7 @@
     <script>
         let currentLang = 'ar';
         const heroes = [
-            // === الشخصيات الأساسية (1-70) ===
+            // الشخصيات الأساسية 1-120 (موجودة مسبقاً)
             { id: 1, type: "game", p: 96, icon: '<i class="fa-solid fa-fire"></i>', source: "God of War", ar: { name: "كراتوس", ability: "إبادة الآلهة", lore: "مِن غياهبِ سبارتا، نهضَ محاربٌ حطمَ قيودَ القدر؛ لم يكن مجردَ منتقمٍ فحسب، بل صارَ أباً يحملُ ندوبَ الماضي ليحميَ المستقبل، بسيفٍ لا يهدأ." }, en: { name: "KRATOS", ability: "God Slayer", lore: "From the shadows of Sparta, a warrior rose to shatter the chains of fate. No longer a mere vessel of vengeance, he is a father bearing the scars of the past to safeguard the future." } },
             { id: 2, type: "game", p: 95, icon: '<i class="fa-solid fa-biohazard"></i>', source: "DOOM", ar: { name: "دوم سلاير", ability: "الإبادة المطلقة", lore: "الكيانُ الذي تخشاهُ الجحيمُ وتصلي لئلا تلمحَه. هو الإرادةُ التي لا تُقهر، يسيرُ وسط النيران ليطهرَ العوالمَ مِن دنسِ الشرِّ بيقينٍ حديديّ." }, en: { name: "DOOM SLAYER", ability: "Unstoppable Will", lore: "The entity Hell fears and prays never to encounter. He is the indomitable will, traversing through infernos to purge the realms of evil with an iron resolve." } },
             { id: 3, type: "movie", p: 94, icon: '<i class="fa-solid fa-gem"></i>', source: "Avengers", ar: { name: "ثانوس", ability: "التوازن الكوني", lore: "التايتن المجنونُ الذي رأى في الفناءِ نجاةً. بفرقعةِ إصبعٍ، يستطيعُ إعادةَ تشكيلِ الوجودِ وفقَ رؤيتِه القاسيةِ للعدالةِ الكونية." }, en: { name: "THANOS", ability: "Cosmic Equilibrium", lore: "The Mad Titan who perceived salvation in annihilation. With a snap of his fingers, he reshapes existence according to his ruthless vision of universal justice." } },
@@ -312,12 +427,10 @@
             { id: 19, type: "anime", p: 90, icon: '<i class="fa-solid fa-hand-back-fist"></i>', source: "One Punch Man", ar: { name: "سايتاما", ability: "اللكمة القاضية", lore: "البطلُ الذي يعاني مللَ القوةِ المطلقةِ. ينهي أعظمَ التهديداتِ بضربةٍ واحدةٍ، باحثاً عن خصمٍ يوقظُ في قلبِه حرارةَ النزالِ من جديدٍ." }, en: { name: "SAITAMA", ability: "One Punch", lore: "The hero suffering from the boredom of absolute power. He eradicates the greatest threats with a single blow, searching for an opponent to reignite the fire of battle." } },
             { id: 20, type: "game", p: 88, icon: '<i class="fa-solid fa-clover"></i>', source: "Elden Ring", ar: { name: "مالينيا", ability: "التعفن الأحمر", lore: "نصلُ ميكيلا التي لم تعرفْ الهزيمةَ قط. بجمالٍ قاتلٍ وسرعةٍ خاطفةٍ، تنشرُ نصلَها الذهبيَّ وتعفنَها في الأرضِ، واهبةً أعداءَها موتاً حتمياً." }, en: { name: "MALENIA", ability: "Scarlet Rot", lore: "The Blade of Miquella, who has never known defeat. With lethal grace and blinding speed, she unleashes her golden blade and rot upon the land, granting enemies an inevitable end." } },
             { id: 21, type: "anime", p: 89, icon: '<i class="fa-solid fa-hurricane"></i>', source: "Dragon Ball", ar: { name: "غوكو", ability: "الغريزة الفائقة", lore: "محاربُ السايان الذي يتخطى حدودَه مع كلِّ صرخةٍ. بروحٍ نقيةٍ وسعيٍ دائمٍ، وصلَ لمرتبةِ الآلهةِ، محولاً جسدَه إلى سلاحٍ كونيٍّ لا يُهزم." }, en: { name: "GOKU", ability: "Ultra Instinct", lore: "The Saiyan warrior who transcends his limits with every roar. With a pure spirit and endless pursuit, he attained the status of gods, turning his body into an invincible cosmic weapon." } },
-            { id: 22, type: "anime", p: 83, icon: '<i class="fa-solid fa-wind"></i>', source: "Attack on Titan", ar: { name: "ليفاي", ability: "الإعصار الأسود", lore: "أقوى جنديٍّ في تاريخِ البشريةِ. إعصارٌ من النصالِ يمزقُ العمالقةَ في ثوانٍ، مخلصاً لرفاقِه الذين سقطوا، وحاملاً أملَ الإنسانيةِ فوقَ جناحيهِ." }, en: { name: "LEVI ACKERMAN", ability: "Steel Whirlwind", lore: "Humanity's strongest soldier. A whirlwind of steel that shreds titans in seconds, remaining loyal to fallen comrades and carrying the hope of humanity on his wings." } },
+            { id: 22, type: "anime", p: 83, icon: '<i class="fa-solid fa-wind"></i>', source: "Attack on Titan", ar: { name: "ليفاي", ability: "الإعصار الأسود", lore: "أقوى جنديٍّ في تاريخِ البشريةِ. إعصارٌ من النصال يمزقُ العمالقةَ في ثوانٍ، مخلصاً لرفاقِه الذين سقطوا، وحاملاً أملَ الإنسانيةِ فوقَ جناحيهِ." }, en: { name: "LEVI ACKERMAN", ability: "Steel Whirlwind", lore: "Humanity's strongest soldier. A whirlwind of steel that shreds titans in seconds, remaining loyal to fallen comrades and carrying the hope of humanity on his wings." } },
             { id: 23, type: "series", p: 82, icon: '<i class="fa-solid fa-dragon"></i>', source: "House of Dragon", ar: { name: "ديمون تارغارين", ability: "نصل التنين", lore: "الأميرُ المارقُ الذي يمتطي نيرانَ التنانينِ. بمزاجٍ متقلبٍ وشجاعةٍ انتحاريةٍ، يفرضُ سطوتَه بسيفه 'الأخت المظلمة' كرمزٍ لسيادةِ الدمِ والنارِ." }, en: { name: "DAEMON TARGARYEN", ability: "Dragon's Blood", lore: "The Rogue Prince who rides the fires of dragons. With a volatile temper and suicidal bravery, he asserts dominance with his blade, 'Dark Sister', as a symbol of blood and fire." } },
             { id: 24, type: "series", p: 77, icon: '<i class="fa-solid fa-magnifying-glass"></i>', source: "Sherlock", ar: { name: "شيرلوك", ability: "العقل التحليلي", lore: "العقلُ الذي يرى ما وراءَ الحجبِ. ليس محارباً بالجسدِ، بل هو قناصُ حقائقَ يفككُ أعقدَ الجرائمِ بلمحةٍ، محولاً مسرحَ الجريمةِ إلى خريطةٍ جليةٍ." }, en: { name: "SHERLOCK HOLMES", ability: "Deductive Mastery", lore: "The mind that perceives what lies beyond the veil. Not a warrior of flesh, but a hunter of truths who dismantles the complex crimes in a glance, turning a crime scene into a clear map." } },
             { id: 25, type: "series", p: 79, icon: '<i class="fa-solid fa-user-tie"></i>', source: "Peaky Blinders", ar: { name: "تومي شيلبي", ability: "الدهاء العظيم", lore: "سيدُ برمنغهام الذي لا ينامُ. بخطواتٍ محسوبةٍ ونظرةٍ ثاقبةٍ، يطوعُ السياسةَ والقوةَ، ليكسرَ إرادةَ خصومِه قبلَ أن تبدأَ الحربُ الفعليةُ." }, en: { name: "TOMMY SHELBY", ability: "Mastermind Cunning", lore: "The sleepless lord of Birmingham. With calculated steps and a piercing gaze, he bends politics and power, breaking his enemies' will before the physical war even begins." } },
-            
-            // شخصيات 26-50
             { id: 26, type: "anime", p: 86, icon: '<i class="fa-solid fa-wind"></i>', source: "Naruto", ar: { name: "ناروتو أوزوماكي", ability: "طور الكيوبي", lore: "اليتيم الذي أصبح الهوكاجي ووحّد عالم الشينوبي بإرادة النار." }, en: { name: "NARUTO", ability: "Nine-Tails Mode", lore: "The orphan who became Hokage and unified the Shinobi world." } },
             { id: 27, type: "anime", p: 85, icon: '<i class="fa-solid fa-anchor"></i>', source: "One Piece", ar: { name: "لوفي", ability: "المحرك الخامس", lore: "ملك القراصنة المستقبلي الذي يقاتل من أجل الحرية المطلقة." }, en: { name: "LUFFY", ability: "Gear 5", lore: "The future Pirate King fighting for ultimate freedom." } },
             { id: 28, type: "anime", p: 84, icon: '<i class="fa-solid fa-skull"></i>', source: "AOT", ar: { name: "إيرين ييغر", ability: "العملاق المهاجم", lore: "الباحث عن الحرية الذي قرر دك العالم لينهي معاناة شعبه." }, en: { name: "EREN YEAGER", ability: "Attack Titan", lore: "The seeker of freedom who decided to rumble the world to end his people's suffering." } },
@@ -343,8 +456,6 @@
             { id: 48, type: "anime", p: 84, icon: '<i class="fa-solid fa-eye-slash"></i>', source: "Naruto", ar: { name: "كاكاشي هاتاكي", ability: "شارينغان النسخ", lore: "نينجا النسخ الذي يتقن ألف تقنية ويقود الجيل الجديد بحكمة." }, en: { name: "KAKASHI HATAKE", ability: "Copy Ninja", lore: "The Copy Ninja who mastered a thousand techniques and leads the new generation with wisdom." } },
             { id: 49, type: "series", p: 80, icon: '<i class="fa-solid fa-user-ninja"></i>', source: "GoT", ar: { name: "أريا ستارك", ability: "وجه لا أحد", lore: "الفتاة التي أصبحت الموت المتجسد لتنهي ليالي الشتاء الطويلة." }, en: { name: "ARYA STARK", ability: "Faceless Assassin", lore: "The girl who became death itself to end the Long Night." } },
             { id: 50, type: "series", p: 78, icon: '<i class="fa-solid fa-chess-king"></i>', source: "The Witcher", ar: { name: "ديكسترا", ability: "العقل المدبر", lore: "رئيس المخابرات الذي يحرك خيوط الممالك ويقلب العروش من الظلال." }, en: { name: "DIJKSTRA", ability: "Mastermind", lore: "The spymaster pulling kingdom strings and toppling thrones from the shadows." } },
-            
-            // شخصيات جديدة 51-70 (بدون بيك)
             { id: 51, type: "movie", p: 83, icon: '<i class="fa-solid fa-dragon"></i>', source: "The Hobbit", ar: { name: "سموغ", ability: "نيران التنين", lore: "التنين الجشع الذي يحرس كنوزه في الجبل الوحيد." }, en: { name: "SMAUG", ability: "Dragon Fire", lore: "The greedy dragon guarding his treasures in the Lonely Mountain." } },
             { id: 52, type: "anime", p: 85, icon: '<i class="fa-solid fa-moon"></i>', source: "Sailor Moon", ar: { name: "سيلور مون", ability: "قمر العدالة", lore: "المحاربة القمرية التي تحمي الأرض من قوى الظلام." }, en: { name: "SAILOR MOON", ability: "Moon Power", lore: "The lunar warrior protecting Earth from dark forces." } },
             { id: 53, type: "game", p: 82, icon: '<i class="fa-solid fa-chess-knight"></i>', source: "Dark Souls", ar: { name: "فارس الجمرة", ability: "إشعال النار", lore: "الخالد الذي يسعى لإشعال النار الأولى للحفاظ على العمر الناري." }, en: { name: "CHOSEN UNDEAD", ability: "Kindling", lore: "The immortal seeking to kindle the First Flame to preserve the Age of Fire." } },
@@ -365,15 +476,13 @@
             { id: 68, type: "anime", p: 81, icon: '<i class="fa-solid fa-spider"></i>', source: "Demon Slayer", ar: { name: "إينوسوكي", ability: "أنفاس الوحش", lore: "صائد الشياطين الغاضب الذي يستخدم أنفاس الوحش في قتاله." }, en: { name: "INOSUKE", ability: "Beast Breathing", lore: "The angry demon slayer using Beast Breathing in his fights." } },
             { id: 69, type: "game", p: 83, icon: '<i class="fa-solid fa-skull"></i>', source: "Dark Souls", ar: { name: "سولير من أستورا", ability: "محارب الشمس", lore: "محارب الشمس الأسطوري الذي يساعد اللاعبين في رحلتهم الصعبة." }, en: { name: "SOLAIRE", ability: "Sun Warrior", lore: "The legendary Sun Warrior who helps players in their difficult journey." } },
             { id: 70, type: "game", p: 82, icon: '<i class="fa-solid fa-mask"></i>', source: "Persona 5", ar: { name: "جوكر", ability: "أرسين", lore: "قائد فرقة اللصوص الشبحية الذي يسرق قلوب الأشرار." }, en: { name: "JOKER", ability: "Arsene", lore: "Leader of the Phantom Thieves who steals the hearts of the wicked." } },
-
-            // === النسخ الذروية (Peak Forms) - فقط للشخصيات الخيالية ===
             { id: 71, type: "game", p: 101, isPeak: true, icon: '<i class="fa-solid fa-crown"></i>', source: "God of War Ragnarok", ar: { name: "كراتوس (إله الحرب)", ability: "الغضب الكوني", lore: "كراتوس في ذروة قوته كإله حرب، يحمل غضباً كونياً يمكنه تحطيم الآلهة والأبعاد." }, en: { name: "KRATOS (God of War)", ability: "Cosmic Rage", lore: "Kratos at his peak as God of War, wielding cosmic rage capable of shattering gods and dimensions." } },
             { id: 72, type: "anime", p: 104, isPeak: true, icon: '<i class="fa-solid fa-fist-raised"></i>', source: "One Punch Man", ar: { name: "سايتاما (النمو الأسي)", ability: "اللكمة المطلقة", lore: "سايتاما في حالة النمو الأسي، حيث تزداد قوته بشكل لا نهائي مع كل معركة." }, en: { name: "SAITAMA (Exponential)", ability: "Absolute Punch", lore: "Saitama in exponential growth state, where his power increases infinitely with every battle." } },
             { id: 73, type: "anime", p: 104, isPeak: true, icon: '<i class="fa-solid fa-star"></i>', source: "Dragon Ball Super", ar: { name: "غوكو (الغريزة الفائقة)", ability: "إتقان الغريزة", lore: "غوكو أتقن الغريزة الفائقة بالكامل، حالة الكمال القتالي حيث يتحرك الجسم دون تفكير." }, en: { name: "GOKU (Ultra Instinct)", ability: "Instinct Mastery", lore: "Goku fully mastering Ultra Instinct, the state of combat perfection where the body moves without thought." } },
             { id: 74, type: "movie", p: 101, isPeak: true, icon: '<i class="fa-solid fa-infinity"></i>', source: "Avengers", ar: { name: "ثانوس (القفاز الكامل)", ability: "المحو الكوني", lore: "ثانوس مع قفاز Infinity الكامل، قادر على تغيير الواقع ومحو نصف الكون." }, en: { name: "THANOS (Full Gauntlet)", ability: "Cosmic Erasure", lore: "Thanos with the complete Infinity Gauntlet, capable of altering reality and erasing half the universe." } },
             { id: 75, type: "anime", p: 100, isPeak: true, icon: '<i class="fa-solid fa-fox"></i>', source: "Naruto Shippuden", ar: { name: "ناروتو (Baryon Mode)", ability: "اندماج الجزيئات", lore: "ناروتو في وضع الباريون، اندماج تشاكرا ناروتو وكوراما الذي يدمر المادة على المستوى الجزيئي." }, en: { name: "NARUTO (Baryon Mode)", ability: "Molecular Fusion", lore: "Naruto in Baryon Mode, fusion of Naruto and Kurama's chakra that destroys matter at molecular level." } },
             { id: 76, type: "anime", p: 100, isPeak: true, icon: '<i class="fa-solid fa-sun"></i>', source: "One Piece", ar: { name: "لوفي (Gear 5)", ability: "إله الشمس نيكا", lore: "استيقاظ فاكهة الشيطان، يحول لوفي إلى إله الشمس نيكا، مع القدرة على جعل العالم مرناً كالمطاط." }, en: { name: "LUFFY (Gear 5)", ability: "Sun God Nika", lore: "Awakening of the Devil Fruit, transforming Luffy into the Sun God Nika, able to make the world rubber-like." } },
-            { id: 77, type: "anime", p: 97, isPeak: true, icon: '<i class="fa-solid fa-mountain"></i>', source: "Attack on Titan", ar: { name: "إرين ييغر (المؤسس)", ability: "الدمدمة", lore: "إرين بصلة مؤسس التيتاني، يتحكم بكل العمالقة في التاريخ لسحق العالم." }, en: { name: "EREN YEAGER (Founder)", ability: "The Rumbling", lore: "Eren wielding the Founder Titan's power, controlling all titans in history to crush the world." } },
+            { id: 77, type: "anime", p: 97, isPeak: true, icon: '<i class="fa-solid fa-mountain"></i>', source: "Attack on Titan", ar: { name: "إيرين ييغر (المؤسس)", ability: "الدمدمة", lore: "إيرين بصلة مؤسس التيتاني، يتحكم بكل العمالقة في التاريخ لسحق العالم." }, en: { name: "EREN YEAGER (Founder)", ability: "The Rumbling", lore: "Eren wielding the Founder Titan's power, controlling all titans in history to crush the world." } },
             { id: 78, type: "anime", p: 100, isPeak: true, icon: '<i class="fa-solid fa-crown"></i>', source: "Dragon Ball Super", ar: { name: "فيجيتا (Ultra Ego)", ability: "الغرور الفائق", lore: "فيجيتا في حالة الغرور الفائق، حيث يتحول كبرياؤه إلى مصدر قوة لا نهائي." }, en: { name: "VEGETA (Ultra Ego)", ability: "Ultimate Pride", lore: "Vegeta in Ultra Ego state, where his pride transforms into an infinite power source." } },
             { id: 79, type: "game", p: 103, isPeak: true, icon: '<i class="fa-solid fa-skull"></i>', source: "DOOM Eternal", ar: { name: "دوم سلاير (الغضب الأبدي)", ability: "الغضب الأبدي", lore: "دوم سلاير في ذروة غضبه، محارب لا يعرف الرحمة يسحق الشياطين عبر الأبعاد." }, en: { name: "DOOM SLAYER (Eternal)", ability: "Eternal Rage", lore: "Doom Slayer at his angriest, a merciless warrior crushing demons across dimensions." } },
             { id: 80, type: "comic", p: 105, isPeak: true, icon: '<i class="fa-solid fa-sun"></i>', source: "DC Comics", ar: { name: "سوبرمان (One Million)", ability: "الجوهر الذهبي", lore: "سوبرمان بعد امتصاص طاقة الشمس لمليون سنة، أصبح كائناً كونياً قادراً على خلق النجوم." }, en: { name: "SUPERMAN (One Million)", ability: "Golden Sun", lore: "Superman after absorbing solar energy for a million years, becoming a cosmic entity capable of creating stars." } },
@@ -416,7 +525,91 @@
             { id: 117, type: "game", p: 86, isPeak: true, icon: '<i class="fa-solid fa-user-secret"></i>', source: "Metal Gear", ar: { name: "سوليد سنيك (التسلل المطلق)", ability: "التسلل الكامل", lore: "سوليد سنيك خبير الحرب الصامتة، يتسلل دون أن يترك أثراً." }, en: { name: "SOLID SNAKE (Absolute Stealth)", ability: "Complete Infiltration", lore: "Solid Snake expert in silent warfare, infiltrating without leaving a trace." } },
             { id: 118, type: "series", p: 85, isPeak: true, icon: '<i class="fa-solid fa-user-ninja"></i>', source: "GoT", ar: { name: "أريا ستارك (وجه لا أحد المطلق)", ability: "الوجه المطلق", lore: "أريا ستارك تتقن فن وجه لا أحد بالكامل." }, en: { name: "ARYA STARK (Faceless One)", ability: "Absolute Face", lore: "Arya Stark fully mastering the art of being Faceless." } },
             { id: 119, type: "game", p: 87, isPeak: true, icon: '<i class="fa-solid fa-shadows"></i>', source: "Dishonored", ar: { name: "كورفو أتانو (سيد الظلال)", ability: "السحر المظلم المطلق", lore: "كورفو أتانو في ذروة قدراته، يتلاعب بالزمن والظلال." }, en: { name: "CORVO ATTANO (Shadow Master)", ability: "Absolute Dark Magic", lore: "Corvo Attano at peak abilities, manipulating time and shadows." } },
-            { id: 120, type: "movie", p: 92, isPeak: true, icon: '<i class="fa-solid fa-jedi"></i>', source: "Star Wars", ar: { name: "دارث فيدر (سيد السيث)", ability: "الجانب المظلم المطلق", lore: "دارث فيدر في ذروة قوته كسيد للسيث." }, en: { name: "DARTH VADER (Sith Lord)", ability: "Absolute Dark Side", lore: "Darth Vader at peak power as Sith Lord." } }
+            { id: 120, type: "movie", p: 92, isPeak: true, icon: '<i class="fa-solid fa-jedi"></i>', source: "Star Wars", ar: { name: "دارث فيدر (سيد السيث)", ability: "الجانب المظلم المطلق", lore: "دارث فيدر في ذروة قوته كسيد للسيث." }, en: { name: "DARTH VADER (Sith Lord)", ability: "Absolute Dark Side", lore: "Darth Vader at peak power as Sith Lord." } },
+
+            // شخصيات جديدة 121-140 (غير ذروية)
+            { id: 121, type: "game", p: 88, icon: '<i class="fa-solid fa-ghost"></i>', source: "Ghost of Tsushima", ar: { name: "جين ساكاي", ability: "الشبح", lore: "الساموراي الذي تخلى عن الشرف لينقذ وطنه، وأصبح أسطورة في الظلال." }, en: { name: "JIN SAKAI", ability: "The Ghost", lore: "The samurai who abandoned honor to save his homeland, becoming a legend in the shadows." } },
+            { id: 122, type: "game", p: 87, icon: '<i class="fa-solid fa-dragon"></i>', source: "Sekiro", ar: { name: "سيكيرو", ability: "الذراع الآلية", lore: "النينجا ذو الذراع الآلية الذي يواجه الآلهة والشياطين في فترة سينغوكو." }, en: { name: "SEKIRO", ability: "Shinobi Prosthetic", lore: "The one-armed shinobi facing gods and demons in the Sengoku era." } },
+            { id: 123, type: "game", p: 89, icon: '<i class="fa-solid fa-crown"></i>', source: "Bloodborne", ar: { name: "الصياد", ability: "دم الوحوش", lore: "صياد في مدينة يهارنام الملعونة، يبحث عن الحقيقة وسط الكوابيس." }, en: { name: "THE HUNTER", ability: "Beast Blood", lore: "A hunter in the cursed city of Yharnam, seeking truth amidst nightmares." } },
+            { id: 124, type: "game", p: 90, icon: '<i class="fa-solid fa-hat-wizard"></i>', source: "Elden Ring", ar: { name: "تارنشيد", ability: "فضل الإرث", lore: "المنبوذ الذي يسعى لأن يصبح إلدر لورد في عالم ما بين الأراضي." }, en: { name: "TARNISHED", ability: "Grace Guidance", lore: "The outcast seeking to become Elden Lord in the Lands Between." } },
+            { id: 125, type: "game", p: 86, icon: '<i class="fa-solid fa-water"></i>', source: "Subnautica", ar: { name: "آيل روبنسون", ability: "البقاء في العمق", lore: "الناجي الوحيد من تحطم سفينة على كوكب محيطي غامض." }, en: { name: "RYAN ROBINSON", ability: "Deep Survival", lore: "The lone survivor of a spaceship crash on a mysterious ocean planet." } },
+            { id: 126, type: "game", p: 84, icon: '<i class="fa-solid fa-tree"></i>', source: "The Forest", ar: { name: "النجا", ability: "البرية", lore: "أب يبحث عن ابنه في جزيرة مليئة بالمتوحشين والأسرار." }, en: { name: "ERIC LEBLANC", ability: "Wilderness", lore: "A father searching for his son on an island full of cannibals and secrets." } },
+            { id: 127, type: "movie", p: 82, icon: '<i class="fa-solid fa-meteor"></i>', source: "E.T.", ar: { name: "إي تي", ability: "الاتصال", lore: "الكائن الفضائي اللطيف الذي يريد العودة إلى وطنه." }, en: { name: "E.T.", ability: "Connection", lore: "The gentle extraterrestrial who wants to go home." } },
+            { id: 128, type: "movie", p: 83, icon: '<i class="fa-solid fa-robot"></i>', source: "Wall-E", ar: { name: "والي", ability: "التجميع", lore: "روبوت وحيد يجمع القمامة على أرض مهجورة، باحثاً عن الأمل." }, en: { name: "WALL-E", ability: "Compacting", lore: "A lonely robot collecting trash on a deserted Earth, searching for hope." } },
+            { id: 129, type: "anime", p: 85, icon: '<i class="fa-solid fa-panda"></i>', source: "Jujutsu Kaisen", ar: { name: "يوجي إيتادوري", ability: "لعنة سوكونا", lore: "الطالب الذي أصبح وعاء لأقوى لعنة في التاريخ." }, en: { name: "YUJI ITADORI", ability: "Sukuna's Curse", lore: "The student who became the vessel for the strongest curse in history." } },
+            { id: 130, type: "anime", p: 86, icon: '<i class="fa-solid fa-wind"></i>', source: "Jujutsu Kaisen", ar: { name: "ميكي زينين", ability: "الشفرة المسحورة", lore: "الساحرة التي لا تملك طاقة لعنة، لكنها تقطع الأرواح بحدها فقط." }, en: { name: "MAKI ZENIN", ability: "Cursed Blade", lore: "The sorcerer with no cursed energy, but cuts through curses with sheer skill." } },
+            { id: 131, type: "anime", p: 87, icon: '<i class="fa-solid fa-hand-sparkles"></i>', source: "Chainsaw Man", ar: { name: "دينجي", ability: "القلب الآلي", lore: "صائد الشياطين الذي اندمج مع شيطان المنشار ليصبح كائناً فريداً." }, en: { name: "DENJI", ability: "Chainsaw Heart", lore: "The devil hunter who merged with the Chainsaw Devil to become a unique being." } },
+            { id: 132, type: "anime", p: 88, icon: '<i class="fa-solid fa-skull"></i>', source: "Chainsaw Man", ar: { name: "باور", ability: "الدم", lore: "شيطانة الدماء التي تدعي أنها أعظم صائدة شياطين في الوجود." }, en: { name: "POWER", ability: "Blood Power", lore: "The Blood Fiend who claims to be the greatest devil hunter in existence." } },
+            { id: 133, type: "series", p: 81, icon: '<i class="fa-solid fa-dragon"></i>', source: "House of Dragon", ar: { name: "راينيرا تارغارين", ability: "دم التنين", lore: "الوريثة الشرعية للعرش الحديدي، أميرة التنين التي قاتلت من أجل حقها." }, en: { name: "RAENERA TARGARYEN", ability: "Dragon Blood", lore: "The rightful heir to the Iron Throne, the dragon princess who fought for her right." } },
+            { id: 134, type: "series", p: 83, icon: '<i class="fa-solid fa-fire"></i>', source: "Game of Thrones", ar: { name: "دنيرس تارغارين", ability: "أم التنين", lore: "أم التنين التي حررت العبيد وكادت أن تسيطر على ويستروس." }, en: { name: "DAENERYS TARGARYEN", ability: "Mother of Dragons", lore: "The Mother of Dragons who freed slaves and almost conquered Westeros." } },
+            { id: 135, type: "series", p: 80, icon: '<i class="fa-solid fa-chess-queen"></i>', source: "The Crown", ar: { name: "الملكة إليزابيث", ability: "العهد الطويل", lore: "الملكة التي حكمت بريطانيا لأكثر من سبعة عقود بحكمة وصبر." }, en: { name: "QUEEN ELIZABETH", ability: "Long Reign", lore: "The queen who ruled Britain for over seven decades with wisdom and patience." } },
+            { id: 136, type: "movie", p: 84, icon: '<i class="fa-solid fa-film"></i>', source: "Inglourious Basterds", ar: { name: "شوشانا دريفوس", ability: "الانتقام", lore: "اليهودية التي نجت من النازيين وأشعلت النار في مسرحهم." }, en: { name: "SHOSHANNA DREYFUS", ability: "Vengeance", lore: "The Jewish woman who survived the Nazis and burned their cinema." } },
+            { id: 137, type: "movie", p: 82, icon: '<i class="fa-solid fa-user-secret"></i>', source: "The Revenant", ar: { name: "هيو غلاس", ability: "البقاء", lore: "الصياد الذي تركه رفاقه للموت بعد هجوم دب، وعاد للانتقام." }, en: { name: "HUGH GLASS", ability: "Survival", lore: "The hunter left for dead by his companions after a bear attack, who returned for revenge." } },
+            { id: 138, type: "game", p: 85, icon: '<i class="fa-solid fa-tree"></i>', source: "The Legend of Zelda", ar: { name: "لينك", ability: "شجاعة البطل", lore: "بطل هايرول الذي يواجه قوى الظلام مراراً وتكراراً لإنقاذ الأميرة زيلدا." }, en: { name: "LINK", ability: "Hero's Courage", lore: "The Hero of Hyrule who repeatedly faces the forces of darkness to save Princess Zelda." } },
+            { id: 139, type: "game", p: 84, icon: '<i class="fa-solid fa-crown"></i>', source: "The Legend of Zelda", ar: { name: "زيلدا", ability: "حكمة الإلهة", lore: "أميرة هايرول التي تمتلك قوى الإلهة وتحارب الظلام بالعلم والسحر." }, en: { name: "ZELDA", ability: "Goddess Wisdom", lore: "The Princess of Hyrule who possesses goddess powers and fights darkness with science and magic." } },
+            { id: 140, type: "anime", p: 86, icon: '<i class="fa-solid fa-dragon"></i>', source: "Fairy Tail", ar: { name: "إرزا سكارلت", ability: "تيتانيا", lore: "أقوى امرأة في نقابة الخرافة، ملكة السيوف التي لا تُقهر." }, en: { name: "ERZA SCARLET", ability: "Titania", lore: "The strongest woman in Fairy Tail, the unbeatable queen of swords." } },
+
+            // شخصيات ذروية جديدة 141-200
+            { id: 141, type: "game", p: 102, isPeak: true, icon: '<i class="fa-solid fa-crown"></i>', source: "God of War Ragnarok", ar: { name: "كراتوس (الأب الكوني)", ability: "الرونية القديمة", lore: "كراتوس بعد أن فهم أسرار الرونية القديمة، قادر على إعادة تشكيل الواقع بكلماته." }, en: { name: "KRATOS (All-Father)", ability: "Ancient Runes", lore: "Kratos after understanding the secrets of ancient runes, able to reshape reality with his words." } },
+            { id: 142, type: "anime", p: 105, isPeak: true, icon: '<i class="fa-solid fa-galaxy"></i>', source: "Dragon Ball Heroes", ar: { name: "غوكو (أولترا GOD)", ability: "قوة الآلهة المطلقة", lore: "غوكو بعد اندماج الغريزة الفائقة مع قوة الآلهة، أصبح كائناً يتجاوز الزمن." }, en: { name: "GOKU (Ultra GOD)", ability: "Divine Power", lore: "Goku after merging Ultra Instinct with god power, becoming a being beyond time." } },
+            { id: 143, type: "comic", p: 108, isPeak: true, icon: '<i class="fa-solid fa-book"></i>', source: "Marvel", ar: { name: "ثانوس (ملك الموت)", ability: "العدم", lore: "ثانوس بعد أن أصبح سيد الموت، قادر على محو الوجود بأكمله." }, en: { name: "THANOS (Death King)", ability: "Oblivion", lore: "Thanos after becoming Death's master, able to erase all existence." } },
+            { id: 144, type: "comic", p: 106, isPeak: true, icon: '<i class="fa-solid fa-infinity"></i>', source: "DC", ar: { name: "دومسداي (النهاية)", ability: "التكيف المطلق", lore: "دومسداي بعد آلاف السنين من التطور، أصبح قادراً على التكيف مع أي هجوم." }, en: { name: "DOOMSDAY (Endgame)", ability: "Absolute Adaptation", lore: "Doomsday after thousands of years of evolution, able to adapt to any attack." } },
+            { id: 145, type: "anime", p: 103, isPeak: true, icon: '<i class="fa-solid fa-skull"></i>', source: "One Punch Man", ar: { name: "غارو (كابوس البشرية)", ability: "نسخ التقنيات", lore: "غارو في ذروة تطوره، قادر على نسخ أي تقنية قتالية بعد مشاهدتها مرة واحدة." }, en: { name: "GAROU (Human Nightmare)", ability: "Technique Copy", lore: "Garou at his peak, able to copy any combat technique after seeing it once." } },
+            { id: 146, type: "anime", p: 104, isPeak: true, icon: '<i class="fa-solid fa-dragon"></i>', source: "One Piece", ar: { name: "كايدو (ملك الوحوش)", ability: "التنين الأزرق", lore: "كايدو في شكله التنيني الكامل، أقوى كائن حي في عالم ون بيس." }, en: { name: "KAIDO (Beast King)", ability: "Azure Dragon", lore: "Kaido in his full dragon form, the strongest living being in One Piece." } },
+            { id: 147, type: "anime", p: 102, isPeak: true, icon: '<i class="fa-solid fa-meteor"></i>', source: "Naruto", ar: { name: "مادارا (إله الشينوبي)", ability: "الجانب المظلم", lore: "مادارا بعد أن أصبح الجويتشي، يمتلك قوة عشيرة أوتشيها بالكامل." }, en: { name: "MADARA (Shinobi God)", ability: "Dark Side", lore: "Madara after becoming the Juubi, possessing the full power of the Uchiha clan." } },
+            { id: 148, type: "anime", p: 103, isPeak: true, icon: '<i class="fa-solid fa-eye"></i>', source: "Naruto", ar: { name: "ساسكي (رينيجان النهائي)", ability: "الفضاء-الزمن", lore: "ساسكي مع رينيجان متطور، قادر على السفر بين الأبعاد." }, en: { name: "SASUKE (Final Rinnegan)", ability: "Space-Time", lore: "Sasuke with evolved Rinnegan, able to travel between dimensions." } },
+            { id: 149, type: "anime", p: 104, isPeak: true, icon: '<i class="fa-solid fa-cloud"></i>', source: "Bleach", ar: { name: "إيتشيغو (البنكاي النهائي)", ability: "قوة الشينيغامي", lore: "إيتشيغو بعد دمج جميع قواه في بنكاي واحد لا يُقهر." }, en: { name: "ICHIGO (Final Bankai)", ability: "Shinigami Power", lore: "Ichigo after merging all his powers into one unbeatable Bankai." } },
+            { id: 150, type: "anime", p: 105, isPeak: true, icon: '<i class="fa-solid fa-hurricane"></i>', source: "Bleach", ar: { name: "أيزن (الهيوجوكو الكامل)", ability: "التحول", lore: "أيزن بعد اندماجه الكامل مع هيوجوكو، أصبح كائناً يتجاوز الشينيغامي." }, en: { name: "AIZEN (Complete Hyogoku)", ability: "Evolution", lore: "Aizen after full fusion with Hyogoku, becoming a being beyond Shinigami." } },
+            { id: 151, type: "game", p: 104, isPeak: true, icon: '<i class="fa-solid fa-biohazard"></i>', source: "Resident Evil", ar: { name: "ألبرت ويسكر (Uroboros)", ability: "الدم الأسود", lore: "ويسكر بعد حقن نفسه بفيروس Uroboros، قادر على التحكم في جسده." }, en: { name: "ALBERT WESKER (Uroboros)", ability: "Black Blood", lore: "Wesker after injecting himself with Uroboros, able to control his body." } },
+            { id: 152, type: "game", p: 105, isPeak: true, icon: '<i class="fa-solid fa-microchip"></i>', source: "Cyberpunk", ar: { name: "آدم سماشر (Alpha)", ability: "الكروم الذهبي", lore: "آدم سماشر بعد ترقية جسده بالكامل بأفضل تقنية في العالم." }, en: { name: "ADAM SMASHER (Alpha)", ability: "Golden Chrome", lore: "Adam Smasher after fully upgrading his body with the world's best tech." } },
+            { id: 153, type: "game", p: 102, isPeak: true, icon: '<i class="fa-solid fa-hand-fist"></i>', source: "Street Fighter", ar: { name: "أكان (المقاتل المطلق)", ability: "الهادو", lore: "أكان في ذروة قوته، قادر على تدمير الجبال بقبضته." }, en: { name: "AKUMA (Absolute Fighter)", ability: "Hadou", lore: "Akuma at his peak power, able to destroy mountains with his fist." } },
+            { id: 154, type: "game", p: 103, isPeak: true, icon: '<i class="fa-solid fa-bolt"></i>', source: "Mortal Kombat", ar: { name: "شاو كان (إمبراطور)", ability: "الهامر", lore: "شاو كان بعد أن استولى على أرواح آلاف المقاتلين." }, en: { name: "SHAO KAHN (Emperor)", ability: "The Hammer", lore: "Shao Kahn after conquering thousands of souls." } },
+            { id: 155, type: "game", p: 104, isPeak: true, icon: '<i class="fa-solid fa-fire"></i>', source: "Mortal Kombat", ar: { name: "ليو كانغ (إله النار)", ability: "نار الآلهة", lore: "ليو كانغ بعد أن أصبح إله النار، حامي مملكة الأرض." }, en: { name: "LIU KANG (Fire God)", ability: "God Fire", lore: "Liu Kang after becoming Fire God, protector of Earthrealm." } },
+            { id: 156, type: "game", p: 101, isPeak: true, icon: '<i class="fa-solid fa-robot"></i>', source: "Tekken", ar: { name: "جينباتشي (الشيطان)", ability: "قوة الشيطان", lore: "جينباتشي في صورته الشيطانية الكاملة، قوة لا تُقهَر." }, en: { name: "JINPACHI (Devil)", ability: "Devil Power", lore: "Jinpachi in his full devil form, unbeatable power." } },
+            { id: 157, type: "game", p: 102, isPeak: true, icon: '<i class="fa-solid fa-ghost"></i>', source: "Dark Souls", ar: { name: "جوين (سيد الشمس)", ability: "الشمس الأولى", lore: "جوين سيد الشمس في قوته الكاملة قبل أن يحرق نفسه." }, en: { name: "GWYN (Sun Lord)", ability: "First Sun", lore: "Gwyn, Lord of Sunlight, at his full power before burning himself." } },
+            { id: 158, type: "game", p: 103, isPeak: true, icon: '<i class="fa-solid fa-dragon"></i>', source: "Dark Souls", ar: { name: "مانوس (أبو العفن)", ability: "الظلام", lore: "مانوس في ذروة قوته، قادر على تشويه الزمن." }, en: { name: "MANUS (Father)", ability: "Darkness", lore: "Manus at his peak, able to distort time." } },
+            { id: 159, type: "game", p: 104, isPeak: true, icon: '<i class="fa-solid fa-crown"></i>', source: "Elden Ring", ar: { name: "ماريكا (الإلهة)", ability: "حلقة إلدن", lore: "الإلهة ماريكا في ذروة قوتها، حارسة حلقة إلدن." }, en: { name: "MARIKA (Goddess)", ability: "Elden Ring", lore: "Goddess Marika at her peak, guardian of the Elden Ring." } },
+            { id: 160, type: "game", p: 105, isPeak: true, icon: '<i class="fa-solid fa-skull"></i>', source: "Elden Ring", ar: { name: "مالينيا (إلهة العفن)", ability: "الزهرة", lore: "مالينيا في ذروة قوتها عندما تحولت إلى إلهة العفن." }, en: { name: "MALENIA (Rot Goddess)", ability: "The Flower", lore: "Malenia at her peak when she became the Goddess of Rot." } },
+            { id: 161, type: "movie", p: 102, isPeak: true, icon: '<i class="fa-solid fa-jedi"></i>', source: "Star Wars", ar: { name: "بالباتين (دارث سيديوس)", ability: "البرق المطلق", lore: "الإمبراطور بالباتين في ذروة قوته، يتحكم بالجانب المظلم." }, en: { name: "PALPATINE (Darth Sidious)", ability: "Absolute Lightning", lore: "Emperor Palpatine at his peak, controlling the dark side." } },
+            { id: 162, type: "movie", p: 103, isPeak: true, icon: '<i class="fa-solid fa-dragon"></i>', source: "Star Wars", ar: { name: "دارث فيدر (المختار)", ability: "التوازن", lore: "أنكين سكاي ووكر في ذروة قوته كالمختار، يجلب التوازن للقوة." }, en: { name: "DARTH VADER (Chosen)", ability: "Balance", lore: "Anakin Skywalker at his peak as the Chosen One, bringing balance to the Force." } },
+            { id: 163, type: "comic", p: 107, isPeak: true, icon: '<i class="fa-solid fa-book"></i>', source: "Marvel", ar: { name: "دكتور دوم (الإمبراطور)", ability: "العلم المطلق", lore: "دكتور دوم بعد أن سرق قوة البيوندر، أصبح أقوى كائن في الوجود." }, en: { name: "DOCTOR DOOM (Emperor)", ability: "Absolute Science", lore: "Doctor Doom after stealing the Beyonder's power, becoming the strongest being." } },
+            { id: 164, type: "comic", p: 108, isPeak: true, icon: '<i class="fa-solid fa-infinity"></i>', source: "Marvel", ar: { name: "البيوندر (ما وراء)", ability: "الواقع", lore: "البيوندر، الكائن الذي يتجاوز كل القوانين الفيزيائية." }, en: { name: "THE BEYONDER", ability: "Reality", lore: "The Beyonder, the being beyond all physical laws." } },
+            { id: 165, type: "comic", p: 106, isPeak: true, icon: '<i class="fa-solid fa-sun"></i>', source: "DC", ar: { name: "سوبرمان (الذهبي)", ability: "الشمس الذهبية", lore: "سوبرمان بعد امتصاص طاقة الشمس الذهبية، قوته لا حدود لها." }, en: { name: "SUPERMAN (Golden)", ability: "Golden Sun", lore: "Superman after absorbing the energy of a golden sun, his power is limitless." } },
+            { id: 166, type: "comic", p: 105, isPeak: true, icon: '<i class="fa-solid fa-flash"></i>', source: "DC", ar: { name: "ذا فلاش (السرعة المطلقة)", ability: "السرعة القصوى", lore: "ذا فلاش في ذروة سرعته، قادر على السفر عبر الزمن." }, en: { name: "THE FLASH (Absolute Speed)", ability: "Max Speed", lore: "The Flash at his peak speed, able to travel through time." } },
+            { id: 167, type: "comic", p: 104, isPeak: true, icon: '<i class="fa-solid fa-bolt"></i>', source: "DC", ar: { name: "ووندر وومان (إلهة الحرب)", ability: "القتال الإلهي", lore: "ديانا في ذروة قوتها كإلهة حرب." }, en: { name: "WONDER WOMAN (War Goddess)", ability: "Divine Combat", lore: "Diana at her peak as the Goddess of War." } },
+            { id: 168, type: "comic", p: 106, isPeak: true, icon: '<i class="fa-solid fa-hammer"></i>', source: "Marvel", ar: { name: "ثور (الرعد المطلق)", ability: "العاصفة", lore: "ثور بكل قوى الرعد الكوني." }, en: { name: "THOR (Absolute Thunder)", ability: "The Storm", lore: "Thor with all the power of cosmic thunder." } },
+            { id: 169, type: "comic", p: 107, isPeak: true, icon: '<i class="fa-solid fa-skull"></i>', source: "Marvel", ar: { name: "هالك (الغضب الكوني)", ability: "الدمار", lore: "هالك بعد سنوات من الغضب المتراكم، قادر على تدمير المجرات." }, en: { name: "HULK (Cosmic Rage)", ability: "Destruction", lore: "Hulk after years of built-up rage, able to destroy galaxies." } },
+            { id: 170, type: "anime", p: 105, isPeak: true, icon: '<i class="fa-solid fa-eye"></i>', source: "Jujutsu Kaisen", ar: { name: "غوجو (اللانهاية)", ability: "الأرجواني المجوف", lore: "غوجو في ذروة قوته، يستخدم الأرجواني المجوف بلا حدود." }, en: { name: "GOJO (Infinity)", ability: "Hollow Purple", lore: "Gojo at his peak, using Hollow Purple without limits." } },
+            { id: 171, type: "anime", p: 106, isPeak: true, icon: '<i class="fa-solid fa-dragon"></i>', source: "Jujutsu Kaisen", ar: { name: "سوكونا (ملك اللعنات)", ability: "الماليشيا", lore: "ريومين سوكونا في شكله الكامل، ملك اللعنات الحقيقي." }, en: { name: "SUKUNA (Curse King)", ability: "Malevolent Shrine", lore: "Ryomen Sukuna in his full form, the true King of Curses." } },
+            { id: 172, type: "anime", p: 104, isPeak: true, icon: '<i class="fa-solid fa-skull"></i>', source: "Chainsaw Man", ar: { name: "بوكتا (شيطان المنشار)", ability: "الصوت", lore: "بوكتا في شكله الكامل كشيطان المنشار." }, en: { name: "POCHITA (Chainsaw Devil)", ability: "The Sound", lore: "Pochita in his full form as the Chainsaw Devil." } },
+            { id: 173, type: "anime", p: 105, isPeak: true, icon: '<i class="fa-solid fa-fire"></i>', source: "Demon Slayer", ar: { name: "يوريتشي (إله الشمس)", ability: "الشمس", lore: "يوريتشي تسوجيكوني في ذروة قوته، مبتكر أنفاس الشمس." }, en: { name: "YORIICHI (Sun God)", ability: "The Sun", lore: "Yoriichi Tsugikuni at his peak, creator of Sun Breathing." } },
+            { id: 174, type: "anime", p: 103, isPeak: true, icon: '<i class="fa-solid fa-moon"></i>', source: "Demon Slayer", ar: { name: "كوكوشيبو (القمر)", ability: "أنفاس القمر", lore: "كوكوشيبو في ذروة قوته، أفضل تلميذ ليوريتشي." }, en: { name: "KOKUSHIBO (Moon)", ability: "Moon Breathing", lore: "Kokushibo at his peak, Yoriichi's best student." } },
+            { id: 175, type: "series", p: 102, isPeak: true, icon: '<i class="fa-solid fa-crown"></i>', source: "The Witcher", ar: { name: "جيرالت (الساحر)", ability: "العلامات", lore: "جيرالت بعد أن أتقن كل علامات الساحر." }, en: { name: "GERALT (Witcher)", ability: "The Signs", lore: "Geralt after mastering all Witcher signs." } },
+            { id: 176, type: "series", p: 103, isPeak: true, icon: '<i class="fa-solid fa-fire"></i>', source: "Game of Thrones", ar: { name: "دنيرس (المحررة)", ability: "النار", lore: "دنيرس بثلاثة تنانين بالغة، قادرة على حرق الممالك." }, en: { name: "DAENERYS (Liberator)", ability: "Fire", lore: "Daenerys with three grown dragons, able to burn kingdoms." } },
+            { id: 177, type: "series", p: 104, isPeak: true, icon: '<i class="fa-solid fa-dragon"></i>', source: "Game of Thrones", ar: { name: "جون سنو (الملك)", ability: "الشتاء", lore: "جون سنو بعد أن أصبح ملك الشمال وواجه الليل الطويل." }, en: { name: "JON SNOW (King)", ability: "Winter", lore: "Jon Snow after becoming King in the North and facing the Long Night." } },
+            { id: 178, type: "movie", p: 105, isPeak: true, icon: '<i class="fa-solid fa-ring"></i>', source: "Lord of the Rings", ar: { name: "ساورون (العين)", ability: "الخاتم", lore: "ساورون مع الخاتم الواحد، يسيطر على كل الأرواح." }, en: { name: "SAURON (The Eye)", ability: "The Ring", lore: "Sauron with the One Ring, controlling all souls." } },
+            { id: 179, type: "movie", p: 103, isPeak: true, icon: '<i class="fa-solid fa-wand"></i>', source: "Harry Potter", ar: { name: "دمبلدور (الأسطورة)", ability: "الخيمياء", lore: "دمبلدور في ذروة قوته، أعظم ساحر في التاريخ." }, en: { name: "DUMBLEDORE (Legend)", ability: "Alchemy", lore: "Dumbledore at his peak, the greatest wizard in history." } },
+            { id: 180, type: "movie", p: 102, isPeak: true, icon: '<i class="fa-solid fa-skull"></i>', source: "Harry Potter", ar: { name: "فولدمورت (الظلام)", ability: "الهوكس", lore: "فولدمورت بعد أن صنع سبعة هوكس، لا يموت." }, en: { name: "VOLDEMORT (Dark)", ability: "Horcruxes", lore: "Voldemort after making seven horcruxes, immortal." } },
+            { id: 181, type: "game", p: 104, isPeak: true, icon: '<i class="fa-solid fa-tree"></i>', source: "The Legend of Zelda", ar: { name: "لينك (البطل)", ability: "الصاعقة", lore: "لينك بعد أن جمع كل القطع الثلاثة، بطل هايرول الحقيقي." }, en: { name: "LINK (Hero)", ability: "Triforce", lore: "Link after collecting all three pieces, the true Hero of Hyrule." } },
+            { id: 182, type: "game", p: 105, isPeak: true, icon: '<i class="fa-solid fa-crown"></i>', source: "The Legend of Zelda", ar: { name: "غانون (الوحش)", ability: "الغضب", lore: "غانون في شكله الوحشي الكامل، قوة الظلام المطلقة." }, en: { name: "GANON (Beast)", ability: "Rage", lore: "Ganon in his full beast form, absolute dark power." } },
+            { id: 183, type: "game", p: 103, isPeak: true, icon: '<i class="fa-solid fa-ghost"></i>', source: "Hollow Knight", ar: { name: "الجوف (الظل)", ability: "الفراغ", lore: "الجوف بعد أن احتوى كل قوة الفراغ." }, en: { name: "THE HOLLOW (Shadow)", ability: "Void", lore: "The Hollow Knight after containing all void power." } },
+            { id: 184, type: "game", p: 104, isPeak: true, icon: '<i class="fa-solid fa-bug"></i>', source: "Hollow Knight", ar: { name: "بال (الضوء)", ability: "الضياء", lore: "بال في شكله الكامل، إله الضوء." }, en: { name: "PALE (Light)", ability: "Radiance", lore: "The Pale King in his full form, the God of Light." } },
+            { id: 185, type: "anime", p: 106, isPeak: true, icon: '<i class="fa-solid fa-meteor"></i>', source: "FMA", ar: { name: "إدوارد (الحجر)", ability: "التحويل", lore: "إدوارد مع حجر الفيلسوف، قادر على تحويل المادة." }, en: { name: "EDWARD (Stone)", ability: "Transmutation", lore: "Edward with the Philosopher's Stone, able to transmute matter." } },
+            { id: 186, type: "anime", p: 105, isPeak: true, icon: '<i class="fa-solid fa-dragon"></i>', source: "FMA", ar: { name: "فاثر (الأب)", ability: "الذات", lore: "فاثر في ذروة قوته، كائن شبه إلهي." }, en: { name: "FATHER (The Father)", ability: "Self", lore: "Father at his peak, a near-divine being." } },
+            { id: 187, type: "series", p: 102, isPeak: true, icon: '<i class="fa-solid fa-clock"></i>', source: "Doctor Who", ar: { name: "دكتور (المنفي)", ability: "الزمن", lore: "دكتور هو بعد أن أصبح سيد الزمن المطلق." }, en: { name: "DOCTOR (Exile)", ability: "Time", lore: "The Doctor after becoming the absolute Time Lord." } },
+            { id: 188, type: "series", p: 103, isPeak: true, icon: '<i class="fa-solid fa-alien"></i>', source: "Doctor Who", ar: { name: "دافروس (الإمبراطور)", ability: "داليك", lore: "دافروس إمبراطور الداليك في ذروة قوته." }, en: { name: "DAVROS (Emperor)", ability: "Dalek", lore: "Davros, Emperor of the Daleks, at his peak." } },
+            { id: 189, type: "comic", p: 109, isPeak: true, icon: '<i class="fa-solid fa-book"></i>', source: "Marvel", ar: { name: "ليفينغ تريبيونال", ability: "العدالة", lore: "كائن العدالة الكوني، فوق كل الآلهة." }, en: { name: "LIVING TRIBUNAL", ability: "Justice", lore: "The cosmic being of justice, above all gods." } },
+            { id: 190, type: "comic", p: 110, isPeak: true, icon: '<i class="fa-solid fa-infinity"></i>', source: "Marvel", ar: { name: "ون-آبوف-أول", ability: "الكل", lore: "الكائن الأعلى في الكون المارفل." }, en: { name: "ONE-ABOVE-ALL", ability: "All", lore: "The supreme being in the Marvel universe." } },
+            { id: 191, type: "comic", p: 109, isPeak: true, icon: '<i class="fa-solid fa-hand"></i>', source: "DC", ar: { name: "ذا بريزنس", ability: "الوجود", lore: "الوجود الأعلى في عالم DC." }, en: { name: "THE PRESENCE", ability: "Presence", lore: "The supreme being in the DC universe." } },
+            { id: 192, type: "comic", p: 108, isPeak: true, icon: '<i class="fa-solid fa-sun"></i>', source: "DC", ar: { name: "لوسيفر (الصباح)", ability: "الحرية", lore: "لوسيفر مورنينغستار في ذروة قوته." }, en: { name: "LUCIFER (Morning)", ability: "Freedom", lore: "Lucifer Morningstar at his peak." } },
+            { id: 193, type: "anime", p: 106, isPeak: true, icon: '<i class="fa-solid fa-fire"></i>', source: "Dragon Ball", ar: { name: "بيروس (الدمار)", ability: "الهاكاي", lore: "بيروس إله الدمار، قادر على محو الكواكب." }, en: { name: "BEERUS (Destruction)", ability: "Hakai", lore: "Beerus the God of Destruction, able to erase planets." } },
+            { id: 194, type: "anime", p: 107, isPeak: true, icon: '<i class="fa-solid fa-star"></i>', source: "Dragon Ball", ar: { name: "ويس (الملاك)", ability: "الزمن", lore: "ويس الملاك، أقوى من الآلهة." }, en: { name: "WHIS (Angel)", ability: "Time", lore: "Whis the Angel, stronger than the gods." } },
+            { id: 195, type: "anime", p: 108, isPeak: true, icon: '<i class="fa-solid fa-crown"></i>', source: "Dragon Ball", ar: { name: "زينو (الملك)", ability: "المحو", lore: "الملك زينو، قادر على محو الكون كله." }, en: { name: "ZENO (King)", ability: "Erasure", lore: "King Zeno, able to erase the entire universe." } },
+            { id: 196, type: "game", p: 106, isPeak: true, icon: '<i class="fa-solid fa-fire"></i>', source: "Dark Souls", ar: { name: "نيتو (الموت)", ability: "الموت", lore: "نيتو سيد الموتى الأوائل في ذروة قوته." }, en: { name: "NITO (Death)", ability: "Death", lore: "Nito, the First of the Dead, at his peak." } },
+            { id: 197, type: "game", p: 107, isPeak: true, icon: '<i class="fa-solid fa-witch"></i>', source: "Dark Souls", ar: { name: "إيزاليث (الساحرة)", ability: "النار", lore: "ساحرة إيزاليث في ذروة قوتها النارية." }, en: { name: "IZALITH (Witch)", ability: "Fire", lore: "The Witch of Izalith at her fiery peak." } },
+            { id: 198, type: "game", p: 105, isPeak: true, icon: '<i class="fa-solid fa-dragon"></i>', source: "Dark Souls", ar: { name: "سيث (الخالد)", ability: "الخلود", lore: "سيث الخالد، ساحر التنين." }, en: { name: "SEATH (Immortal)", ability: "Immortality", lore: "Seath the Scaleless, the dragon sorcerer." } },
+            { id: 199, type: "anime", p: 107, isPeak: true, icon: '<i class="fa-solid fa-skull"></i>', source: "Hellsing", ar: { name: "ألوكارد (الدم)", ability: "الدم", lore: "ألوكارد بعد أن أطلق كل أرواح دمه." }, en: { name: "ALUCARD (Blood)", ability: "Blood", lore: "Alucard after releasing all souls in his blood." } },
+            { id: 200, type: "anime", p: 108, isPeak: true, icon: '<i class="fa-solid fa-church"></i>', source: "Hellsing", ar: { name: "والتر (الموت)", ability: "الخيوط", lore: "والتر في شكله الشيطاني، أسرع قاتل." }, en: { name: "WALTER (Death)", ability: "Threads", lore: "Walter in his vampire form, the fastest killer." } }
         ];
 
         let selected = [];
@@ -511,7 +704,6 @@
                 
                 const peakBadge = h.isPeak ? '<div class="peak-label">PEAK</div>' : '';
                 
-                // إزالة عرض نقاط القوة من البطاقة
                 card.innerHTML = `
                     <span class="type-badge">${h.type.toUpperCase()}</span>
                     <div class="hero-icon-container">${h.icon}</div>
