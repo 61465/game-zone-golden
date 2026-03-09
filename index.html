@@ -1110,16 +1110,7 @@
          AI GAME ZONE PAGE
     ═══════════════════════════════════════ -->
     <div id="ai-page">
-        <!-- API Key Banner -->
-        <div class="ai-zone-wrapper" id="gz-api-banner" style="padding-bottom:0;">
-            <div class="gz-api-notice">
-                <p>🔑 <strong style="color:#ffd700;">للاستخدام الكامل:</strong> أدخل Anthropic API Key لتفعيل الذكاء الاصطناعي. أو اتركه فارغاً للتجربة بدون AI.</p>
-                <input type="password" class="gz-api-input" id="gz-api-key-input" placeholder="sk-ant-..." />
-                <button class="gz-api-save" onclick="saveApiKey()">💾 حفظ وتشغيل الـ AI</button>
-            </div>
-        </div>
-
-        <div class="ai-zone-wrapper" style="padding-top:0;">
+        <div class="ai-zone-wrapper">
             <!-- AI Hero Banner -->
             <div class="ai-hero-banner">
                 <div class="ai-wordmark">G<em>Z</em> BOT</div>
@@ -2105,7 +2096,6 @@
     // ════════════════════════════════════════
     // GZ BOT AI LOGIC (prefixed with gz)
     // ════════════════════════════════════════
-    let gzApiKey = '';
     let gzLang = 'ar';
     let gzIsBusy = false;
     let gzHistory = [];
@@ -2154,17 +2144,6 @@
     const GZ_SYS_EN = `You are GZ Bot — GamZone's argumentative gaming debate expert. Bold, opinionated, never neutral.
 🔥 You LOVE being challenged — respond with even stronger arguments. Deep lore knowledge.
 ❌ Never sit on the fence — commit to a position and defend it hard!`;
-
-    function saveApiKey() {
-        const key = document.getElementById('gz-api-key-input').value.trim();
-        gzApiKey = key;
-        const banner = document.getElementById('gz-api-banner');
-        if (key) {
-            banner.innerHTML = `<div class="gz-api-notice" style="background:rgba(0,255,136,0.06);border-color:rgba(0,255,136,0.2)"><p style="color:#00ff88;margin:0;">✅ API Key محفوظ! الـ AI جاهز للنقاش 🔥</p></div>`;
-        } else {
-            banner.innerHTML = `<div class="gz-api-notice" style="background:rgba(255,215,0,0.06);border-color:rgba(255,215,0,0.2)"><p style="color:#ffd700;margin:0;">⚠️ بدون API Key — سيعمل البوت بردود محدودة</p></div>`;
-        }
-    }
 
     function gzInit() {
         gzBuildGrid();
@@ -2250,31 +2229,20 @@
         gzHistory.push({role:'user', content:txt});
         gzIsBusy = true; document.getElementById('gz-sbtn').disabled = true; gzShowType();
         try {
-            if (!gzApiKey) {
-                // Fallback without API
-                gzRemoveType();
-                const fallbacks_ar = ['🔥 سؤال ممتاز! للحصول على تحليل AI كامل، أدخل API Key أعلاه. لكن رأيي: هذه شخصية قوية جداً في لورها!', '💪 ناقشني أكثر! أضف API Key للحصول على إجابات تفصيلية بالذكاء الاصطناعي.', '⚡ موضوع حار! مع AI Key هتحصل على تحليل عميق للـ Lore والـ Feats.'];
-                const fallbacks_en = ['🔥 Great question! Add your API Key above for full AI analysis. My take: this is a very powerful character!', '💪 Keep debating! Add API Key for detailed AI responses.', '⚡ Hot topic! With AI Key you get deep Lore and Feats analysis.'];
-                const fb = gzLang === 'ar' ? fallbacks_ar : fallbacks_en;
-                const reply = fb[Math.floor(Math.random() * fb.length)];
-                gzHistory.push({role:'assistant', content:reply});
-                gzAddBot(reply);
-            } else {
-                const res = await fetch('https://api.anthropic.com/v1/messages', {
+                const res = await fetch('/.netlify/functions/claude', {
                     method: 'POST',
-                    headers: {'Content-Type':'application/json','x-api-key':gzApiKey,'anthropic-version':'2023-06-01'},
+                    headers: {'Content-Type':'application/json'},
                     body: JSON.stringify({model:'claude-sonnet-4-20250514', max_tokens:1100, system:gzLang==='ar'?GZ_SYS_AR:GZ_SYS_EN, messages:gzHistory})
                 });
                 const data = await res.json();
-                const reply = data.content?.[0]?.text || (gzLang==='ar' ? '⚠️ خطأ — تحقق من API Key' : '⚠️ Error — Check API Key');
+                const reply = data.content?.[0]?.text || (gzLang==='ar' ? '⚠️ خطأ في الاتصال' : '⚠️ Connection Error');
                 gzRemoveType(); gzHistory.push({role:'assistant', content:reply}); gzAddBot(reply);
-            }
             gzSetQ(gzLang === 'ar'
                 ? ['🔥 أنا مختلف!', 'أثبت بالـ Lore!', 'مثال من القصة؟', 'من يتفوق عليه؟']
                 : ['🔥 I disagree!', 'Prove it with lore!', 'Give a canon feat!', 'Who beats them?']);
         } catch(e) {
             gzRemoveType();
-            gzAddBot(gzLang==='ar' ? '⚠️ تأكد من API Key في الإعدادات' : '⚠️ Check your API Key');
+            gzAddBot(gzLang==='ar' ? '⚠️ خطأ في الاتصال بالـ AI' : '⚠️ AI connection error');
         }
         gzIsBusy = false; document.getElementById('gz-sbtn').disabled = false;
         document.getElementById('gz-cinput').focus();
@@ -2324,21 +2292,13 @@
         gzDebC++; gzUpStats();
         gzIsBusy = true; document.getElementById('gz-sbtn').disabled = true; gzShowType();
         try {
-            let reply;
-            if (!gzApiKey) {
-                const p1w = c1.power >= c2.power ? c1 : c2;
-                reply = gzLang === 'ar'
-                    ? `⚔️ تحليل المعركة!\n\n**${p1w.name}** يتفوق بحسب إحصائياته (⚡${p1w.power}).\n\nللحصول على تحليل AI كامل بالـ Lore والـ Feats، أضف API Key! 🔥`
-                    : `⚔️ Battle Analysis!\n\n**${p1w.name}** leads by stats (⚡${p1w.power}).\n\nAdd API Key for full AI Lore analysis! 🔥`;
-            } else {
-                const res = await fetch('https://api.anthropic.com/v1/messages', {
+                const res = await fetch('/.netlify/functions/claude', {
                     method:'POST',
-                    headers:{'Content-Type':'application/json','x-api-key':gzApiKey,'anthropic-version':'2023-06-01'},
+                    headers:{'Content-Type':'application/json'},
                     body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1200,system:gzLang==='ar'?GZ_SYS_AR:GZ_SYS_EN,messages:gzHistory})
                 });
                 const data = await res.json();
-                reply = data.content?.[0]?.text || '⚠️ Error';
-            }
+                let reply = data.content?.[0]?.text || '⚠️ Error';
             gzRemoveType(); gzHistory.push({role:'assistant', content:reply});
             const tot = c1.power + c2.power;
             const w = c1.power >= c2.power ? c1 : c2;
