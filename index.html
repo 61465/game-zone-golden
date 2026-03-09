@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GAME ZONE: GOLDEN ARENA 200</title>
+    <title>GAME ZONE: GOLDEN ARENA 518</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Cairo:wght@300;400;600;700;900&family=Orbitron:wght@400;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Cairo:wght@300;400;600;700;900&family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap');
 
         :root {
             --bg: #030303;
@@ -21,6 +21,11 @@
             --text-dim: #6b6050;
             --border: #1e1a14;
             --border-gold: rgba(201,168,76,0.25);
+            /* AI Zone vars */
+            --gz-bg:#07080e;--gz-s1:#0d0f18;--gz-s2:#131620;--gz-s3:#1a1d2a;
+            --gz-orange:#ff6b00;--gz-red:#ff2244;
+            --gz-green:#00ff88;--gz-blue:#00c8ff;--gz-purple:#b44dff;
+            --gz-border:rgba(255,215,0,0.12);--gz-text:#dde0f0;--gz-muted:#5a6070;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -33,7 +38,6 @@
             min-height: 100vh;
         }
 
-        /* ─── BACKGROUND ─── */
         body::before {
             content: '';
             position: fixed;
@@ -46,7 +50,6 @@
             z-index: 0;
         }
 
-        /* ─── SCANLINES ─── */
         body::after {
             content: '';
             position: fixed;
@@ -74,18 +77,12 @@
         nav::after {
             content: '';
             position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
+            bottom: 0; left: 0; right: 0;
             height: 1px;
             background: linear-gradient(90deg, transparent, var(--gold), transparent);
         }
 
-        .nav-left {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
+        .nav-left { display: flex; align-items: center; gap: 20px; }
 
         .nav-logo {
             font-family: 'Orbitron', sans-serif;
@@ -95,7 +92,6 @@
             letter-spacing: 3px;
             text-shadow: 0 0 20px rgba(201,168,76,0.5);
         }
-
         .nav-logo span {
             color: var(--text-dim);
             font-size: 0.6rem;
@@ -126,34 +122,40 @@
             transition: all 0.2s;
             letter-spacing: 0.5px;
         }
-
         .tab-btn.active {
             background: rgba(201,168,76,0.15);
             color: var(--gold);
             border: 1px solid var(--border-gold);
         }
-
-        .nav-right {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        /* ─── SEARCH BAR ─── */
-        .search-wrap {
+        .tab-btn.ai-tab {
+            background: linear-gradient(135deg, rgba(255,107,0,0.08), rgba(255,215,0,0.08));
+            color: var(--gz-orange);
+            border: 1px solid rgba(255,107,0,0.2);
             position: relative;
+            overflow: hidden;
         }
-
-        .search-wrap i {
+        .tab-btn.ai-tab::before {
+            content: '';
             position: absolute;
-            top: 50%;
-            right: 12px;
-            transform: translateY(-50%);
-            color: var(--text-dim);
-            font-size: 0.75rem;
-            pointer-events: none;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,215,0,0.08), transparent);
+            animation: ai-shimmer 2.5s ease infinite;
         }
+        .tab-btn.ai-tab.active {
+            background: linear-gradient(135deg, rgba(255,107,0,0.2), rgba(255,215,0,0.15));
+            color: #ffd700;
+            border-color: rgba(255,215,0,0.4);
+        }
+        @keyframes ai-shimmer { 0%,100%{transform:translateX(-100%)} 50%{transform:translateX(100%)} }
 
+        .nav-right { display: flex; align-items: center; gap: 12px; }
+
+        .search-wrap { position: relative; }
+        .search-wrap i {
+            position: absolute; top: 50%; right: 12px;
+            transform: translateY(-50%);
+            color: var(--text-dim); font-size: 0.75rem; pointer-events: none;
+        }
         body[lang="en"] .search-wrap i { right: auto; left: 12px; }
 
         #search-input {
@@ -168,15 +170,12 @@
             transition: all 0.3s;
             outline: none;
         }
-
         body[lang="en"] #search-input { padding: 7px 14px 7px 36px; }
-
         #search-input:focus {
             border-color: var(--border-gold);
             background: rgba(201,168,76,0.05);
             width: 240px;
         }
-
         #search-input::placeholder { color: var(--text-dim); }
 
         .nav-btn {
@@ -191,37 +190,23 @@
             transition: all 0.2s;
             letter-spacing: 1px;
         }
-
-        .nav-btn:hover {
-            border-color: var(--border-gold);
-            color: var(--gold);
-        }
-
-        .nav-btn.archive-btn {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            text-decoration: none;
-        }
+        .nav-btn:hover { border-color: var(--border-gold); color: var(--gold); }
+        .nav-btn.archive-btn { display: flex; align-items: center; gap: 8px; text-decoration: none; }
 
         .led {
             width: 7px; height: 7px;
-            background: #ff2200;
-            border-radius: 50%;
+            background: #ff2200; border-radius: 50%;
             box-shadow: 0 0 8px #ff2200;
             animation: blink 1.5s infinite;
         }
-
         @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
 
-        /* ─── HERO SECTION ─── */
+        /* ─── HERO ─── */
         .hero-header {
             text-align: center;
             padding: 50px 20px 30px;
-            position: relative;
-            z-index: 1;
+            position: relative; z-index: 1;
         }
-
         .hero-header h1 {
             font-family: 'Cinzel', serif;
             font-size: clamp(2rem, 5vw, 3.5rem);
@@ -231,7 +216,6 @@
             text-shadow: 0 0 40px rgba(201,168,76,0.4), 0 0 80px rgba(201,168,76,0.15);
             line-height: 1.1;
         }
-
         .hero-header .sub {
             font-size: 0.7rem;
             color: var(--text-dim);
@@ -239,10 +223,8 @@
             font-family: 'Orbitron', sans-serif;
             margin-top: 10px;
         }
-
         .hero-divider {
-            width: 200px;
-            height: 1px;
+            width: 200px; height: 1px;
             background: linear-gradient(90deg, transparent, var(--gold), transparent);
             margin: 20px auto;
         }
@@ -253,21 +235,15 @@
             justify-content: center;
             gap: 40px;
             margin-bottom: 30px;
-            position: relative;
-            z-index: 1;
+            position: relative; z-index: 1;
         }
-
-        .stat-item {
-            text-align: center;
-        }
-
+        .stat-item { text-align: center; }
         .stat-num {
             font-family: 'Orbitron', sans-serif;
             font-size: 1.5rem;
             font-weight: 900;
             color: var(--gold);
         }
-
         .stat-label {
             font-size: 0.65rem;
             color: var(--text-dim);
@@ -278,10 +254,8 @@
         /* ─── FILTER BAR ─── */
         .filter-section {
             padding: 0 20px 20px;
-            position: relative;
-            z-index: 1;
+            position: relative; z-index: 1;
         }
-
         .filter-bar {
             display: flex;
             justify-content: center;
@@ -290,7 +264,6 @@
             max-width: 800px;
             margin: 0 auto;
         }
-
         .filter-btn {
             background: rgba(255,255,255,0.03);
             border: 1px solid var(--border);
@@ -304,19 +277,13 @@
             transition: all 0.25s;
             letter-spacing: 0.5px;
         }
-
-        .filter-btn:hover {
-            border-color: rgba(201,168,76,0.4);
-            color: var(--gold);
-        }
-
+        .filter-btn:hover { border-color: rgba(201,168,76,0.4); color: var(--gold); }
         .filter-btn.active {
             background: rgba(201,168,76,0.12);
             border-color: var(--gold);
             color: var(--gold);
             box-shadow: 0 0 15px rgba(201,168,76,0.15);
         }
-
         .filter-btn.peak-btn.active {
             background: rgba(204,34,0,0.12);
             border-color: var(--red-glow);
@@ -325,12 +292,7 @@
         }
 
         /* ─── GRID ─── */
-        .grid-section {
-            padding: 0 20px;
-            position: relative;
-            z-index: 1;
-        }
-
+        .grid-section { padding: 0 20px; position: relative; z-index: 1; }
         .grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -350,60 +312,46 @@
             overflow: hidden;
             border-radius: 6px;
         }
-
         .card::before {
             content: '';
-            position: absolute;
-            inset: 0;
+            position: absolute; inset: 0;
             background: linear-gradient(135deg, rgba(201,168,76,0.03) 0%, transparent 50%);
-            opacity: 0;
-            transition: opacity 0.3s;
+            opacity: 0; transition: opacity 0.3s;
         }
-
         .card:hover {
             border-color: rgba(201,168,76,0.5);
             transform: translateY(-4px);
             box-shadow: 0 12px 30px rgba(0,0,0,0.5), 0 0 20px rgba(201,168,76,0.1);
         }
-
         .card:hover::before { opacity: 1; }
-
         .card.selected {
             border-color: var(--gold);
             background: rgba(201,168,76,0.07);
             box-shadow: 0 0 25px rgba(201,168,76,0.2), inset 0 0 20px rgba(201,168,76,0.05);
         }
-
         .card.peak {
             background: linear-gradient(180deg, #0e0505 0%, #080202 100%);
             border-color: rgba(204,34,0,0.3);
         }
-
         .card.peak:hover {
             border-color: var(--red-glow);
             box-shadow: 0 12px 30px rgba(0,0,0,0.5), 0 0 25px rgba(255,51,0,0.15);
             transform: translateY(-6px);
         }
-
         .card.peak.selected {
             border-color: var(--red-glow);
             background: rgba(204,34,0,0.08);
             box-shadow: 0 0 30px rgba(255,51,0,0.25);
         }
-
-        /* card glow animation for peak */
         .card.peak::after {
             content: '';
             position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
             background: conic-gradient(from 0deg, transparent 0deg, rgba(255,51,0,0.05) 60deg, transparent 120deg);
             animation: peak-rotate 4s linear infinite;
             pointer-events: none;
         }
-
         @keyframes peak-rotate { to { transform: rotate(360deg); } }
 
         .card-inner {
@@ -412,14 +360,10 @@
             flex-direction: column;
             align-items: center;
             gap: 8px;
-            position: relative;
-            z-index: 1;
+            position: relative; z-index: 1;
         }
-
         .card-badge {
-            position: absolute;
-            top: 0;
-            left: 0;
+            position: absolute; top: 0; left: 0;
             font-size: 0.45rem;
             font-family: 'Orbitron', sans-serif;
             font-weight: 700;
@@ -429,126 +373,66 @@
             color: var(--gold);
             border-bottom-right-radius: 6px;
         }
-
-        .card.peak .card-badge {
-            background: rgba(204,34,0,0.3);
-            color: var(--red-glow);
-        }
+        .card.peak .card-badge { background: rgba(204,34,0,0.3); color: var(--red-glow); }
 
         .card-icon {
-            width: 52px;
-            height: 52px;
+            width: 52px; height: 52px;
             border-radius: 50%;
             background: rgba(255,255,255,0.04);
             border: 1px solid rgba(255,255,255,0.07);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.6rem;
-            line-height: 1;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.6rem; line-height: 1;
             transition: all 0.3s;
             margin-top: 4px;
             filter: drop-shadow(0 0 6px rgba(0,0,0,0.4));
         }
-
-        .card:hover .card-icon {
-            color: var(--gold);
-            border-color: var(--border-gold);
-            box-shadow: 0 0 15px rgba(201,168,76,0.2);
-        }
-
-        .card.selected .card-icon {
-            color: var(--gold-light);
-            border-color: var(--gold);
-            background: rgba(201,168,76,0.1);
-            box-shadow: 0 0 20px rgba(201,168,76,0.3);
-        }
-
-        .card.peak .card-icon {
-            color: rgba(255,100,80,0.6);
-            border-color: rgba(204,34,0,0.2);
-        }
-
-        .card.peak:hover .card-icon,
-        .card.peak.selected .card-icon {
-            color: var(--red-glow);
-            border-color: rgba(204,34,0,0.5);
+        .card:hover .card-icon { color: var(--gold); border-color: var(--border-gold); box-shadow: 0 0 15px rgba(201,168,76,0.2); }
+        .card.selected .card-icon { color: var(--gold-light); border-color: var(--gold); background: rgba(201,168,76,0.1); box-shadow: 0 0 20px rgba(201,168,76,0.3); }
+        .card.peak .card-icon { color: rgba(255,100,80,0.6); border-color: rgba(204,34,0,0.2); }
+        .card.peak:hover .card-icon, .card.peak.selected .card-icon {
+            color: var(--red-glow); border-color: rgba(204,34,0,0.5);
             box-shadow: 0 0 20px rgba(255,51,0,0.3);
             animation: icon-float 2.5s ease-in-out infinite;
         }
-
         @keyframes icon-float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
 
-        .card-name {
-            font-weight: 700;
-            font-size: 0.8rem;
-            text-align: center;
-            color: var(--text);
-            line-height: 1.3;
-            transition: color 0.2s;
-        }
-
-        .card:hover .card-name,
-        .card.selected .card-name { color: var(--gold-light); }
-        .card.peak:hover .card-name,
-        .card.peak.selected .card-name { color: #ff8866; }
-
-        .card-source {
-            font-size: 0.6rem;
-            color: var(--text-dim);
-            font-family: 'Orbitron', sans-serif;
-            letter-spacing: 0.5px;
-        }
-
+        .card-name { font-weight: 700; font-size: 0.8rem; text-align: center; color: var(--text); line-height: 1.3; transition: color 0.2s; }
+        .card:hover .card-name, .card.selected .card-name { color: var(--gold-light); }
+        .card.peak:hover .card-name, .card.peak.selected .card-name { color: #ff8866; }
+        .card-source { font-size: 0.6rem; color: var(--text-dim); font-family: 'Orbitron', sans-serif; letter-spacing: 0.5px; }
         .card.peak .card-source { color: rgba(255,80,50,0.5); }
 
-
-
         .peak-tag {
-            position: absolute;
-            bottom: 0;
-            right: 0;
+            position: absolute; bottom: 0; right: 0;
             font-size: 0.45rem;
             font-family: 'Orbitron', sans-serif;
             font-weight: 900;
             padding: 3px 7px;
-            background: var(--red);
-            color: #fff;
+            background: var(--red); color: #fff;
             letter-spacing: 1px;
             border-top-left-radius: 4px;
             animation: peak-flash 2s infinite;
         }
-
         @keyframes peak-flash { 0%,100%{opacity:1} 50%{opacity:0.6} }
 
         .selected-indicator {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            width: 18px;
-            height: 18px;
+            position: absolute; top: 8px; right: 8px;
+            width: 18px; height: 18px;
             background: var(--gold);
             border-radius: 50%;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.6rem;
-            color: #000;
-            font-weight: 900;
+            display: none; align-items: center; justify-content: center;
+            font-size: 0.6rem; color: #000; font-weight: 900;
             animation: pop-in 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-
         .card.selected .selected-indicator { display: flex; }
         .card.peak.selected .selected-indicator { background: var(--red-glow); }
-
         @keyframes pop-in { 0%{transform:scale(0)} 100%{transform:scale(1)} }
 
         /* ─── BATTLE CONTROLS ─── */
         .battle-controls {
             display: none;
             position: fixed;
-            bottom: 30px;
-            left: 50%;
+            bottom: 30px; left: 50%;
             transform: translateX(-50%);
             z-index: 600;
             background: rgba(8,8,8,0.97);
@@ -561,505 +445,148 @@
             box-shadow: 0 20px 60px rgba(0,0,0,0.8), 0 0 40px rgba(201,168,76,0.1);
             animation: slide-up 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-
         @keyframes slide-up { from{transform:translateX(-50%) translateY(20px);opacity:0} to{transform:translateX(-50%) translateY(0);opacity:1} }
-
         .battle-controls.show { display: flex; }
 
-        .battle-vs {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.7rem;
-            color: var(--text-dim);
-            letter-spacing: 2px;
-        }
-
-        .selected-names {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 0.8rem;
-            font-weight: 700;
-        }
-
-        .s-name {
-            color: var(--gold);
-            max-width: 100px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .vs-dot {
-            color: var(--text-dim);
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.65rem;
-        }
+        .battle-vs { font-family: 'Orbitron', sans-serif; font-size: 0.7rem; color: var(--text-dim); letter-spacing: 2px; }
+        .selected-names { display: flex; align-items: center; gap: 10px; font-size: 0.8rem; font-weight: 700; }
+        .s-name { color: var(--gold); max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .vs-dot { color: var(--text-dim); font-family: 'Orbitron', sans-serif; font-size: 0.65rem; }
 
         .btn-battle {
             background: linear-gradient(135deg, #a07830, #d4a840, #a07830);
             background-size: 200% 200%;
-            border: none;
-            color: #000;
-            padding: 10px 22px;
-            border-radius: 30px;
+            border: none; color: #000;
+            padding: 10px 22px; border-radius: 30px;
             font-family: 'Orbitron', sans-serif;
-            font-size: 0.7rem;
-            font-weight: 700;
-            cursor: pointer;
-            letter-spacing: 1px;
+            font-size: 0.7rem; font-weight: 700;
+            cursor: pointer; letter-spacing: 1px;
             animation: gold-shine 3s ease infinite;
             transition: transform 0.2s;
         }
-
         .btn-battle:hover { transform: scale(1.05); }
-
         @keyframes gold-shine { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
 
         .btn-luck {
             background: transparent;
             border: 1px solid rgba(0,229,204,0.3);
             color: var(--neon);
-            padding: 10px 18px;
-            border-radius: 30px;
+            padding: 10px 18px; border-radius: 30px;
             font-family: 'Cairo', sans-serif;
-            font-size: 0.75rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s;
+            font-size: 0.75rem; font-weight: 700;
+            cursor: pointer; transition: all 0.2s;
         }
-
-        .btn-luck:hover {
-            background: rgba(0,229,204,0.1);
-            border-color: var(--neon);
-        }
+        .btn-luck:hover { background: rgba(0,229,204,0.1); border-color: var(--neon); }
 
         .btn-clear {
             background: none;
             border: 1px solid rgba(255,255,255,0.1);
             color: var(--text-dim);
-            padding: 8px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.75rem;
-            transition: all 0.2s;
+            padding: 8px; border-radius: 6px;
+            cursor: pointer; font-size: 0.75rem; transition: all 0.2s;
         }
-
         .btn-clear:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
 
         /* ─── BATTLE OVERLAY ─── */
         #battle-overlay {
-            position: fixed;
-            inset: 0;
+            position: fixed; inset: 0;
             background: rgba(0,0,0,0.97);
             z-index: 900;
             display: none;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            overflow-y: auto;
+            align-items: center; justify-content: center;
+            padding: 20px; overflow-y: auto;
         }
-
         #battle-overlay.show { display: flex; }
 
-        .battle-arena {
-            max-width: 700px;
-            width: 100%;
-            text-align: center;
-        }
-
-        .battle-label {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.6rem;
-            color: var(--text-dim);
-            letter-spacing: 5px;
-            margin-bottom: 10px;
-        }
-
-        .battle-title {
-            font-family: 'Cinzel', serif;
-            font-size: clamp(1.5rem, 4vw, 2.5rem);
-            color: var(--gold-light);
-            text-shadow: 0 0 30px rgba(201,168,76,0.5);
-            margin-bottom: 30px;
-        }
-
-        .battle-fighters {
-            display: grid;
-            grid-template-columns: 1fr auto 1fr;
-            gap: 20px;
-            align-items: center;
-            margin-bottom: 30px;
-        }
-
-        .fighter-card {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid var(--border);
-            padding: 24px 16px;
-            border-radius: 8px;
-            transition: all 0.5s;
-        }
-
-        .fighter-card.winner {
-            border-color: var(--gold);
-            background: rgba(201,168,76,0.08);
-            box-shadow: 0 0 30px rgba(201,168,76,0.2);
-        }
-
-        .fighter-card.loser {
-            opacity: 0.4;
-        }
-
-        .fighter-icon {
-            font-size: 2rem;
-            margin-bottom: 10px;
-            color: var(--text-dim);
-        }
-
+        .battle-arena { max-width: 700px; width: 100%; text-align: center; }
+        .battle-label { font-family: 'Orbitron', sans-serif; font-size: 0.6rem; color: var(--text-dim); letter-spacing: 5px; margin-bottom: 10px; }
+        .battle-title { font-family: 'Cinzel', serif; font-size: clamp(1.5rem, 4vw, 2.5rem); color: var(--gold-light); text-shadow: 0 0 30px rgba(201,168,76,0.5); margin-bottom: 30px; }
+        .battle-fighters { display: grid; grid-template-columns: 1fr auto 1fr; gap: 20px; align-items: center; margin-bottom: 30px; }
+        .fighter-card { background: rgba(255,255,255,0.03); border: 1px solid var(--border); padding: 24px 16px; border-radius: 8px; transition: all 0.5s; }
+        .fighter-card.winner { border-color: var(--gold); background: rgba(201,168,76,0.08); box-shadow: 0 0 30px rgba(201,168,76,0.2); }
+        .fighter-card.loser { opacity: 0.4; }
+        .fighter-icon { font-size: 2rem; margin-bottom: 10px; color: var(--text-dim); }
         .fighter-card.winner .fighter-icon { color: var(--gold); }
-
-        .fighter-name {
-            font-family: 'Cinzel', serif;
-            font-size: 1rem;
-            font-weight: 700;
-            color: var(--text);
-            margin-bottom: 4px;
-        }
-
+        .fighter-name { font-family: 'Cinzel', serif; font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 4px; }
         .fighter-card.winner .fighter-name { color: var(--gold-light); }
+        .fighter-ability { font-size: 0.65rem; color: var(--gold-dim); font-family: 'Orbitron', sans-serif; letter-spacing: 0.5px; }
+        .fighter-score { font-family: 'Orbitron', sans-serif; font-size: 2rem; font-weight: 900; color: var(--text-dim); margin-top: 12px; transition: all 0.5s; }
+        .fighter-card.winner .fighter-score { color: var(--gold-light); text-shadow: 0 0 20px rgba(201,168,76,0.5); }
+        .vs-center { font-family: 'Orbitron', sans-serif; font-size: 1.2rem; font-weight: 900; color: var(--text-dim); letter-spacing: 2px; }
 
-        .fighter-ability {
-            font-size: 0.65rem;
-            color: var(--gold-dim);
-            font-family: 'Orbitron', sans-serif;
-            letter-spacing: 0.5px;
-        }
+        .hp-section { margin: 0 0 25px; }
+        .hp-label { display: flex; justify-content: space-between; font-family: 'Orbitron', sans-serif; font-size: 0.6rem; color: var(--text-dim); margin-bottom: 8px; }
+        .hp-track { height: 6px; background: rgba(255,255,255,0.05); border-radius: 3px; overflow: hidden; border: 1px solid var(--border); }
+        .hp-fill { height: 100%; background: linear-gradient(90deg, var(--gold-dim), var(--gold-light)); border-radius: 3px; width: 50%; transition: width 1.5s cubic-bezier(0.2, 0, 0, 1); box-shadow: 0 0 10px rgba(201,168,76,0.4); }
 
-        .fighter-score {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 2rem;
-            font-weight: 900;
-            color: var(--text-dim);
-            margin-top: 12px;
-            transition: all 0.5s;
-        }
-
-        .fighter-card.winner .fighter-score {
-            color: var(--gold-light);
-            text-shadow: 0 0 20px rgba(201,168,76,0.5);
-        }
-
-        .vs-center {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.2rem;
-            font-weight: 900;
-            color: var(--text-dim);
-            letter-spacing: 2px;
-        }
-
-        /* HP BAR */
-        .hp-section {
-            margin: 0 0 25px;
-        }
-
-        .hp-label {
-            display: flex;
-            justify-content: space-between;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.6rem;
-            color: var(--text-dim);
-            margin-bottom: 8px;
-        }
-
-        .hp-track {
-            height: 6px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 3px;
-            overflow: hidden;
-            border: 1px solid var(--border);
-        }
-
-        .hp-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--gold-dim), var(--gold-light));
-            border-radius: 3px;
-            width: 50%;
-            transition: width 1.5s cubic-bezier(0.2, 0, 0, 1);
-            box-shadow: 0 0 10px rgba(201,168,76,0.4);
-        }
-
-        /* BATTLE STORY */
         .battle-story {
             background: rgba(255,255,255,0.02);
             border: 1px solid var(--border);
             border-left: 3px solid var(--gold);
             padding: 16px 20px;
             text-align: left;
-            font-size: 0.85rem;
-            line-height: 1.7;
-            color: var(--text);
+            font-size: 0.85rem; line-height: 1.7; color: var(--text);
             margin-bottom: 25px;
             border-radius: 0 6px 6px 0;
         }
-
         body[lang="ar"] .battle-story { border-left: none; border-right: 3px solid var(--gold); text-align: right; border-radius: 6px 0 0 6px; }
-
         .battle-story strong { color: var(--gold-light); }
 
-        /* INTENSITY BADGE */
-        .intensity-badge {
-            display: inline-block;
-            padding: 4px 14px;
-            border-radius: 20px;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.65rem;
-            font-weight: 700;
-            margin-bottom: 20px;
-            letter-spacing: 1px;
-        }
-
+        .intensity-badge { display: inline-block; padding: 4px 14px; border-radius: 20px; font-family: 'Orbitron', sans-serif; font-size: 0.65rem; font-weight: 700; margin-bottom: 20px; letter-spacing: 1px; }
         .int-epic { background: rgba(255,0,255,0.1); color: #ff66ff; border: 1px solid rgba(255,0,255,0.3); animation: epic-pulse 1s infinite; }
         .int-hard { background: rgba(255,51,0,0.1); color: var(--red-glow); border: 1px solid rgba(255,51,0,0.3); }
         .int-med  { background: rgba(255,165,0,0.1); color: #ffa500; border: 1px solid rgba(255,165,0,0.3); }
         .int-easy { background: rgba(0,255,100,0.1); color: #00ff88; border: 1px solid rgba(0,255,100,0.3); }
-
         @keyframes epic-pulse { 0%,100%{box-shadow:0 0 5px rgba(255,0,255,0.3)} 50%{box-shadow:0 0 15px rgba(255,0,255,0.6)} }
 
-        /* COUNTDOWN */
-        .countdown-num {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 6rem;
-            font-weight: 900;
-            color: var(--gold);
-            text-shadow: 0 0 40px rgba(201,168,76,0.6);
-            display: none;
-            animation: count-pulse 1s ease-in-out;
-        }
-
+        .countdown-num { font-family: 'Orbitron', sans-serif; font-size: 6rem; font-weight: 900; color: var(--gold); text-shadow: 0 0 40px rgba(201,168,76,0.6); display: none; animation: count-pulse 1s ease-in-out; }
         @keyframes count-pulse { 0%{transform:scale(1.5);opacity:0} 50%{transform:scale(1);opacity:1} 100%{transform:scale(0.9);opacity:0.8} }
 
-        /* BATTLE ACTIONS */
-        .battle-actions {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .btn-action {
-            padding: 10px 20px;
-            border-radius: 6px;
-            font-family: 'Cairo', sans-serif;
-            font-size: 0.8rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn-primary {
-            background: rgba(201,168,76,0.12);
-            border: 1px solid var(--gold);
-            color: var(--gold);
-        }
-
+        .battle-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+        .btn-action { padding: 10px 20px; border-radius: 6px; font-family: 'Cairo', sans-serif; font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: all 0.2s; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-primary { background: rgba(201,168,76,0.12); border: 1px solid var(--gold); color: var(--gold); }
         .btn-primary:hover { background: rgba(201,168,76,0.2); }
-
-        .btn-secondary {
-            background: rgba(255,255,255,0.04);
-            border: 1px solid var(--border);
-            color: var(--text-dim);
-        }
-
+        .btn-secondary { background: rgba(255,255,255,0.04); border: 1px solid var(--border); color: var(--text-dim); }
         .btn-secondary:hover { border-color: rgba(255,255,255,0.2); color: var(--text); }
-
-        .btn-cyan {
-            background: rgba(0,229,204,0.08);
-            border: 1px solid rgba(0,229,204,0.3);
-            color: var(--neon);
-        }
-
+        .btn-cyan { background: rgba(0,229,204,0.08); border: 1px solid rgba(0,229,204,0.3); color: var(--neon); }
         .btn-cyan:hover { background: rgba(0,229,204,0.15); }
 
-        /* ═══ LUCK BATTLE ═══ */
+        /* ─── LUCK ─── */
         .luck-section { display: none; }
-
-        .luck-fighters-row {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            margin-bottom: 24px;
-        }
-        .luck-fname {
-            font-family: 'Cinzel', serif;
-            font-size: 0.85rem;
-            color: var(--gold);
-            max-width: 110px;
-            text-align: center;
-            line-height: 1.3;
-        }
-        .luck-vs-dot {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.65rem;
-            color: var(--text-dim);
-            letter-spacing: 2px;
-        }
-
-        /* CHOICE BUTTONS */
-        .rps-btns {
-            display: flex;
-            gap: 18px;
-            justify-content: center;
-            margin-bottom: 16px;
-        }
-        .rps-btn {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-            width: 96px;
-            height: 108px;
-            background: rgba(255,255,255,0.03);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            cursor: pointer;
-            transition: all 0.22s cubic-bezier(.2,0,0,1);
-            padding: 14px 8px 10px;
-        }
-        .rps-btn:hover {
-            border-color: var(--gold);
-            background: rgba(201,168,76,0.07);
-            transform: translateY(-7px) scale(1.06);
-            box-shadow: 0 14px 32px rgba(0,0,0,.5), 0 0 22px rgba(201,168,76,.18);
-        }
-        .rps-btn:active { transform: translateY(-2px) scale(1.02); }
+        .luck-fighters-row { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 24px; }
+        .luck-fname { font-family: 'Cinzel', serif; font-size: 0.85rem; color: var(--gold); max-width: 110px; text-align: center; line-height: 1.3; }
+        .luck-vs-dot { font-family: 'Orbitron', sans-serif; font-size: 0.65rem; color: var(--text-dim); letter-spacing: 2px; }
+        .rps-btns { display: flex; gap: 18px; justify-content: center; margin-bottom: 16px; }
+        .rps-btn { display: flex; flex-direction: column; align-items: center; gap: 6px; width: 96px; height: 108px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 14px; cursor: pointer; transition: all 0.22s cubic-bezier(.2,0,0,1); padding: 14px 8px 10px; }
+        .rps-btn:hover { border-color: var(--gold); background: rgba(201,168,76,0.07); transform: translateY(-7px) scale(1.06); box-shadow: 0 14px 32px rgba(0,0,0,.5), 0 0 22px rgba(201,168,76,.18); }
         .rps-emoji-big { font-size: 2.5rem; line-height: 1; display: block; }
-        .rps-btn-label {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.52rem;
-            color: var(--text-dim);
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-        }
-
-        /* SHOWDOWN REVEAL */
-        .rps-showdown {
-            display: grid;
-            grid-template-columns: 1fr 60px 1fr;
-            gap: 10px;
-            align-items: center;
-            max-width: 480px;
-            margin: 16px auto 20px;
-        }
-        .rps-player {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 18px 10px;
-            text-align: center;
-            transition: all .5s ease;
-        }
-        .rps-player.won {
-            border-color: var(--gold);
-            background: rgba(201,168,76,0.09);
-            box-shadow: 0 0 28px rgba(201,168,76,.22);
-        }
-        .rps-player.lost {
-            opacity: .35;
-            filter: grayscale(.6);
-        }
-        .rps-player.draw-state {
-            border-color: rgba(0,229,204,.4);
-            background: rgba(0,229,204,.04);
-        }
-        .rps-player-tag {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.5rem;
-            color: var(--text-dim);
-            letter-spacing: 2px;
-            margin-bottom: 8px;
-        }
-        .rps-chosen-emoji {
-            font-size: 3rem;
-            line-height: 1;
-            display: block;
-            margin-bottom: 8px;
-            animation: bounceIn .45s cubic-bezier(.175,.885,.32,1.275) both;
-        }
-        @keyframes bounceIn {
-            0%   { transform: scale(0) rotate(-15deg); opacity: 0; }
-            100% { transform: scale(1) rotate(0); opacity: 1; }
-        }
-        .rps-player-hero-name {
-            font-family: 'Cinzel', serif;
-            font-size: 0.72rem;
-            color: var(--text);
-            line-height: 1.3;
-        }
-        .rps-mid-col {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-        }
-        .rps-mid-vs {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.6rem;
-            color: var(--text-dim);
-            letter-spacing: 2px;
-        }
-        .rps-clash-icon {
-            font-size: 1.6rem;
-            animation: popIn .5s ease both;
-        }
-        @keyframes popIn {
-            0% { transform: scale(0); opacity: 0; }
-            60%{ transform: scale(1.35); }
-            100%{ transform: scale(1); opacity: 1; }
-        }
-
-        /* VERDICT */
+        .rps-btn-label { font-family: 'Orbitron', sans-serif; font-size: 0.52rem; color: var(--text-dim); letter-spacing: 1.5px; text-transform: uppercase; }
+        .rps-showdown { display: grid; grid-template-columns: 1fr 60px 1fr; gap: 10px; align-items: center; max-width: 480px; margin: 16px auto 20px; }
+        .rps-player { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 12px; padding: 18px 10px; text-align: center; transition: all .5s ease; }
+        .rps-player.won { border-color: var(--gold); background: rgba(201,168,76,0.09); box-shadow: 0 0 28px rgba(201,168,76,.22); }
+        .rps-player.lost { opacity: .35; filter: grayscale(.6); }
+        .rps-player.draw-state { border-color: rgba(0,229,204,.4); background: rgba(0,229,204,.04); }
+        .rps-player-tag { font-family: 'Orbitron', sans-serif; font-size: 0.5rem; color: var(--text-dim); letter-spacing: 2px; margin-bottom: 8px; }
+        .rps-chosen-emoji { font-size: 3rem; line-height: 1; display: block; margin-bottom: 8px; animation: bounceIn .45s cubic-bezier(.175,.885,.32,1.275) both; }
+        @keyframes bounceIn { 0%{transform:scale(0) rotate(-15deg);opacity:0;} 100%{transform:scale(1) rotate(0);opacity:1;} }
+        .rps-player-hero-name { font-family: 'Cinzel', serif; font-size: 0.72rem; color: var(--text); line-height: 1.3; }
+        .rps-mid-col { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+        .rps-mid-vs { font-family: 'Orbitron', sans-serif; font-size: 0.6rem; color: var(--text-dim); letter-spacing: 2px; }
+        .rps-clash-icon { font-size: 1.6rem; animation: popIn .5s ease both; }
+        @keyframes popIn { 0%{transform:scale(0);opacity:0;} 60%{transform:scale(1.35);} 100%{transform:scale(1);opacity:1;} }
         .rps-verdict-box { text-align: center; margin-top: 4px; }
-        .rps-verdict-text {
-            font-family: 'Cinzel', serif;
-            font-size: 1.5rem;
-            font-weight: 900;
-            animation: fadeUp .4s ease both;
-            margin-bottom: 6px;
-        }
+        .rps-verdict-text { font-family: 'Cinzel', serif; font-size: 1.5rem; font-weight: 900; animation: fadeUp .4s ease both; margin-bottom: 6px; }
         .rps-verdict-text.win  { color: var(--gold-light); text-shadow: 0 0 20px rgba(240,201,110,.4); }
         .rps-verdict-text.lose { color: #ff6644; }
         .rps-verdict-text.draw { color: var(--neon); }
-        .rps-winner-line {
-            font-size: 0.78rem;
-            color: var(--text-dim);
-            animation: fadeUp .5s ease .1s both;
-        }
+        .rps-winner-line { font-size: 0.78rem; color: var(--text-dim); animation: fadeUp .5s ease .1s both; }
         .rps-winner-line strong { color: var(--gold); }
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(12px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes fadeUp { from{opacity:0;transform:translateY(12px);} to{opacity:1;transform:translateY(0);} }
 
         /* ─── LORE ─── */
-        #lore-page {
-            display: none;
-            position: relative;
-            z-index: 1;
-            padding: 20px;
-        }
-
-        .lore-viewer {
-            display: none;
-            max-width: 700px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
+        #lore-page { display: none; position: relative; z-index: 1; padding: 20px; }
+        .lore-viewer { display: none; max-width: 700px; margin: 0 auto; padding: 20px; }
         .manuscript {
             background: linear-gradient(180deg, #1a1508 0%, #120f06 100%);
             border: 1px solid rgba(201,168,76,0.2);
@@ -1068,57 +595,18 @@
             box-shadow: 0 20px 60px rgba(0,0,0,0.8), inset 0 0 60px rgba(201,168,76,0.03);
             position: relative;
         }
-
-        .manuscript::before {
-            content: '';
-            position: absolute;
-            inset: 3px;
-            border: 1px solid rgba(201,168,76,0.08);
-            border-radius: 3px;
-            pointer-events: none;
-        }
-
-        .m-title {
-            font-family: 'Cinzel', serif;
-            font-size: 1.8rem;
-            color: var(--gold-light);
-            text-align: center;
-            margin-bottom: 12px;
-            text-shadow: 0 0 20px rgba(201,168,76,0.3);
-        }
-
-        .m-divider {
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
-            margin: 16px 0 24px;
-        }
-
-        .m-content {
-            font-family: 'Cairo', sans-serif;
-            font-size: 1.05rem;
-            line-height: 2;
-            color: #c4b896;
-            text-align: justify;
-        }
-
-        .drop-cap {
-            float: right;
-            font-family: 'Cinzel', serif;
-            font-size: 3.5rem;
-            line-height: 0.8;
-            color: var(--gold);
-            padding: 5px 0 5px 16px;
-            font-weight: 900;
-        }
-
+        .manuscript::before { content: ''; position: absolute; inset: 3px; border: 1px solid rgba(201,168,76,0.08); border-radius: 3px; pointer-events: none; }
+        .m-title { font-family: 'Cinzel', serif; font-size: 1.8rem; color: var(--gold-light); text-align: center; margin-bottom: 12px; text-shadow: 0 0 20px rgba(201,168,76,0.3); }
+        .m-divider { height: 1px; background: linear-gradient(90deg, transparent, var(--gold-dim), transparent); margin: 16px 0 24px; }
+        .m-content { font-family: 'Cairo', sans-serif; font-size: 1.05rem; line-height: 2; color: #c4b896; text-align: justify; }
+        .drop-cap { float: right; font-family: 'Cinzel', serif; font-size: 3.5rem; line-height: 0.8; color: var(--gold); padding: 5px 0 5px 16px; font-weight: 900; }
         body[lang="en"] .drop-cap { float: left; padding: 5px 16px 5px 0; }
         body[lang="en"] .m-content { text-align: left; }
 
-        /* ─── HELPER BUTTON ─── */
+        /* ─── HELPER ─── */
         .helper-link {
             position: fixed;
-            bottom: 30px;
-            left: 20px;
+            bottom: 30px; left: 20px;
             z-index: 600;
             background: linear-gradient(135deg, #8b6914, #c9a84c, #8b6914);
             background-size: 200%;
@@ -1127,19 +615,387 @@
             padding: 10px 20px;
             border-radius: 30px;
             font-family: 'Orbitron', sans-serif;
-            font-size: 0.65rem;
-            font-weight: 900;
+            font-size: 0.65rem; font-weight: 900;
             letter-spacing: 1px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            display: flex; align-items: center; gap: 10px;
             box-shadow: 0 5px 20px rgba(0,0,0,0.4), 0 0 20px rgba(201,168,76,0.2);
             animation: helper-shine 3s ease infinite;
             transition: transform 0.2s;
         }
-
         .helper-link:hover { transform: scale(1.05); }
         @keyframes helper-shine { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
+
+        /* ═══════════════════════════════════════
+           AI GAME ZONE PAGE
+        ═══════════════════════════════════════ */
+        #ai-page {
+            display: none;
+            position: relative;
+            z-index: 1;
+            padding: 0;
+            min-height: calc(100vh - 64px);
+        }
+
+        .ai-zone-wrapper {
+            max-width: 620px;
+            margin: 0 auto;
+            padding: 24px 16px 40px;
+        }
+
+        /* AI Hero Banner */
+        .ai-hero-banner {
+            text-align: center;
+            padding: 30px 20px 20px;
+            background: linear-gradient(180deg, rgba(255,107,0,0.06) 0%, transparent 100%);
+            border-bottom: 1px solid var(--gz-border);
+            margin-bottom: 0;
+        }
+        .ai-wordmark {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(1.6rem, 5vw, 2.3rem);
+            font-weight: 900;
+            letter-spacing: 4px;
+            color: #ffd700;
+            text-shadow: 0 0 25px rgba(255,215,0,0.4), 0 0 60px rgba(255,215,0,0.1);
+            line-height: 1;
+        }
+        .ai-wordmark em { color: var(--gz-orange); font-style: normal; }
+        .ai-tagline {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.66rem;
+            color: var(--gz-muted);
+            letter-spacing: 2px;
+            margin-top: 6px;
+        }
+
+        /* AI Mode Tabs */
+        .ai-mode-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--gz-border);
+            background: var(--gz-s1);
+            overflow-x: auto;
+        }
+        .ai-mode-tab {
+            flex: 1; min-width: 75px;
+            padding: 9px 6px;
+            border: none;
+            border-bottom: 2px solid transparent;
+            background: transparent;
+            color: var(--gz-muted);
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 700;
+            white-space: nowrap;
+            transition: all 0.2s;
+            display: flex; flex-direction: column; align-items: center; gap: 2px;
+        }
+        .ai-mode-tab .ti { font-size: 0.95rem; }
+        .ai-mode-tab:hover { color: var(--gz-text); background: rgba(255,255,255,0.03); }
+        .ai-mode-tab.active { color: #ffd700; border-bottom-color: #ffd700; background: rgba(255,215,0,0.04); }
+
+        /* Chat Zone */
+        .gz-chat-zone {
+            display: flex;
+            flex-direction: column;
+            height: 520px;
+            background: var(--gz-s1);
+            border: 1px solid var(--gz-border);
+            border-top: none;
+        }
+
+        .gz-chat-header {
+            padding: 11px 15px;
+            background: linear-gradient(135deg, rgba(255,215,0,0.05), rgba(255,107,0,0.03));
+            border-bottom: 1px solid var(--gz-border);
+            display: flex; align-items: center; gap: 11px;
+            flex-shrink: 0;
+        }
+        .gz-av {
+            width: 42px; height: 42px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #ffd700, #ff6b00);
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.95rem; font-weight: 900; color: #000;
+            box-shadow: 0 0 18px rgba(255,215,0,0.25);
+            position: relative; flex-shrink: 0;
+        }
+        .gz-av::after {
+            content: '';
+            position: absolute; bottom: -2px; right: -2px;
+            width: 9px; height: 9px;
+            border-radius: 50%;
+            background: var(--gz-green);
+            border: 2px solid var(--gz-s1);
+            box-shadow: 0 0 7px var(--gz-green);
+            animation: gz-pulse 2s infinite;
+        }
+        @keyframes gz-pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:0.5;transform:scale(1.15);} }
+
+        .gz-bot-info { flex: 1; }
+        .gz-bot-name { font-family: 'Orbitron', sans-serif; font-size: 0.8rem; font-weight: 900; color: #ffd700; letter-spacing: 1px; }
+        .gz-bot-sub { font-family: 'Share Tech Mono', monospace; font-size: 0.6rem; color: var(--gz-green); display: flex; align-items: center; gap: 5px; margin-top: 2px; }
+        .gz-live-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--gz-green); box-shadow: 0 0 5px var(--gz-green); animation: gz-pulse 1.5s infinite; }
+        .gz-hdr-btns { display: flex; gap: 5px; }
+        .gz-hbtn {
+            padding: 4px 8px; border-radius: 7px;
+            border: 1px solid var(--gz-border);
+            background: rgba(255,255,255,0.03);
+            color: var(--gz-muted);
+            cursor: pointer;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.58rem; font-weight: 700; letter-spacing: 1px;
+            transition: all 0.2s;
+        }
+        .gz-hbtn:hover { background: rgba(255,215,0,0.08); color: #ffd700; border-color: rgba(255,215,0,0.3); }
+
+        /* Messages */
+        .gz-chat-msgs {
+            flex: 1; overflow-y: auto;
+            padding: 12px 11px;
+            display: flex; flex-direction: column; gap: 10px;
+            scroll-behavior: smooth;
+        }
+        .gz-chat-msgs::-webkit-scrollbar { width: 3px; }
+        .gz-chat-msgs::-webkit-scrollbar-thumb { background: rgba(255,215,0,0.15); border-radius: 2px; }
+
+        .gz-msg { display: flex; gap: 8px; align-items: flex-end; animation: gz-msgIn 0.28s cubic-bezier(0.16,1,0.3,1) both; }
+        @keyframes gz-msgIn { from{opacity:0;transform:translateY(10px);} to{opacity:1;transform:translateY(0);} }
+        .gz-msg.gz-user { flex-direction: row-reverse; }
+
+        .gz-mav { width: 26px; height: 26px; border-radius: 7px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 0.6rem; font-weight: 900; font-family: 'Orbitron', sans-serif; }
+        .gz-msg.gz-bot .gz-mav { background: linear-gradient(135deg, #ffd700, #ff6b00); color: #000; }
+        .gz-msg.gz-user .gz-mav { background: rgba(255,255,255,0.05); border: 1px solid var(--gz-border); color: var(--gz-muted); font-size: 0.8rem; }
+
+        .gz-bubble {
+            max-width: 82%;
+            padding: 10px 13px;
+            border-radius: 14px;
+            font-size: 0.85rem; line-height: 1.65; word-break: break-word;
+        }
+        .gz-msg.gz-bot .gz-bubble { background: var(--gz-s2); border: 1px solid var(--gz-border); color: var(--gz-text); border-bottom-right-radius: 3px; }
+        .gz-msg.gz-user .gz-bubble { background: linear-gradient(135deg, #ffd700, #ff6b00); color: #000; font-weight: 700; border-bottom-left-radius: 3px; }
+        .gz-mtime { font-size: 0.57rem; color: var(--gz-muted); margin-top: 3px; opacity: 0.45; font-family: 'Share Tech Mono', monospace; }
+
+        /* Battle Result Card */
+        .gz-battle-result {
+            margin-top: 10px;
+            background: var(--gz-s3);
+            border: 1px solid rgba(255,215,0,0.15);
+            border-radius: 10px;
+            padding: 10px 12px;
+            font-size: 0.78rem;
+        }
+        .gz-br-title { font-family: 'Orbitron', sans-serif; font-size: 0.62rem; color: #ffd700; letter-spacing: 1px; margin-bottom: 8px; }
+        .gz-br-vs { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+        .gz-br-side { flex: 1; text-align: center; padding: 7px; border-radius: 8px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); }
+        .gz-br-side.gz-winner { border-color: rgba(255,215,0,0.35); background: rgba(255,215,0,0.05); }
+        .gz-br-side .gz-sn { font-weight: 700; font-size: 0.78rem; color: var(--gz-text); }
+        .gz-br-side .gz-sb { height: 4px; border-radius: 2px; margin-top: 5px; background: rgba(255,255,255,0.08); overflow: hidden; }
+        .gz-br-side .gz-sf { height: 100%; border-radius: 2px; }
+        .gz-vs-badge { font-family: 'Orbitron', sans-serif; font-size: 0.75rem; font-weight: 900; color: var(--gz-red); text-shadow: 0 0 10px rgba(255,34,68,0.5); }
+        .gz-br-verdict { font-size: 0.72rem; color: var(--gz-muted); text-align: center; padding-top: 7px; border-top: 1px solid rgba(255,255,255,0.05); }
+
+        /* Typing */
+        .gz-typing-bub { display: flex; gap: 5px; padding: 11px 14px; align-items: center; }
+        .gz-tdot { width: 6px; height: 6px; border-radius: 50%; background: #ffd700; animation: gz-td 1.2s infinite; box-shadow: 0 0 5px #ffd700; }
+        .gz-tdot:nth-child(2){animation-delay:0.2s;} .gz-tdot:nth-child(3){animation-delay:0.4s;}
+        @keyframes gz-td { 0%,100%{transform:translateY(0);opacity:0.35;} 50%{transform:translateY(-5px);opacity:1;} }
+
+        /* Quick chips */
+        .gz-qwrap { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 11px 7px; flex-shrink: 0; }
+        .gz-qchip {
+            padding: 5px 11px; border-radius: 20px;
+            border: 1px solid rgba(255,215,0,0.2);
+            background: rgba(255,215,0,0.04);
+            color: #ffd700;
+            cursor: pointer; font-size: 0.7rem;
+            font-family: 'Cairo', sans-serif;
+            transition: all 0.18s; white-space: nowrap;
+        }
+        .gz-qchip:hover { background: rgba(255,215,0,0.1); border-color: #ffd700; transform: translateY(-1px); }
+        .gz-qchip.hot { border-color: rgba(255,107,0,0.3); color: var(--gz-orange); }
+        .gz-qchip.hot:hover { background: rgba(255,107,0,0.1); border-color: var(--gz-orange); }
+
+        /* Stats strip */
+        .gz-stats-strip { display: flex; border-top: 1px solid var(--gz-border); background: rgba(0,0,0,0.25); flex-shrink: 0; }
+        .gz-sst { flex: 1; text-align: center; padding: 6px 4px; border-left: 1px solid var(--gz-border); }
+        .gz-sst:last-child { border-left: none; }
+        .gz-sst-v { font-family: 'Orbitron', sans-serif; font-size: 0.7rem; font-weight: 700; color: #ffd700; }
+        .gz-sst-l { font-size: 0.52rem; color: var(--gz-muted); font-family: 'Share Tech Mono', monospace; }
+
+        /* Input */
+        .gz-chat-input-row {
+            padding: 9px 11px;
+            border-top: 1px solid var(--gz-border);
+            background: rgba(0,0,0,0.3);
+            display: flex; gap: 8px; align-items: flex-end;
+            flex-shrink: 0;
+        }
+        .gz-cinput {
+            flex: 1;
+            background: var(--gz-s2);
+            border: 1px solid var(--gz-border);
+            border-radius: 11px;
+            padding: 9px 12px;
+            color: var(--gz-text);
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.85rem;
+            resize: none; outline: none;
+            min-height: 40px; max-height: 90px;
+            line-height: 1.5;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .gz-cinput:focus { border-color: rgba(255,215,0,0.35); box-shadow: 0 0 0 3px rgba(255,215,0,0.05); }
+        .gz-cinput::placeholder { color: rgba(90,96,112,0.7); }
+        .gz-sbtn {
+            width: 40px; height: 40px;
+            border-radius: 10px; border: none;
+            background: linear-gradient(135deg, #ffd700, #ff6b00);
+            color: #000; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.9rem; font-weight: 900;
+            flex-shrink: 0;
+            transition: all 0.18s;
+            box-shadow: 0 3px 12px rgba(255,215,0,0.28);
+        }
+        .gz-sbtn:hover { transform: scale(1.07); }
+        .gz-sbtn:active { transform: scale(0.94); }
+        .gz-sbtn:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
+
+        /* Panels */
+        .gz-panel {
+            background: var(--gz-s1);
+            border: 1px solid var(--gz-border);
+            border-top: none;
+            padding: 14px;
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 520px;
+            overflow-y: auto;
+        }
+        .gz-panel.active { display: flex; }
+        .gz-panel::-webkit-scrollbar { width: 3px; }
+        .gz-panel::-webkit-scrollbar-thumb { background: rgba(255,215,0,0.15); border-radius: 2px; }
+        .gz-p-title { font-family: 'Orbitron', sans-serif; font-size: 0.7rem; color: #ffd700; letter-spacing: 2px; display: flex; align-items: center; gap: 8px; }
+        .gz-p-title::after { content: ''; flex: 1; height: 1px; background: var(--gz-border); }
+
+        /* Char Grid */
+        .gz-char-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 7px; }
+        .gz-char-card {
+            background: var(--gz-s2);
+            border: 1px solid var(--gz-border);
+            border-radius: 10px;
+            padding: 10px 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative; overflow: hidden;
+        }
+        .gz-char-card::before { content: ''; position: absolute; inset: 0; opacity: 0; background: linear-gradient(135deg, rgba(255,215,0,0.07), transparent); transition: opacity 0.2s; }
+        .gz-char-card:hover::before { opacity: 1; }
+        .gz-char-card:hover { border-color: rgba(255,215,0,0.3); transform: translateY(-2px); }
+        .gz-char-card.gz-sel { border-color: #ffd700; box-shadow: 0 0 14px rgba(255,215,0,0.18); }
+        .gz-cico { font-size: 1.55rem; line-height: 1; margin-bottom: 4px; }
+        .gz-cname { font-size: 0.66rem; font-weight: 700; color: var(--gz-text); }
+        .gz-cgame { font-size: 0.52rem; color: var(--gz-muted); margin-top: 1px; }
+        .gz-cpow { font-family: 'Orbitron', sans-serif; font-size: 0.67rem; color: #ffd700; margin-top: 3px; }
+
+        /* VS Pair */
+        .gz-vs-pair { display: flex; align-items: center; gap: 10px; background: var(--gz-s2); border: 1px solid var(--gz-border); border-radius: 10px; padding: 10px; }
+        .gz-vs-slot { flex: 1; text-align: center; padding: 8px; border-radius: 8px; border: 1px dashed rgba(255,255,255,0.08); min-height: 58px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; }
+        .gz-vs-slot.gz-filled { border-style: solid; border-color: rgba(255,215,0,0.2); background: rgba(255,215,0,0.03); }
+        .gz-vs-ico { font-size: 1.4rem; }
+        .gz-vs-name { font-size: 0.7rem; font-weight: 700; color: var(--gz-text); }
+        .gz-vs-div { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 1.1rem; color: var(--gz-red); text-shadow: 0 0 12px rgba(255,34,68,0.5); flex-shrink: 0; }
+        .gz-battle-btn {
+            padding: 10px; border-radius: 10px; border: none;
+            background: linear-gradient(135deg, #ffd700, #ff6b00);
+            color: #000;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.72rem; font-weight: 900; letter-spacing: 2px;
+            cursor: pointer; transition: all 0.2s;
+            box-shadow: 0 4px 14px rgba(255,215,0,0.25);
+        }
+        .gz-battle-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(255,215,0,0.35); }
+        .gz-battle-btn:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
+
+        /* Debate items */
+        .gz-debate-item {
+            background: var(--gz-s2);
+            border: 1px solid var(--gz-border);
+            border-radius: 10px; padding: 12px;
+            cursor: pointer; transition: all 0.2s; position: relative;
+        }
+        .gz-debate-item:hover { border-color: rgba(255,107,0,0.3); transform: translateX(-2px); }
+        .gz-d-num { position: absolute; top: 10px; left: 12px; font-family: 'Orbitron', sans-serif; font-size: 0.6rem; color: var(--gz-orange); }
+        .gz-d-title { font-weight: 700; font-size: 0.8rem; color: var(--gz-text); padding-right: 16px; }
+        .gz-d-meta { font-size: 0.62rem; color: var(--gz-muted); margin-top: 4px; font-family: 'Share Tech Mono', monospace; }
+        .gz-d-tags { display: flex; gap: 5px; margin-top: 7px; flex-wrap: wrap; }
+        .gz-dtag { padding: 2px 8px; border-radius: 20px; font-size: 0.57rem; border: 1px solid; font-family: 'Share Tech Mono', monospace; }
+
+        /* Tier */
+        .gz-tier-row { display: flex; align-items: center; gap: 0; border-radius: 10px; overflow: hidden; border: 1px solid rgba(255,255,255,0.06); margin-bottom: 1px; }
+        .gz-tier-lbl { width: 36px; flex-shrink: 0; font-family: 'Orbitron', sans-serif; font-size: 0.88rem; font-weight: 900; text-align: center; padding: 10px 5px; }
+        .gz-tier-chars { flex: 1; padding: 7px 10px; display: flex; flex-wrap: wrap; gap: 7px; align-items: center; background: var(--gz-s2); }
+        .gz-tchar { display: flex; flex-direction: column; align-items: center; gap: 1px; cursor: pointer; padding: 4px 5px; border-radius: 6px; transition: background 0.15s; }
+        .gz-tchar:hover { background: rgba(255,255,255,0.06); }
+        .gz-tchar .gz-tico { font-size: 1.25rem; }
+        .gz-tchar .gz-tname { font-size: 0.5rem; color: var(--gz-muted); }
+        .gz-ts .gz-tier-lbl { background: rgba(255,50,50,0.14); color: #ff5555; }
+        .gz-ta .gz-tier-lbl { background: rgba(255,165,0,0.14); color: #ffaa00; }
+        .gz-tb .gz-tier-lbl { background: rgba(100,200,100,0.14); color: #64c864; }
+        .gz-tc .gz-tier-lbl { background: rgba(100,150,255,0.14); color: #6496ff; }
+
+        /* API Key Input */
+        .gz-api-notice {
+            background: rgba(255,107,0,0.08);
+            border: 1px solid rgba(255,107,0,0.25);
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin-bottom: 0;
+        }
+        .gz-api-notice p {
+            font-size: 0.75rem;
+            color: var(--gz-text);
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+        .gz-api-input {
+            width: 100%;
+            background: var(--gz-s2);
+            border: 1px solid rgba(255,107,0,0.3);
+            color: var(--gz-text);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.78rem;
+            outline: none;
+        }
+        .gz-api-input:focus { border-color: #ffd700; }
+        .gz-api-save {
+            margin-top: 8px;
+            width: 100%;
+            padding: 8px;
+            border-radius: 8px; border: none;
+            background: linear-gradient(135deg, #ffd700, #ff6b00);
+            color: #000;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.68rem; font-weight: 900; letter-spacing: 1px;
+            cursor: pointer;
+        }
+
+        .gz-footer {
+            text-align: center;
+            padding: 7px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.57rem;
+            color: var(--gz-muted);
+            opacity: 0.4;
+            border-top: 1px solid var(--gz-border);
+        }
 
         /* ─── MOBILE ─── */
         @media (max-width: 768px) {
@@ -1155,21 +1011,14 @@
         }
 
         /* ─── EMPTY STATE ─── */
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: var(--text-dim);
-        }
-
+        .empty-state { text-align: center; padding: 60px 20px; color: var(--text-dim); }
         .empty-state i { font-size: 2rem; margin-bottom: 12px; opacity: 0.3; }
         .empty-state p { font-family: 'Orbitron', sans-serif; font-size: 0.7rem; letter-spacing: 2px; }
 
-        /* ─── SCROLL BAR ─── */
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: var(--bg); }
         ::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 2px; }
 
-        /* FADE IN */
         .card { animation: fade-in 0.3s ease both; }
         @keyframes fade-in { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
     </style>
@@ -1186,6 +1035,7 @@
             <div class="nav-tabs">
                 <button class="tab-btn active" id="btn-arena" onclick="showTab('arena')">ميدان القتال</button>
                 <button class="tab-btn" id="btn-lore" onclick="showTab('lore')">المخطوطات</button>
+                <button class="tab-btn ai-tab" id="btn-ai" onclick="showTab('ai')">🤖 AI GAME ZONE</button>
             </div>
         </div>
         <div class="nav-right">
@@ -1203,16 +1053,14 @@
 
     <!-- ARENA PAGE -->
     <div id="arena-page">
-
         <div class="hero-header">
-            <p class="sub" id="txt-sub">GOLDEN ARENA — 200 CHAMPIONS</p>
+            <p class="sub" id="txt-sub">GOLDEN ARENA — 518 CHAMPIONS</p>
             <h1>THE ULTIMATE SHOWDOWN</h1>
             <div class="hero-divider"></div>
         </div>
-
         <div class="stats-bar">
             <div class="stat-item">
-                <div class="stat-num" id="stat-total">200</div>
+                <div class="stat-num" id="stat-total">518</div>
                 <div class="stat-label" id="stat-lbl-total">CHAMPIONS</div>
             </div>
             <div class="stat-item">
@@ -1224,7 +1072,6 @@
                 <div class="stat-label" id="stat-lbl-sel">SELECTED</div>
             </div>
         </div>
-
         <div class="filter-section">
             <div class="filter-bar">
                 <button class="filter-btn active" onclick="filterHeroes('all',this)" id="f-all">الكل</button>
@@ -1236,11 +1083,9 @@
                 <button class="filter-btn peak-btn" onclick="filterHeroes('peak',this)" id="f-peak">🔥 الأساطير</button>
             </div>
         </div>
-
         <div class="grid-section">
             <div class="grid" id="hero-grid"></div>
         </div>
-
         <div style="height:120px;"></div>
     </div>
 
@@ -1261,7 +1106,91 @@
         </div>
     </div>
 
-    <!-- BATTLE CONTROLS (sticky bottom) -->
+    <!-- ═══════════════════════════════════════
+         AI GAME ZONE PAGE
+    ═══════════════════════════════════════ -->
+    <div id="ai-page">
+        <!-- API Key Banner -->
+        <div class="ai-zone-wrapper" id="gz-api-banner" style="padding-bottom:0;">
+            <div class="gz-api-notice">
+                <p>🔑 <strong style="color:#ffd700;">للاستخدام الكامل:</strong> أدخل Anthropic API Key لتفعيل الذكاء الاصطناعي. أو اتركه فارغاً للتجربة بدون AI.</p>
+                <input type="password" class="gz-api-input" id="gz-api-key-input" placeholder="sk-ant-..." />
+                <button class="gz-api-save" onclick="saveApiKey()">💾 حفظ وتشغيل الـ AI</button>
+            </div>
+        </div>
+
+        <div class="ai-zone-wrapper" style="padding-top:0;">
+            <!-- AI Hero Banner -->
+            <div class="ai-hero-banner">
+                <div class="ai-wordmark">G<em>Z</em> BOT</div>
+                <div class="ai-tagline">GAMZONE AI • نقاشات الألعاب والشخصيات</div>
+            </div>
+
+            <!-- AI Mode Tabs -->
+            <div class="ai-mode-tabs">
+                <button class="ai-mode-tab active" onclick="gzSwitchMode('chat')" id="gz-tab-chat"><span class="ti">💬</span>نقاش حر</button>
+                <button class="ai-mode-tab" onclick="gzSwitchMode('battle')" id="gz-tab-battle"><span class="ti">⚔️</span>معركة</button>
+                <button class="ai-mode-tab" onclick="gzSwitchMode('debates')" id="gz-tab-debates"><span class="ti">🔥</span>ساخنة</button>
+                <button class="ai-mode-tab" onclick="gzSwitchMode('tier')" id="gz-tab-tier"><span class="ti">👑</span>Tier List</button>
+            </div>
+
+            <!-- CHAT ZONE -->
+            <div class="gz-chat-zone" id="gz-chatZone">
+                <div class="gz-chat-header">
+                    <div class="gz-av">GZ</div>
+                    <div class="gz-bot-info">
+                        <div class="gz-bot-name">GAMZONE BOT</div>
+                        <div class="gz-bot-sub"><div class="gz-live-dot"></div><span>DEBATE MODE • ONLINE</span></div>
+                    </div>
+                    <div class="gz-hdr-btns">
+                        <button class="gz-hbtn" onclick="gzToggleLang()">AR/EN</button>
+                        <button class="gz-hbtn" onclick="gzClearChat()">CLR</button>
+                    </div>
+                </div>
+                <div class="gz-chat-msgs" id="gz-chatMsgs"></div>
+                <div class="gz-qwrap" id="gz-qwrap"></div>
+                <div class="gz-stats-strip">
+                    <div class="gz-sst"><div class="gz-sst-v" id="gz-sMsgs">0</div><div class="gz-sst-l">MSGS</div></div>
+                    <div class="gz-sst"><div class="gz-sst-v" id="gz-sDebates">0</div><div class="gz-sst-l">DEBATES</div></div>
+                    <div class="gz-sst"><div class="gz-sst-v" id="gz-sGames">0</div><div class="gz-sst-l">GAMES</div></div>
+                    <div class="gz-sst"><div class="gz-sst-v" id="gz-sLang">AR</div><div class="gz-sst-l">LANG</div></div>
+                </div>
+                <div class="gz-chat-input-row">
+                    <textarea class="gz-cinput" id="gz-cinput" placeholder="ناقشني في أي لعبة أو شخصية... / Debate me!" rows="1" onkeydown="gzHandleKey(event)" oninput="gzAutoR(this)"></textarea>
+                    <button class="gz-sbtn" id="gz-sbtn" onclick="gzSendMsg()">▶</button>
+                </div>
+            </div>
+
+            <!-- BATTLE PANEL -->
+            <div class="gz-panel" id="gz-panel-battle">
+                <div class="gz-p-title">⚔️ اختر شخصيتين للمعركة</div>
+                <div class="gz-vs-pair">
+                    <div class="gz-vs-slot" id="gz-slot1"><span style="font-size:1.4rem;opacity:0.25">?</span><span style="font-size:0.62rem;color:var(--gz-muted)">Fighter 1</span></div>
+                    <div class="gz-vs-div">VS</div>
+                    <div class="gz-vs-slot" id="gz-slot2"><span style="font-size:1.4rem;opacity:0.25">?</span><span style="font-size:0.62rem;color:var(--gz-muted)">Fighter 2</span></div>
+                </div>
+                <button class="gz-battle-btn" id="gz-battleBtn" onclick="gzStartBattle()" disabled>⚔️ ANALYZE BATTLE</button>
+                <div class="gz-char-grid" id="gz-charGrid"></div>
+            </div>
+
+            <!-- DEBATES PANEL -->
+            <div class="gz-panel" id="gz-panel-debates">
+                <div class="gz-p-title">🔥 نقاشات ساخنة</div>
+                <div id="gz-debatesList"></div>
+            </div>
+
+            <!-- TIER PANEL -->
+            <div class="gz-panel" id="gz-panel-tier">
+                <div class="gz-p-title">👑 TIER LIST الشخصيات</div>
+                <div id="gz-tierContent"></div>
+                <button class="gz-battle-btn" style="margin-top:6px;" onclick="gzAskTier()">🔥 ناقش هذا الـ Tier List</button>
+            </div>
+
+            <div class="gz-footer"><strong style="color:#ffd700;font-weight:normal;">GZ BOT v2</strong> • Powered by Claude AI • نقاشات بلا حدود 🎮</div>
+        </div>
+    </div>
+
+    <!-- BATTLE CONTROLS -->
     <div class="battle-controls" id="battle-controls">
         <div class="selected-names" id="selected-names">
             <span class="s-name" id="sel-name-1">—</span>
@@ -1281,17 +1210,11 @@
     <!-- BATTLE OVERLAY -->
     <div id="battle-overlay">
         <div class="battle-arena" id="battle-content">
-
-            <!-- COUNTDOWN -->
             <div class="countdown-num" id="countdown">3</div>
-
-            <!-- RESULT -->
             <div id="battle-result" style="display:none;">
                 <div class="battle-label" id="txt-battle-system">GAME ZONE — BATTLE SYSTEM</div>
                 <div class="battle-title" id="winner-title">—</div>
-
                 <div class="intensity-badge" id="intensity-badge"></div>
-
                 <div class="battle-fighters">
                     <div class="fighter-card" id="fc-1">
                         <div class="fighter-icon" id="fi-1">—</div>
@@ -1307,7 +1230,6 @@
                         <div class="fighter-score" id="fs-2">—</div>
                     </div>
                 </div>
-
                 <div class="hp-section">
                     <div class="hp-label">
                         <span id="hp-name-1">—</span>
@@ -1316,48 +1238,29 @@
                     </div>
                     <div class="hp-track"><div class="hp-fill" id="hp-fill"></div></div>
                 </div>
-
                 <div class="battle-story" id="battle-story"></div>
-
                 <div class="battle-actions">
                     <button class="btn-action btn-primary" onclick="closeBattle()" id="txt-new-battle">↺ نزال جديد</button>
                     <a href="https://61465.github.io/game-zone-archive/" target="_blank" class="btn-action btn-secondary" id="txt-archive-btn">📜 سجل الأبطال</a>
                     <a href="https://61465.github.io/GAME-ZONE-CHAT/" target="_blank" class="btn-action btn-cyan" id="txt-discuss">💬 ناقش القوة</a>
                 </div>
             </div>
-
-            <!-- LUCK -->
             <div id="luck-section" class="luck-section">
                 <div class="battle-label">LUCK BATTLE</div>
                 <div class="battle-title" id="luck-title">معركة الحظ</div>
-
-                <!-- أسماء المتنافسين -->
                 <div class="luck-fighters-row">
                     <span class="luck-fname" id="rps-h1-name">—</span>
                     <span class="luck-vs-dot">VS</span>
                     <span class="luck-fname" id="rps-h2-name">—</span>
                 </div>
-
-                <!-- مرحلة الاختيار -->
                 <div id="rps-pick-phase">
                     <p style="color:var(--text-dim);font-size:0.82rem;margin-bottom:18px;" id="txt-rps-desc">اختر سلاحك لحسم المعركة:</p>
                     <div class="rps-btns">
-                        <button class="rps-btn" onclick="playRPS('rock')">
-                            <span class="rps-emoji-big">✊</span>
-                            <span class="rps-btn-label" id="lbl-rock">حجرة</span>
-                        </button>
-                        <button class="rps-btn" onclick="playRPS('paper')">
-                            <span class="rps-emoji-big">✋</span>
-                            <span class="rps-btn-label" id="lbl-paper">ورقة</span>
-                        </button>
-                        <button class="rps-btn" onclick="playRPS('scissors')">
-                            <span class="rps-emoji-big">✌️</span>
-                            <span class="rps-btn-label" id="lbl-scissors">مقص</span>
-                        </button>
+                        <button class="rps-btn" onclick="playRPS('rock')"><span class="rps-emoji-big">✊</span><span class="rps-btn-label" id="lbl-rock">حجرة</span></button>
+                        <button class="rps-btn" onclick="playRPS('paper')"><span class="rps-emoji-big">✋</span><span class="rps-btn-label" id="lbl-paper">ورقة</span></button>
+                        <button class="rps-btn" onclick="playRPS('scissors')"><span class="rps-emoji-big">✌️</span><span class="rps-btn-label" id="lbl-scissors">مقص</span></button>
                     </div>
                 </div>
-
-                <!-- مرحلة النتيجة -->
                 <div id="rps-result-phase" style="display:none;">
                     <div class="rps-showdown">
                         <div class="rps-player" id="rps-p1">
@@ -1385,11 +1288,13 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 
     <script>
+    // ════════════════════════════════════════
+    // ORIGINAL GOLDEN ARENA LOGIC
+    // ════════════════════════════════════════
     let currentLang = 'ar';
     let selected = [];
     let currentFilter = 'all';
@@ -1938,61 +1843,62 @@
     { id: 497, type: "comic", p: 106, isPeak: true, icon: '🌑', source: "Marvel Comics", ar: { name: "فينوم (الإله الأسود)", ability: "الكيان الفضائي الكامل", lore: "فينوم بعد استيعاب كل الكيانات الفضائية. أسود الفضاء المطلق." }, en: { name: "VENOM (Black God)", ability: "Complete Alien Entity", lore: "Venom after absorbing all alien symbiotes. Absolute Black Space God." } },
     { id: 498, type: "comic", p: 107, isPeak: true, icon: '🔴', source: "Marvel Comics", ar: { name: "كارنيج (الكون)", ability: "دم الكون", lore: "كارنيج بعد اندماجه مع القوة الكونية. يلوث الكون بالجنون." }, en: { name: "CARNAGE (Cosmic)", ability: "Cosmic Blood", lore: "Carnage fused with cosmic power, infecting the universe with madness." } },
     { id: 499, type: "series", p: 107, isPeak: true, icon: '🌊', source: "Aquaman", ar: { name: "أرثر كوري (ملك الملوك)", ability: "عرش المحيطات الكوني", lore: "أرثر كوري بعد استيعاب قوة أطلانتس القديمة بالكامل." }, en: { name: "ARTHUR CURRY (Ocean King)", ability: "Cosmic Ocean Throne", lore: "Arthur Curry fully absorbing ancient Atlantean power." } },
-    { id: 500, type: "comic", p: 110, isPeak: true, icon: '🌌', source: "Marvel/DC", ar: { name: "الكائن الكوني الأعظم", ability: "مطلق الوجود الكلي", lore: "الكيان الذي يتجاوز كل ما عرفه الخيال. لا قانون يقيده، لا حد يوقفه." }, en: { name: "SUPREME COSMIC ENTITY", ability: "Total Absolute Existence", lore: "The entity that transcends all imagination. No law binds it, no limit stops it." } }
+    { id: 500, type: "comic", p: 110, isPeak: true, icon: '🌌', source: "Marvel/DC", ar: { name: "الكائن الكوني الأعظم", ability: "مطلق الوجود الكلي", lore: "الكيان الذي يتجاوز كل ما عرفه الخيال. لا قانون يقيده، لا حد يوقفه." }, en: { name: "SUPREME COSMIC ENTITY", ability: "Total Absolute Existence", lore: "The entity that transcends all imagination. No law binds it, no limit stops it." } },
+
+    // ══════════════════════════════════════════
+    // DISCO ELYSIUM
+    // ══════════════════════════════════════════
+    { id: 501, type: "game", p: 82, icon: '🥃', source: "Disco Elysium", ar: { name: "هاري دوبوا", ability: "التفكيك الداخلي", lore: "المحقق الذي نسي هويته بعد ليلة عنيفة. يحقق في جريمة قتل ويعيد بناء نفسه من الصفر. عقله ساحة حرب من الأفكار المتناقضة." }, en: { name: "HARRY DU BOIS", ability: "Thought Cabinet", lore: "The detective who forgot himself after one catastrophic night. Investigating a murder while rebuilding his identity from scratch. His mind is a battleground of contradictory ideas." } },
+    { id: 502, type: "game", p: 80, icon: '🚬', source: "Disco Elysium", ar: { name: "كيم كاتساراكي", ability: "الهدوء المطلق", lore: "الشريك المثالي. مظبوط، منضبط، ويحمل هاري دوبوا من هشيمه الداخلي." }, en: { name: "KIM KITSURAGI", ability: "Absolute Composure", lore: "The perfect partner. Precise, disciplined, carrying Harry Du Bois from his inner wreckage." } },
+    { id: 503, type: "game", p: 79, icon: '🍺', source: "Disco Elysium", ar: { name: "هاري (سيكريتشن)", ability: "الحقيقة المرة", lore: "نسخة هاري المثالية التي ولدت من ركام الفشل. يرى الحقيقة بوضوح لا يطيقه أحد." }, en: { name: "HARRY (Superstar Cop)", ability: "Bitter Truth", lore: "The perfect version of Harry born from the ruins of failure. Sees truth with a clarity nobody else can bear." } },
+    { id: 504, type: "game", p: 78, icon: '🌿', source: "Disco Elysium", ar: { name: "سيلفيستر ماير", ability: "التقارير الميدانية", lore: "المحقق الثاني من نفس الدائرة. يسير في ظل هاري دوبوا دائماً." }, en: { name: "JEAN VICQUEMARE", ability: "Field Reports", lore: "Harry's colleague who carries the weight of his partner's endless chaos." } },
+
+    // ══════════════════════════════════════════
+    // WARHAMMER 40,000
+    // ══════════════════════════════════════════
+    { id: 505, type: "game", p: 97, icon: '⚙️', source: "Warhammer 40K", ar: { name: "الإمبراطور البشري", ability: "الإرادة الذهبية", lore: "أعظم نفسانٍ عرفته البشرية. يجلس على عرش الجماجم منذ عشرة آلاف سنة يحمي البشرية بإرادته وحده." }, en: { name: "THE EMPEROR OF MANKIND", ability: "Golden Will", lore: "The greatest psyker humanity ever knew. Sitting on the Golden Throne for ten thousand years, protecting humanity through sheer will alone." } },
+    { id: 506, type: "game", p: 95, icon: '🦅', source: "Warhammer 40K", ar: { name: "رابتر غيليمان", ability: "الفاتح الأبدي", lore: "بريمارك الفيلق الأول. عاد من بين الأموات ليقود البشرية مجدداً في حرب لا تنتهي." }, en: { name: "ROBOUTE GUILLIMAN", ability: "Eternal Conqueror", lore: "Primarch of the First Legion, returned from death to lead humanity again in a war without end." } },
+    { id: 507, type: "game", p: 94, icon: '🌑', source: "Warhammer 40K", ar: { name: "هوروس لوبرمل", ability: "الكفر المطلق", lore: "أعظم بريمارك وأكبر خائن في التاريخ. قاد التمرد ضد أبيه الإمبراطور وكاد يدمر البشرية." }, en: { name: "HORUS LUPERCAL", ability: "Absolute Heresy", lore: "The greatest Primarch and history's greatest traitor. Led the Heresy against the Emperor and nearly destroyed humanity." } },
+    { id: 508, type: "game", p: 93, icon: '🔥', source: "Warhammer 40K", ar: { name: "أنجروس مالكادور", ability: "نيران الأثير", lore: "بريمارك فيلق الرماة الهزاع. يحرق الأعداء بالنار الذهنية ويؤمن بالسحر حين الجميع ينكره." }, en: { name: "MAGNUS THE RED", ability: "Aetheric Flames", lore: "Primarch of the Thousand Sons. Burns enemies with psychic fire and embraced sorcery when all others condemned it." } },
+    { id: 509, type: "game", p: 92, icon: '🐺', source: "Warhammer 40K", ar: { name: "ليمان روس", ability: "مخلب الذئب", lore: "بريمارك الفضاء الذئاب. المحارب الأشرس والأوفى. يمزق الدروع بيديه الفارغتين." }, en: { name: "LEMAN RUSS", ability: "Wolf Claw", lore: "Primarch of the Space Wolves. Fiercest and most loyal warrior. Tears armor apart with his bare hands." } },
+    { id: 510, type: "game", p: 91, icon: '☠️', source: "Warhammer 40K", ar: { name: "مورتاريون", ability: "الطاعون الأبدي", lore: "بريمارك فيلق الموت الذي قبل نعمة نورغل. جسده مستنقع متعفن لكن قوته تتجاوز فهم البشر." }, en: { name: "MORTARION", ability: "Death Guard", lore: "Primarch who embraced Nurgle's blessing. His body is a rotting swamp but his power transcends human comprehension." } },
+    { id: 511, type: "game", p: 90, icon: '⚡', source: "Warhammer 40K", ar: { name: "غزبريل أنجيلوس", ability: "حكم الإبادة", lore: "الكابتن الجنرال لحرس الإمبراطور. يمثل سيف الإمبراطور وعدالته في الكون." }, en: { name: "GABRIEL ANGELOS", ability: "Dawn of War", lore: "Chapter Master of the Blood Ravens. Battles Chaos and xenos with unbreakable faith." } },
+    { id: 512, type: "game", p: 89, icon: '💀', source: "Warhammer 40K", ar: { name: "أباددون المدمر", ability: "الإمبراطور الأسود", lore: "بطل الفوضى الأبدي. يقود حملات الحرمان الكبرى لمحق الإمبراطور الذهبي." }, en: { name: "ABADDON THE DESPOILER", ability: "Warmaster of Chaos", lore: "Eternal Champion of Chaos, leading the Black Crusades to destroy the Golden Emperor." } },
+    { id: 513, type: "game", p: 88, icon: '🤖', source: "Warhammer 40K", ar: { name: "كيلار-تيتان", ability: "سيف المجمع", lore: "القاتل الآلي المصنوع خصيصاً لاغتيال الأهداف البشرية والخارقة بصمت مطلق." }, en: { name: "CULEXUS ASSASSIN", ability: "Pariah Null", lore: "The void in the Warp, a living blank that shuts down all psychic power within range." } },
+    { id: 514, type: "game", p: 87, icon: '🛡️', source: "Warhammer 40K", ar: { name: "فارس الرعد", ability: "درع الطاعة", lore: "الجندي المدجج لفيلق فضائي. أقوى مشاة حرب في تاريخ البشرية." }, en: { name: "SPACE MARINE", ability: "Adamantine Will", lore: "The armored soldier of a Space Marine Chapter. The strongest infantry in the history of mankind." } },
+    { id: 515, type: "game", p: 86, icon: '🦾', source: "Warhammer 40K", ar: { name: "دريدنوت", ability: "الحرب السرمدية", lore: "محارب مستحيل الموت يمشي في درع ضخم يحمل روحه المحطمة." }, en: { name: "DREADNOUGHT", ability: "Eternal War Machine", lore: "A shattered hero walking in a massive armor, his broken spirit carrying the chapter's memory." } },
+
+    // Peak Warhammer
+    { id: 516, type: "game", p: 108, isPeak: true, icon: '👑', source: "Warhammer 40K", ar: { name: "الإمبراطور (السيف الذهبي)", ability: "الإرادة الكونية الكاملة", lore: "الإمبراطور إذا أُطلق من عرشه. قوة نفسانية تحرق أكواناً كاملة وتمحو الفوضى من الوجود." }, en: { name: "THE EMPEROR (Unbound)", ability: "Complete Cosmic Will", lore: "The Emperor if ever freed from his Throne. Psychic might that burns entire universes and erases Chaos from existence." } },
+    { id: 517, type: "game", p: 106, isPeak: true, icon: '🌑', source: "Warhammer 40K", ar: { name: "هوروس (ختم الفوضى)", ability: "تجسد الفوضى", lore: "هوروس بعد استيعاب قوى الآلهة الأربعة. كيان يتجاوز البريمارك ويصل مستوى الآلهة." }, en: { name: "HORUS (Chaos Ascendant)", ability: "Chaos Incarnate", lore: "Horus having absorbed the Four Chaos Gods' power. A being beyond Primarch, approaching divinity." } },
+    { id: 518, type: "game", p: 105, isPeak: true, icon: '🔥', source: "Warhammer 40K", ar: { name: "ماغنوس (الحقيقة الكاملة)", ability: "الأثير المطلق", lore: "ماغنوس في ذروة قوته النفسانية. يمحو الجيوش من الوجود بنظرة واحدة." }, en: { name: "MAGNUS (Full Truth)", ability: "Absolute Aether", lore: "Magnus at the peak of his psychic power. Erasing armies from existence with a single gaze." } }
 
 ];
 
-    function getPeakCount() {
-        return heroes.filter(h => h.isPeak).length;
-    }
+
+    function getPeakCount() { return heroes.filter(h => h.isPeak).length; }
 
     function renderGrid(filter, query) {
         const grid = document.getElementById('hero-grid');
         grid.innerHTML = '';
-
         let list = [...heroes];
-
-        if (filter === 'peak') {
-            list = list.filter(h => h.isPeak);
-        } else if (filter !== 'all') {
-            list = list.filter(h => h.type === filter);
-        }
-
+        if (filter === 'peak') list = list.filter(h => h.isPeak);
+        else if (filter !== 'all') list = list.filter(h => h.type === filter);
         if (query && query.trim()) {
             const q = query.trim().toLowerCase();
-            list = list.filter(h =>
-                h[currentLang].name.toLowerCase().includes(q) ||
-                h.source.toLowerCase().includes(q) ||
-                h[currentLang].ability.toLowerCase().includes(q)
-            );
+            list = list.filter(h => h[currentLang].name.toLowerCase().includes(q) || h.source.toLowerCase().includes(q));
         }
-
         if (list.length === 0) {
-            grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1">
-                🔍
-                <p>${currentLang === 'ar' ? 'لا توجد نتائج' : 'NO RESULTS FOUND'}</p>
-            </div>`;
+            grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><p>${currentLang === 'ar' ? 'لا توجد نتائج' : 'NO RESULTS FOUND'}</p></div>`;
             return;
         }
-
         list.forEach((h, i) => {
             const isSelected = selected.find(s => s.id === h.id);
             const card = document.createElement('div');
             card.className = `card ${isSelected ? 'selected' : ''} ${h.isPeak ? 'peak' : ''}`;
             card.style.animationDelay = `${Math.min(i * 0.02, 0.5)}s`;
-
             const selNum = isSelected ? (selected.indexOf(isSelected) + 1) : '';
-
-            card.innerHTML = `
-                <div class="card-inner">
-                    <span class="card-badge">${h.type.toUpperCase()}</span>
-                    <div class="selected-indicator">${selNum}</div>
-                    <div class="card-icon">${h.icon}</div>
-                    <div class="card-name">${h[currentLang].name}</div>
-                    <div class="card-source">${h.source}</div>
-                    ${h.isPeak ? '<div class="peak-tag">PEAK</div>' : ''}
-                </div>`;
-
+            card.innerHTML = `<div class="card-inner"><span class="card-badge">${h.type.toUpperCase()}</span><div class="selected-indicator">${selNum}</div><div class="card-icon">${h.icon}</div><div class="card-name">${h[currentLang].name}</div><div class="card-source">${h.source}</div>${h.isPeak ? '<div class="peak-tag">PEAK</div>' : ''}</div>`;
             card.onclick = () => selectHero(card, h);
             grid.appendChild(card);
         });
@@ -2000,25 +1906,16 @@
 
     function selectHero(el, hero) {
         const idx = selected.findIndex(s => s.id === hero.id);
-        if (idx !== -1) {
-            selected.splice(idx, 1);
-        } else if (selected.length < 2) {
-            selected.push(hero);
-        } else {
-            return;
-        }
-
+        if (idx !== -1) selected.splice(idx, 1);
+        else if (selected.length < 2) selected.push(hero);
+        else return;
         document.getElementById('stat-selected').innerText = selected.length;
-
         const controls = document.getElementById('battle-controls');
         if (selected.length > 0) {
             controls.classList.add('show');
             document.getElementById('sel-name-1').innerText = selected[0] ? selected[0][currentLang].name : '—';
             document.getElementById('sel-name-2').innerText = selected[1] ? selected[1][currentLang].name : '—';
-        } else {
-            controls.classList.remove('show');
-        }
-
+        } else { controls.classList.remove('show'); }
         renderGrid(currentFilter, searchQuery);
     }
 
@@ -2036,10 +1933,7 @@
         renderGrid(type, searchQuery);
     }
 
-    function handleSearch(q) {
-        searchQuery = q;
-        renderGrid(currentFilter, q);
-    }
+    function handleSearch(q) { searchQuery = q; renderGrid(currentFilter, q); }
 
     function runBattle() {
         if (selected.length < 2) return;
@@ -2047,102 +1941,45 @@
         const winner = h1.p >= h2.p ? h1 : h2;
         const loser = winner === h1 ? h2 : h1;
         const diff = Math.abs(h1.p - h2.p);
-
-        // setup overlay
         const overlay = document.getElementById('battle-overlay');
         overlay.classList.add('show');
         document.getElementById('battle-result').style.display = 'none';
         document.getElementById('luck-section').style.display = 'none';
-
         let intensity, intClass, intText;
-        if (diff <= 3) {
-            intensity = "epic";
-            intClass = "int-epic";
-            intText = currentLang === 'ar' ? "🔥 EPIC — معركة ملحمية" : "🔥 EPIC BATTLE";
-        } else if (diff <= 10) {
-            intensity = "hard";
-            intClass = "int-hard";
-            intText = currentLang === 'ar' ? "⚡ معركة شرسة" : "⚡ HARD BATTLE";
-        } else if (diff <= 20) {
-            intensity = "med";
-            intClass = "int-med";
-            intText = currentLang === 'ar' ? "⚔️ معركة متوازنة" : "⚔️ BALANCED DUEL";
-        } else {
-            intensity = "easy";
-            intClass = "int-easy";
-            intText = currentLang === 'ar' ? "🎯 سيطرة كاملة" : "🎯 TOTAL DOMINANCE";
-        }
-
+        if (diff <= 3) { intensity = "epic"; intClass = "int-epic"; intText = currentLang === 'ar' ? "🔥 EPIC — معركة ملحمية" : "🔥 EPIC BATTLE"; }
+        else if (diff <= 10) { intensity = "hard"; intClass = "int-hard"; intText = currentLang === 'ar' ? "⚡ معركة شرسة" : "⚡ HARD BATTLE"; }
+        else if (diff <= 20) { intensity = "med"; intClass = "int-med"; intText = currentLang === 'ar' ? "⚔️ معركة متوازنة" : "⚔️ BALANCED DUEL"; }
+        else { intensity = "easy"; intClass = "int-easy"; intText = currentLang === 'ar' ? "🎯 سيطرة كاملة" : "🎯 TOTAL DOMINANCE"; }
         const showCount = intensity === "epic" || intensity === "hard";
-
         function showResult() {
             document.getElementById('countdown').style.display = 'none';
             const result = document.getElementById('battle-result');
             result.style.display = 'block';
-
             document.getElementById('winner-title').innerText = winner[currentLang].name + (currentLang === 'ar' ? " ينتصر!" : " WINS!");
-
             const badge = document.getElementById('intensity-badge');
-            badge.className = `intensity-badge ${intClass}`;
-            badge.innerText = intText;
-
-            // fighters
-            document.getElementById('fi-1').innerHTML = h1.icon;
-            document.getElementById('fn-1').innerText = h1[currentLang].name;
-            document.getElementById('fa-1').innerText = h1[currentLang].ability;
-            document.getElementById('fs-1').innerText = h1.p;
-
-            document.getElementById('fi-2').innerHTML = h2.icon;
-            document.getElementById('fn-2').innerText = h2[currentLang].name;
-            document.getElementById('fa-2').innerText = h2[currentLang].ability;
-            document.getElementById('fs-2').innerText = h2.p;
-
+            badge.className = `intensity-badge ${intClass}`; badge.innerText = intText;
+            document.getElementById('fi-1').innerHTML = h1.icon; document.getElementById('fn-1').innerText = h1[currentLang].name;
+            document.getElementById('fa-1').innerText = h1[currentLang].ability; document.getElementById('fs-1').innerText = h1.p;
+            document.getElementById('fi-2').innerHTML = h2.icon; document.getElementById('fn-2').innerText = h2[currentLang].name;
+            document.getElementById('fa-2').innerText = h2[currentLang].ability; document.getElementById('fs-2').innerText = h2.p;
             document.getElementById('fc-1').className = 'fighter-card ' + (winner === h1 ? 'winner' : 'loser');
             document.getElementById('fc-2').className = 'fighter-card ' + (winner === h2 ? 'winner' : 'loser');
-
-            // HP bar
             document.getElementById('hp-name-1').innerText = h1[currentLang].name;
             document.getElementById('hp-name-2').innerText = h2[currentLang].name;
-            let pct = intensity === "epic" ? 51 + diff * 0.5
-                     : intensity === "hard" ? 60 + diff * 0.4
-                     : intensity === "med"  ? 70 + diff * 0.3
-                     :                        85 + diff * 0.2;
+            let pct = intensity === "epic" ? 51 + diff * 0.5 : intensity === "hard" ? 60 + diff * 0.4 : intensity === "med" ? 70 + diff * 0.3 : 85 + diff * 0.2;
             pct = Math.min(pct, 98);
             document.getElementById('hp-pct').innerText = Math.round(pct) + '%';
             setTimeout(() => { document.getElementById('hp-fill').style.width = pct + '%'; }, 300);
-
-            // story
             const stories = {
-                ar: {
-                    epic: `⚔️ معركة تاريخية للأبد! <strong>${winner[currentLang].name}</strong> هزم <strong>${loser[currentLang].name}</strong> بفارق ${diff} نقطة في نزال سيُروى على مر العصور. <strong>${winner[currentLang].ability}</strong> كان القرار الفاصل في اللحظة الأخيرة.`,
-                    hard: `💥 قتال شرس وعنيف! <strong>${winner[currentLang].name}</strong> أثبت جدارته وهزم <strong>${loser[currentLang].name}</strong> بفارق ${diff} نقاط. <strong>${winner[currentLang].ability}</strong> حسم النزال.`,
-                    med: `⚡ نزال متوازن انتهى لصالح <strong>${winner[currentLang].name}</strong> بفارق ${diff} نقطة بفضل <strong>${winner[currentLang].ability}</strong>.`,
-                    easy: `👑 سيطرة مطلقة! <strong>${winner[currentLang].name}</strong> هيمن على المعركة بفارق ${diff} نقطة. <strong>${winner[currentLang].ability}</strong> كان ساحقاً تماماً.`
-                },
-                en: {
-                    epic: `⚔️ A HISTORIC CLASH for all eternity! <strong>${winner[currentLang].name}</strong> defeated <strong>${loser[currentLang].name}</strong> by only ${diff} points in a battle that will echo through the ages. <strong>${winner[currentLang].ability}</strong> made the final difference.`,
-                    hard: `💥 FIERCE AND BRUTAL! <strong>${winner[currentLang].name}</strong> proved their worth against <strong>${loser[currentLang].name}</strong> by ${diff} points. <strong>${winner[currentLang].ability}</strong> decided the outcome.`,
-                    med: `⚡ A balanced duel won by <strong>${winner[currentLang].name}</strong>, ${diff} points ahead thanks to <strong>${winner[currentLang].ability}</strong>.`,
-                    easy: `👑 TOTAL DOMINANCE. <strong>${winner[currentLang].name}</strong> overwhelmed the opponent by ${diff} points. <strong>${winner[currentLang].ability}</strong> was completely crushing.`
-                }
+                ar: { epic: `⚔️ معركة تاريخية! <strong>${winner[currentLang].name}</strong> هزم <strong>${loser[currentLang].name}</strong> بفارق ${diff} نقطة.`, hard: `💥 قتال شرس! <strong>${winner[currentLang].name}</strong> أثبت جدارته وهزم <strong>${loser[currentLang].name}</strong> بفارق ${diff} نقاط.`, med: `⚡ نزال متوازن انتهى لصالح <strong>${winner[currentLang].name}</strong> بفارق ${diff} نقطة.`, easy: `👑 سيطرة مطلقة! <strong>${winner[currentLang].name}</strong> هيمن بفارق ${diff} نقطة.` },
+                en: { epic: `⚔️ HISTORIC CLASH! <strong>${winner[currentLang].name}</strong> defeated <strong>${loser[currentLang].name}</strong> by ${diff} points.`, hard: `💥 FIERCE BATTLE! <strong>${winner[currentLang].name}</strong> proved worth by ${diff} points.`, med: `⚡ Balanced duel won by <strong>${winner[currentLang].name}</strong>, ${diff} points ahead.`, easy: `👑 TOTAL DOMINANCE. <strong>${winner[currentLang].name}</strong> overwhelmed by ${diff} points.` }
             };
-
             document.getElementById('battle-story').innerHTML = stories[currentLang][intensity];
         }
-
         if (showCount) {
-            const cd = document.getElementById('countdown');
-            cd.style.display = 'block';
-            let n = 3;
-            cd.innerText = n;
-            const t = setInterval(() => {
-                n--;
-                if (n > 0) { cd.innerText = n; }
-                else { clearInterval(t); showResult(); }
-            }, 1000);
-        } else {
-            setTimeout(showResult, intensity === "easy" ? 400 : 800);
-        }
+            const cd = document.getElementById('countdown'); cd.style.display = 'block'; let n = 3; cd.innerText = n;
+            const t = setInterval(() => { n--; if (n > 0) { cd.innerText = n; } else { clearInterval(t); showResult(); } }, 1000);
+        } else { setTimeout(showResult, 400); }
     }
 
     function startLuck() {
@@ -2151,7 +1988,6 @@
         document.getElementById('countdown').style.display = 'none';
         document.getElementById('luck-section').style.display = 'block';
         resetRPS();
-        // update fighter names
         document.getElementById('rps-h1-name').innerText = selected[0] ? selected[0][currentLang].name : '—';
         document.getElementById('rps-h2-name').innerText = selected[1] ? selected[1][currentLang].name : '—';
     }
@@ -2159,109 +1995,57 @@
     function resetRPS() {
         document.getElementById('rps-pick-phase').style.display = 'block';
         document.getElementById('rps-result-phase').style.display = 'none';
-        // refresh names after lang toggle
         if (selected[0]) document.getElementById('rps-h1-name').innerText = selected[0][currentLang].name;
         if (selected[1]) document.getElementById('rps-h2-name').innerText = selected[1][currentLang].name;
     }
 
     function playRPS(userKey) {
-        const emojis  = { rock: '✊', paper: '✋', scissors: '✌️' };
-        const keys    = ['rock','paper','scissors'];
-        const botKey  = keys[Math.floor(Math.random() * 3)];
-        // rock beats scissors, scissors beats paper, paper beats rock
-        const beats   = { rock: 'scissors', scissors: 'paper', paper: 'rock' };
-
-        const h1 = selected[0];
-        const h2 = selected[1];
+        const emojis = { rock: '✊', paper: '✋', scissors: '✌️' };
+        const keys = ['rock','paper','scissors'];
+        const botKey = keys[Math.floor(Math.random() * 3)];
+        const beats = { rock: 'scissors', scissors: 'paper', paper: 'rock' };
+        const h1 = selected[0], h2 = selected[1];
         const h1name = h1 ? h1[currentLang].name : '?';
         const h2name = h2 ? h2[currentLang].name : '?';
-
         let verdict, verdictClass, winnerName, clashIcon;
-
-        if (userKey === botKey) {
-            verdict      = currentLang === 'ar' ? '🤝 تعادل!' : '🤝 DRAW!';
-            verdictClass = 'draw';
-            winnerName   = '';
-            clashIcon    = '🤝';
-            document.getElementById('rps-p1').className = 'rps-player draw-state';
-            document.getElementById('rps-p2').className = 'rps-player draw-state';
-        } else if (beats[userKey] === botKey) {
-            verdict      = currentLang === 'ar' ? '🏆 انتصر ' + h1name + '!' : '🏆 ' + h1name + ' WINS!';
-            verdictClass = 'win';
-            winnerName   = currentLang === 'ar'
-                ? '<strong>' + h1name + '</strong> يفوز بمعركة الحظ'
-                : '<strong>' + h1name + '</strong> wins the Luck Battle';
-            clashIcon    = '👑';
-            document.getElementById('rps-p1').className = 'rps-player won';
-            document.getElementById('rps-p2').className = 'rps-player lost';
-        } else {
-            verdict      = currentLang === 'ar' ? '💀 انتصر ' + h2name + '!' : '💀 ' + h2name + ' WINS!';
-            verdictClass = 'lose';
-            winnerName   = currentLang === 'ar'
-                ? '<strong>' + h2name + '</strong> يفوز بمعركة الحظ'
-                : '<strong>' + h2name + '</strong> wins the Luck Battle';
-            clashIcon    = '💀';
-            document.getElementById('rps-p1').className = 'rps-player lost';
-            document.getElementById('rps-p2').className = 'rps-player won';
-        }
-
-        // fill in emojis & names
+        if (userKey === botKey) { verdict = currentLang === 'ar' ? '🤝 تعادل!' : '🤝 DRAW!'; verdictClass = 'draw'; winnerName = ''; clashIcon = '🤝'; document.getElementById('rps-p1').className = 'rps-player draw-state'; document.getElementById('rps-p2').className = 'rps-player draw-state'; }
+        else if (beats[userKey] === botKey) { verdict = currentLang === 'ar' ? '🏆 انتصر ' + h1name + '!' : '🏆 ' + h1name + ' WINS!'; verdictClass = 'win'; winnerName = currentLang === 'ar' ? '<strong>' + h1name + '</strong> يفوز' : '<strong>' + h1name + '</strong> wins'; clashIcon = '👑'; document.getElementById('rps-p1').className = 'rps-player won'; document.getElementById('rps-p2').className = 'rps-player lost'; }
+        else { verdict = currentLang === 'ar' ? '💀 انتصر ' + h2name + '!' : '💀 ' + h2name + ' WINS!'; verdictClass = 'lose'; winnerName = currentLang === 'ar' ? '<strong>' + h2name + '</strong> يفوز' : '<strong>' + h2name + '</strong> wins'; clashIcon = '💀'; document.getElementById('rps-p1').className = 'rps-player lost'; document.getElementById('rps-p2').className = 'rps-player won'; }
         document.getElementById('rps-user-emoji').textContent = emojis[userKey];
-        document.getElementById('rps-bot-emoji').textContent  = emojis[botKey];
-        document.getElementById('rps-p1-name').innerText      = h1name;
-        document.getElementById('rps-p2-name').innerText      = h2name;
-        document.getElementById('rps-tag-you').innerText      = currentLang === 'ar' ? 'أنت ('+h1name+')' : 'You ('+h1name+')';
-        document.getElementById('rps-tag-bot').innerText      = currentLang === 'ar' ? 'الخصم ('+h2name+')' : 'Bot ('+h2name+')';
-        document.getElementById('rps-clash').textContent      = clashIcon;
-
-        const vEl = document.getElementById('rps-verdict');
-        vEl.className = 'rps-verdict-text ' + verdictClass;
-        vEl.innerText = verdict;
-        document.getElementById('rps-winner-line').innerHTML  = winnerName;
-
-        // show result phase
-        document.getElementById('rps-pick-phase').style.display   = 'none';
+        document.getElementById('rps-bot-emoji').textContent = emojis[botKey];
+        document.getElementById('rps-p1-name').innerText = h1name;
+        document.getElementById('rps-p2-name').innerText = h2name;
+        document.getElementById('rps-tag-you').innerText = currentLang === 'ar' ? 'أنت ('+h1name+')' : 'You ('+h1name+')';
+        document.getElementById('rps-tag-bot').innerText = currentLang === 'ar' ? 'الخصم ('+h2name+')' : 'Bot ('+h2name+')';
+        document.getElementById('rps-clash').textContent = clashIcon;
+        const vEl = document.getElementById('rps-verdict'); vEl.className = 'rps-verdict-text ' + verdictClass; vEl.innerText = verdict;
+        document.getElementById('rps-winner-line').innerHTML = winnerName;
+        document.getElementById('rps-pick-phase').style.display = 'none';
         document.getElementById('rps-result-phase').style.display = 'block';
-        // re-trigger emoji animation
-        ['rps-user-emoji','rps-bot-emoji'].forEach(id => {
-            const el = document.getElementById(id);
-            el.style.animation = 'none';
-            el.offsetHeight;
-            el.style.animation = '';
-        });
     }
 
-    function closeBattle() {
-        document.getElementById('battle-overlay').classList.remove('show');
-        document.getElementById('hp-fill').style.width = '50%';
-    }
+    function closeBattle() { document.getElementById('battle-overlay').classList.remove('show'); document.getElementById('hp-fill').style.width = '50%'; }
 
     function showTab(tab) {
         document.getElementById('arena-page').style.display = tab === 'arena' ? 'block' : 'none';
         document.getElementById('lore-page').style.display = tab === 'lore' ? 'block' : 'none';
+        document.getElementById('ai-page').style.display = tab === 'ai' ? 'block' : 'none';
         document.getElementById('btn-arena').classList.toggle('active', tab === 'arena');
         document.getElementById('btn-lore').classList.toggle('active', tab === 'lore');
+        document.getElementById('btn-ai').classList.toggle('active', tab === 'ai');
+        // Hide battle controls when switching to AI tab
+        if (tab === 'ai') document.getElementById('battle-controls').classList.remove('show');
         if (tab === 'lore') renderLoreList();
+        if (tab === 'ai' && !gzInitialized) { gzInit(); gzInitialized = true; }
     }
 
     function renderLoreList() {
-        const grid = document.getElementById('lore-grid');
-        grid.innerHTML = '';
-        document.getElementById('lore-viewer').style.display = 'none';
-        grid.style.display = 'grid';
-
+        const grid = document.getElementById('lore-grid'); grid.innerHTML = '';
+        document.getElementById('lore-viewer').style.display = 'none'; grid.style.display = 'grid';
         heroes.forEach(h => {
             const card = document.createElement('div');
             card.className = `card ${h.isPeak ? 'peak' : ''}`;
-            card.innerHTML = `
-                <div class="card-inner">
-                    <span class="card-badge">${h.type.toUpperCase()}</span>
-                    <div class="card-icon">${h.icon}</div>
-                    <div class="card-name">${h[currentLang].name}</div>
-                    <div class="card-source">${h.source}</div>
-                    <div style="font-size:0.65rem;color:var(--gold-dim);margin-top:4px;">${currentLang==='ar'?'اقرأ المخطوطة':'Read Lore'}</div>
-                    ${h.isPeak ? '<div class="peak-tag">PEAK</div>' : ''}
-                </div>`;
+            card.innerHTML = `<div class="card-inner"><span class="card-badge">${h.type.toUpperCase()}</span><div class="card-icon">${h.icon}</div><div class="card-name">${h[currentLang].name}</div><div class="card-source">${h.source}</div><div style="font-size:0.65rem;color:var(--gold-dim);margin-top:4px;">${currentLang==='ar'?'اقرأ المخطوطة':'Read Lore'}</div>${h.isPeak ? '<div class="peak-tag">PEAK</div>' : ''}</div>`;
             card.onclick = () => openLore(h);
             grid.appendChild(card);
         });
@@ -2275,16 +2059,12 @@
         document.getElementById('m-text').innerHTML = `<span class="drop-cap">${text.charAt(0)}</span>${text.substring(1)}`;
     }
 
-    function closeLore() {
-        document.getElementById('lore-grid').style.display = 'grid';
-        document.getElementById('lore-viewer').style.display = 'none';
-    }
+    function closeLore() { document.getElementById('lore-grid').style.display = 'grid'; document.getElementById('lore-viewer').style.display = 'none'; }
 
     function toggleLanguage() {
         currentLang = currentLang === 'ar' ? 'en' : 'ar';
         const body = document.getElementById('main-body');
-        body.lang = currentLang;
-        body.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+        body.lang = currentLang; body.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
         document.getElementById('lang-btn').innerText = currentLang === 'ar' ? 'EN' : 'AR';
         updateTexts();
         renderGrid(currentFilter, searchQuery);
@@ -2299,7 +2079,7 @@
         const ar = currentLang === 'ar';
         document.getElementById('btn-arena').innerText = ar ? 'ميدان القتال' : 'BATTLE ARENA';
         document.getElementById('btn-lore').innerText = ar ? 'المخطوطات' : 'ROYAL LORE';
-        document.getElementById('txt-sub').innerText = ar ? 'GOLDEN ARENA — 200 CHAMPION' : 'GOLDEN ARENA — 200 CHAMPIONS';
+        document.getElementById('txt-sub').innerText = ar ? 'GOLDEN ARENA — 518 CHAMPION' : 'GOLDEN ARENA — 518 CHAMPIONS';
         document.getElementById('f-all').innerText = ar ? 'الكل' : 'ALL';
         document.getElementById('f-game').innerText = ar ? '🎮 ألعاب' : '🎮 GAMES';
         document.getElementById('f-series').innerText = ar ? '📺 مسلسلات' : '📺 SERIES';
@@ -2311,22 +2091,319 @@
         document.getElementById('txt-luck').innerText = ar ? '🎲 تحدي الحظ' : '🎲 LUCK';
         document.getElementById('txt-helper').innerText = ar ? 'لنساعدك على الاختيار' : 'HELP ME CHOOSE';
         document.getElementById('search-input').placeholder = ar ? 'ابحث عن بطل...' : 'Search champion...';
-        document.getElementById('txt-archive-nav').innerText = 'ARCHIVE';
         document.getElementById('txt-new-battle').innerText = ar ? '↺ نزال جديد' : '↺ NEW BATTLE';
-        document.getElementById('txt-archive-btn').innerHTML = ar ? '📜 سجل الأبطال' : '📜 HERO ARCHIVE';
-        document.getElementById('txt-discuss').innerHTML = ar ? '💬 ناقش القوة' : '💬 DISCUSS';
-        document.getElementById('txt-back-battle').innerText = ar ? '↺ العودة' : '↺ BACK';
+        document.getElementById('txt-back-rps').innerText = ar ? '↺ العودة' : '↺ BACK';
         document.getElementById('stat-lbl-total').innerText = ar ? 'بطل' : 'CHAMPIONS';
         document.getElementById('stat-lbl-peak').innerText = ar ? 'شكل ذروة' : 'PEAK FORMS';
         document.getElementById('stat-lbl-sel').innerText = ar ? 'مختار' : 'SELECTED';
         document.getElementById('luck-title').innerText = ar ? 'معركة الحظ' : 'BATTLE OF LUCK';
-        document.getElementById('txt-rps-desc').innerText = ar ? 'اختر للحسم النهائي:' : 'Choose to settle the score:';
+        document.getElementById('txt-rps-desc').innerText = ar ? 'اختر سلاحك لحسم المعركة:' : 'Choose to settle the score:';
         document.getElementById('txt-close-lore').innerText = ar ? 'إغلاق المخطوطة' : 'CLOSE MANUSCRIPT';
         document.getElementById('txt-back-lore').innerText = ar ? '← العودة للقائمة' : '← BACK TO LIST';
-        document.getElementById('txt-battle-system').innerText = 'GAME ZONE — BATTLE SYSTEM';
     }
 
-    // INIT
+    // ════════════════════════════════════════
+    // GZ BOT AI LOGIC (prefixed with gz)
+    // ════════════════════════════════════════
+    let gzApiKey = '';
+    let gzLang = 'ar';
+    let gzIsBusy = false;
+    let gzHistory = [];
+    let gzMsgC = 0, gzDebC = 0, gzGameC = 0;
+    let gzSel = [null, null];
+    let gzInitialized = false;
+
+    const GZ_GAME_KW = ['game','games','لعبة','ألعاب','gaming','fortnite','valorant','apex','pubg','gta','cod','fifa','cs2','zelda','elden','rpg','fps','ps5','xbox','شخصية','character','kratos','dante','doom'];
+
+    const GZ_CHARS = [
+        {id:'kratos',  ico:'⚡', name:'Kratos',      game:'God of War',    power:97},
+        {id:'doomguy', ico:'💀', name:'Doom Slayer', game:'DOOM',          power:96},
+        {id:'dante',   ico:'🔥', name:'Dante',       game:'Devil May Cry', power:94},
+        {id:'2b',      ico:'🤖', name:'2B',          game:'NieR',          power:93},
+        {id:'master',  ico:'🪖', name:'Master Chief',game:'Halo',          power:92},
+        {id:'cloud',   ico:'⚔️', name:'Cloud',       game:'FF7',           power:91},
+        {id:'jin',     ico:'👊', name:'Jin Kazama',  game:'Tekken',        power:89},
+        {id:'geralt',  ico:'🗡️', name:'Geralt',      game:'The Witcher',   power:88},
+        {id:'ezio',    ico:'🦅', name:'Ezio',        game:'AC',            power:86},
+        {id:'link',    ico:'🧝', name:'Link',        game:'Zelda',         power:85},
+        {id:'arthur',  ico:'🤠', name:'Arthur',      game:'RDR2',          power:82},
+        {id:'ellie',   ico:'🏹', name:'Ellie',       game:'TLOU',          power:79},
+    ];
+
+    const GZ_HOT = [
+        {title:'كراتوس ضد دانتي — من الأقوى؟', tags:[{l:'POWER',c:'#ff5555'},{l:'LORE',c:'#ffaa00'},{l:'🔥 TOP',c:'#ff6b00'}], prompt:'نقاش عميق: كراتوس من God of War ضد دانتي من Devil May Cry. من سيكسب ولماذا؟'},
+        {title:'PS5 ضد Xbox Series X — الحرب الأبدية 2025', tags:[{l:'CONSOLE',c:'#6496ff'},{l:'WAR',c:'#ff2244'}], prompt:'جادلني: PS5 أم Xbox Series X الأفضل في 2025؟'},
+        {title:'Doom Slayer ضد كل شيء', tags:[{l:'DOOM',c:'#ff2244'},{l:'OP',c:'#ff5555'}], prompt:'هل Doom Slayer أقوى شخصية في تاريخ الألعاب؟'},
+        {title:'Elden Ring أفضل لعبة في التاريخ؟', tags:[{l:'FROMSOFT',c:'#b44dff'},{l:'GOTY',c:'#ffd700'}], prompt:'هل Elden Ring تستحق لقب أفضل لعبة في التاريخ؟'},
+        {title:'Valorant ضد CS2 — ملك الـ FPS', tags:[{l:'FPS',c:'#00c8ff'},{l:'ESPORTS',c:'#b44dff'}], prompt:'نقاش تنافسي: Valorant أم CS2 الأفضل في 2025؟'},
+        {title:'Cloud ضد Link — البطل الأعظم', tags:[{l:'RPG',c:'#b44dff'},{l:'ICONIC',c:'#ffd700'}], prompt:'Cloud من FF7 ضد Link من Zelda. من أقوى وأفضل؟'},
+    ];
+
+    const GZ_TIERS = [
+        {t:'S', cl:'gz-ts', c:'#ff5555', ids:['kratos','doomguy','dante','2b']},
+        {t:'A', cl:'gz-ta', c:'#ffaa00', ids:['master','cloud','jin','geralt']},
+        {t:'B', cl:'gz-tb', c:'#64c864', ids:['link','ezio']},
+        {t:'C', cl:'gz-tc', c:'#6496ff', ids:['arthur','ellie']},
+    ];
+
+    const GZ_SYS_AR = `أنت GZ Bot — خبير نقاشات الألعاب على موقع GamZone. شخصية مشاكسة وواثقة.
+🔥 شخصيتك: لديك آراء قوية لا تتراجع عنها، تستمتع بالجدال، تعرف lore الألعاب بعمق.
+لغتك: عربي عامي + مصطلحات Gaming (كلاتش، رانك، برو، OP، nerf، buff، feats)
+❌ لا تجلس على الحياد — خذ موقف وادافع عنه بقوة!`;
+
+    const GZ_SYS_EN = `You are GZ Bot — GamZone's argumentative gaming debate expert. Bold, opinionated, never neutral.
+🔥 You LOVE being challenged — respond with even stronger arguments. Deep lore knowledge.
+❌ Never sit on the fence — commit to a position and defend it hard!`;
+
+    function saveApiKey() {
+        const key = document.getElementById('gz-api-key-input').value.trim();
+        gzApiKey = key;
+        const banner = document.getElementById('gz-api-banner');
+        if (key) {
+            banner.innerHTML = `<div class="gz-api-notice" style="background:rgba(0,255,136,0.06);border-color:rgba(0,255,136,0.2)"><p style="color:#00ff88;margin:0;">✅ API Key محفوظ! الـ AI جاهز للنقاش 🔥</p></div>`;
+        } else {
+            banner.innerHTML = `<div class="gz-api-notice" style="background:rgba(255,215,0,0.06);border-color:rgba(255,215,0,0.2)"><p style="color:#ffd700;margin:0;">⚠️ بدون API Key — سيعمل البوت بردود محدودة</p></div>`;
+        }
+    }
+
+    function gzInit() {
+        gzBuildGrid();
+        gzBuildDebates();
+        gzBuildTier();
+        gzShowWelcome();
+    }
+
+    function gzShowWelcome() {
+        document.getElementById('gz-chatMsgs').innerHTML = '';
+        gzHistory = []; gzMsgC = 0; gzDebC = 0; gzGameC = 0; gzUpStats();
+        const m = gzLang === 'ar'
+            ? `🎮 **GG يا بطل!** أنا GZ Bot — خبير نقاشات الألعاب.\n\nعندي آراء قوية وما أتراجع عنها 😤💪\n\nناقشني في:\n• **قوة الشخصيات** — كراتوس، دانتي، Doom Slayer...\n• **مقارنات الألعاب** — PS5 vs Xbox، Elden Ring...\n• **Tier Lists وتصنيفات**\n\nأو استخدم التابات! 🔥`
+            : `🎮 **GG!** I'm GZ Bot — GamZone's gaming debate expert.\n\nI have STRONG opinions 😤💪\n\nDebate me on characters, games, tier lists!\n\nUse the tabs above! 🔥`;
+        gzAddBot(m);
+        gzSetQ(gzLang === 'ar'
+            ? ['⚔️ أقوى شخصية؟', '🎮 PS5 ولا Xbox؟', '💀 Doom Slayer OP؟', '🔥 Elden Ring صعبة؟']
+            : ['⚔️ Strongest character?', '🎮 PS5 or Xbox?', '💀 Is Doom Slayer OP?', '🔥 Elden Ring too hard?']);
+    }
+
+    function gzAddBot(text, extra = '') {
+        const el = document.getElementById('gz-chatMsgs');
+        const d = document.createElement('div');
+        d.className = 'gz-msg gz-bot';
+        const t = new Date().toLocaleTimeString('en', {hour:'2-digit', minute:'2-digit'});
+        d.innerHTML = `<div class="gz-mav">GZ</div><div><div class="gz-bubble">${gzFmt(text)}${extra}</div><div class="gz-mtime">${t}</div></div>`;
+        el.appendChild(d); gzScroll();
+    }
+
+    function gzAddUser(text) {
+        const el = document.getElementById('gz-chatMsgs');
+        const d = document.createElement('div');
+        d.className = 'gz-msg gz-user';
+        const t = new Date().toLocaleTimeString('en', {hour:'2-digit', minute:'2-digit'});
+        d.innerHTML = `<div class="gz-mav">👤</div><div><div class="gz-bubble">${gzFmt(text)}</div><div class="gz-mtime">${t}</div></div>`;
+        el.appendChild(d);
+        gzMsgC++;
+        if (GZ_GAME_KW.some(k => text.toLowerCase().includes(k))) gzGameC++;
+        gzUpStats(); gzScroll();
+    }
+
+    function gzFmt(t) {
+        return t.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\*(.*?)\*/g, '<em>$1</em>').replace(/\n/g, '<br>');
+    }
+
+    function gzScroll() { const e = document.getElementById('gz-chatMsgs'); setTimeout(() => e.scrollTop = e.scrollHeight, 60); }
+
+    function gzShowType() {
+        const el = document.getElementById('gz-chatMsgs');
+        const d = document.createElement('div'); d.className = 'gz-msg gz-bot'; d.id = 'gz-typ';
+        d.innerHTML = `<div class="gz-mav">GZ</div><div class="gz-bubble gz-typing-bub"><div class="gz-tdot"></div><div class="gz-tdot"></div><div class="gz-tdot"></div></div>`;
+        el.appendChild(d); gzScroll();
+    }
+
+    function gzRemoveType() { const e = document.getElementById('gz-typ'); if (e) e.remove(); }
+
+    function gzSetQ(arr) {
+        const el = document.getElementById('gz-qwrap'); el.innerHTML = '';
+        (arr || []).forEach((x, i) => {
+            const b = document.createElement('button');
+            b.className = 'gz-qchip' + (i >= 2 ? ' hot' : ''); b.textContent = x;
+            b.onclick = () => { document.getElementById('gz-cinput').value = x; gzSendMsg(); };
+            el.appendChild(b);
+        });
+    }
+
+    function gzUpStats() {
+        document.getElementById('gz-sMsgs').textContent = gzMsgC;
+        document.getElementById('gz-sDebates').textContent = gzDebC;
+        document.getElementById('gz-sGames').textContent = gzGameC;
+        document.getElementById('gz-sLang').textContent = gzLang.toUpperCase();
+    }
+
+    async function gzSendMsg() {
+        const inp = document.getElementById('gz-cinput');
+        const txt = inp.value.trim();
+        if (!txt || gzIsBusy) return;
+        inp.value = ''; gzAutoR(inp); gzSetQ([]);
+        gzAddUser(txt);
+        const debKW = ['ضد','vs','أقوى','أفضل','strongest','best','compare','tier'];
+        if (debKW.some(k => txt.toLowerCase().includes(k))) gzDebC++;
+        gzUpStats();
+        gzHistory.push({role:'user', content:txt});
+        gzIsBusy = true; document.getElementById('gz-sbtn').disabled = true; gzShowType();
+        try {
+            if (!gzApiKey) {
+                // Fallback without API
+                gzRemoveType();
+                const fallbacks_ar = ['🔥 سؤال ممتاز! للحصول على تحليل AI كامل، أدخل API Key أعلاه. لكن رأيي: هذه شخصية قوية جداً في لورها!', '💪 ناقشني أكثر! أضف API Key للحصول على إجابات تفصيلية بالذكاء الاصطناعي.', '⚡ موضوع حار! مع AI Key هتحصل على تحليل عميق للـ Lore والـ Feats.'];
+                const fallbacks_en = ['🔥 Great question! Add your API Key above for full AI analysis. My take: this is a very powerful character!', '💪 Keep debating! Add API Key for detailed AI responses.', '⚡ Hot topic! With AI Key you get deep Lore and Feats analysis.'];
+                const fb = gzLang === 'ar' ? fallbacks_ar : fallbacks_en;
+                const reply = fb[Math.floor(Math.random() * fb.length)];
+                gzHistory.push({role:'assistant', content:reply});
+                gzAddBot(reply);
+            } else {
+                const res = await fetch('https://api.anthropic.com/v1/messages', {
+                    method: 'POST',
+                    headers: {'Content-Type':'application/json','x-api-key':gzApiKey,'anthropic-version':'2023-06-01'},
+                    body: JSON.stringify({model:'claude-sonnet-4-20250514', max_tokens:1100, system:gzLang==='ar'?GZ_SYS_AR:GZ_SYS_EN, messages:gzHistory})
+                });
+                const data = await res.json();
+                const reply = data.content?.[0]?.text || (gzLang==='ar' ? '⚠️ خطأ — تحقق من API Key' : '⚠️ Error — Check API Key');
+                gzRemoveType(); gzHistory.push({role:'assistant', content:reply}); gzAddBot(reply);
+            }
+            gzSetQ(gzLang === 'ar'
+                ? ['🔥 أنا مختلف!', 'أثبت بالـ Lore!', 'مثال من القصة؟', 'من يتفوق عليه؟']
+                : ['🔥 I disagree!', 'Prove it with lore!', 'Give a canon feat!', 'Who beats them?']);
+        } catch(e) {
+            gzRemoveType();
+            gzAddBot(gzLang==='ar' ? '⚠️ تأكد من API Key في الإعدادات' : '⚠️ Check your API Key');
+        }
+        gzIsBusy = false; document.getElementById('gz-sbtn').disabled = false;
+        document.getElementById('gz-cinput').focus();
+    }
+
+    function gzBuildGrid() {
+        const g = document.getElementById('gz-charGrid'); g.innerHTML = '';
+        GZ_CHARS.forEach(c => {
+            const d = document.createElement('div');
+            d.className = 'gz-char-card'; d.id = 'gz-cc-' + c.id;
+            d.innerHTML = `<div class="gz-cico">${c.ico}</div><div class="gz-cname">${c.name}</div><div class="gz-cgame">${c.game}</div><div class="gz-cpow">⚡${c.power}</div>`;
+            d.onclick = () => gzPickChar(c);
+            g.appendChild(d);
+        });
+    }
+
+    function gzPickChar(c) {
+        if (gzSel[0]?.id === c.id) { gzSel[0] = null; document.getElementById('gz-cc-'+c.id).classList.remove('gz-sel'); gzUpdSlots(); return; }
+        if (gzSel[1]?.id === c.id) { gzSel[1] = null; document.getElementById('gz-cc-'+c.id).classList.remove('gz-sel'); gzUpdSlots(); return; }
+        if (!gzSel[0]) gzSel[0] = c;
+        else if (!gzSel[1]) gzSel[1] = c;
+        else { document.getElementById('gz-cc-'+gzSel[0].id)?.classList.remove('gz-sel'); gzSel[0] = gzSel[1]; gzSel[1] = c; }
+        document.querySelectorAll('.gz-char-card').forEach(e => e.classList.remove('gz-sel'));
+        if (gzSel[0]) document.getElementById('gz-cc-'+gzSel[0].id)?.classList.add('gz-sel');
+        if (gzSel[1]) document.getElementById('gz-cc-'+gzSel[1].id)?.classList.add('gz-sel');
+        gzUpdSlots();
+    }
+
+    function gzUpdSlots() {
+        const s1 = document.getElementById('gz-slot1'), s2 = document.getElementById('gz-slot2');
+        const btn = document.getElementById('gz-battleBtn');
+        if (gzSel[0]) { s1.className='gz-vs-slot gz-filled'; s1.innerHTML=`<span class="gz-vs-ico">${gzSel[0].ico}</span><span class="gz-vs-name">${gzSel[0].name}</span><span style="font-size:0.58rem;color:#ffd700">⚡${gzSel[0].power}</span>`; }
+        else { s1.className='gz-vs-slot'; s1.innerHTML=`<span style="font-size:1.4rem;opacity:0.25">?</span><span style="font-size:0.62rem;color:var(--gz-muted)">Fighter 1</span>`; }
+        if (gzSel[1]) { s2.className='gz-vs-slot gz-filled'; s2.innerHTML=`<span class="gz-vs-ico">${gzSel[1].ico}</span><span class="gz-vs-name">${gzSel[1].name}</span><span style="font-size:0.58rem;color:#ffd700">⚡${gzSel[1].power}</span>`; }
+        else { s2.className='gz-vs-slot'; s2.innerHTML=`<span style="font-size:1.4rem;opacity:0.25">?</span><span style="font-size:0.62rem;color:var(--gz-muted)">Fighter 2</span>`; }
+        btn.disabled = !(gzSel[0] && gzSel[1]);
+    }
+
+    async function gzStartBattle() {
+        const c1 = gzSel[0], c2 = gzSel[1]; if (!c1 || !c2) return;
+        gzSwitchMode('chat');
+        const p = gzLang === 'ar'
+            ? `حلل معركة بين ${c1.name} (${c1.game}) ضد ${c2.name} (${c2.game}) بناءً على الـ Lore الرسمي. من يكسب ولماذا؟`
+            : `Analyze a battle between ${c1.name} (${c1.game}) vs ${c2.name} (${c2.game}) using official lore. Who wins and why?`;
+        gzAddUser(`⚔️ ${c1.name} VS ${c2.name}`);
+        gzHistory.push({role:'user', content:p});
+        gzDebC++; gzUpStats();
+        gzIsBusy = true; document.getElementById('gz-sbtn').disabled = true; gzShowType();
+        try {
+            let reply;
+            if (!gzApiKey) {
+                const p1w = c1.power >= c2.power ? c1 : c2;
+                reply = gzLang === 'ar'
+                    ? `⚔️ تحليل المعركة!\n\n**${p1w.name}** يتفوق بحسب إحصائياته (⚡${p1w.power}).\n\nللحصول على تحليل AI كامل بالـ Lore والـ Feats، أضف API Key! 🔥`
+                    : `⚔️ Battle Analysis!\n\n**${p1w.name}** leads by stats (⚡${p1w.power}).\n\nAdd API Key for full AI Lore analysis! 🔥`;
+            } else {
+                const res = await fetch('https://api.anthropic.com/v1/messages', {
+                    method:'POST',
+                    headers:{'Content-Type':'application/json','x-api-key':gzApiKey,'anthropic-version':'2023-06-01'},
+                    body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1200,system:gzLang==='ar'?GZ_SYS_AR:GZ_SYS_EN,messages:gzHistory})
+                });
+                const data = await res.json();
+                reply = data.content?.[0]?.text || '⚠️ Error';
+            }
+            gzRemoveType(); gzHistory.push({role:'assistant', content:reply});
+            const tot = c1.power + c2.power;
+            const w = c1.power >= c2.power ? c1 : c2;
+            const pct1 = Math.round((c1.power/tot)*100), pct2 = 100 - pct1;
+            const card = `<div class="gz-battle-result"><div class="gz-br-title">⚔️ BATTLE ANALYSIS • GZ BOT</div><div class="gz-br-vs"><div class="gz-br-side${w.id===c1.id?' gz-winner':''}"><div>${c1.ico} <span class="gz-sn">${c1.name}</span></div><div class="gz-sb"><div class="gz-sf" style="width:${pct1}%;background:linear-gradient(90deg,#ffd700,#ff6b00)"></div></div></div><div class="gz-vs-badge">VS</div><div class="gz-br-side${w.id===c2.id?' gz-winner':''}"><div>${c2.ico} <span class="gz-sn">${c2.name}</span></div><div class="gz-sb"><div class="gz-sf" style="width:${pct2}%;background:linear-gradient(90deg,#00c8ff,#b44dff)"></div></div></div></div><div class="gz-br-verdict">🏆 <strong style="color:#ffd700">${w.name}</strong> — الفائز المرجح</div></div>`;
+            gzAddBot(reply, card);
+            gzSetQ(gzLang==='ar' ? ['🔥 أنا مختلف!','وماذا لو كانوا في فريق؟'] : ['🔥 I disagree!','What if they teamed up?']);
+        } catch(e) { gzRemoveType(); gzAddBot('⚠️ Check API key'); }
+        gzIsBusy = false; document.getElementById('gz-sbtn').disabled = false;
+    }
+
+    function gzBuildDebates() {
+        const el = document.getElementById('gz-debatesList'); el.innerHTML = '';
+        GZ_HOT.forEach((d, i) => {
+            const tags = d.tags.map(t => `<span class="gz-dtag" style="color:${t.c};border-color:${t.c}33">${t.l}</span>`).join('');
+            const div = document.createElement('div'); div.className = 'gz-debate-item';
+            div.innerHTML = `<div class="gz-d-num">#${i+1}</div><div class="gz-d-title">${d.title}</div><div class="gz-d-meta">اضغط لبدء النقاش 🔥</div><div class="gz-d-tags">${tags}</div>`;
+            div.onclick = () => { gzSwitchMode('chat'); document.getElementById('gz-cinput').value = d.prompt; gzSendMsg(); };
+            el.appendChild(div);
+        });
+    }
+
+    function gzBuildTier() {
+        const el = document.getElementById('gz-tierContent'); el.innerHTML = '';
+        GZ_TIERS.forEach(row => {
+            const chars = row.ids.map(id => {
+                const c = GZ_CHARS.find(x => x.id === id);
+                return c ? `<div class="gz-tchar" onclick="gzAskChar('${c.name}')"><div class="gz-tico">${c.ico}</div><div class="gz-tname">${c.name}</div></div>` : '';
+            }).join('');
+            const d = document.createElement('div');
+            d.className = `gz-tier-row ${row.cl}`;
+            d.innerHTML = `<div class="gz-tier-lbl">${row.t}</div><div class="gz-tier-chars">${chars}</div>`;
+            el.appendChild(d);
+        });
+    }
+
+    function gzAskChar(name) {
+        gzSwitchMode('chat');
+        const q = gzLang === 'ar' ? `لماذا ${name} في هذا الترتيب؟ ناقشني!` : `Why is ${name} in their tier? Let's debate!`;
+        document.getElementById('gz-cinput').value = q; gzSendMsg();
+    }
+
+    function gzAskTier() {
+        gzSwitchMode('chat');
+        const q = gzLang === 'ar' ? `ناقشني في هذا الـ Tier List! هل كراتوس يستحق S-tier؟` : `Let's debate this Tier List! Does Kratos deserve S-tier?`;
+        document.getElementById('gz-cinput').value = q; gzSendMsg();
+    }
+
+    function gzSwitchMode(mode) {
+        document.querySelectorAll('.ai-mode-tab').forEach(t => t.classList.remove('active'));
+        document.getElementById('gz-tab-' + mode).classList.add('active');
+        ['battle','debates','tier'].forEach(m => document.getElementById('gz-panel-' + m).classList.remove('active'));
+        if (mode !== 'chat') document.getElementById('gz-panel-' + mode).classList.add('active');
+    }
+
+    function gzHandleKey(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); gzSendMsg(); } }
+    function gzAutoR(el) { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 90) + 'px'; }
+    function gzToggleLang() {
+        gzLang = gzLang === 'ar' ? 'en' : 'ar';
+        gzUpStats(); gzShowWelcome();
+    }
+    function gzClearChat() { gzShowWelcome(); }
+
+    // ── INIT ──
+    document.getElementById('stat-total').innerText = heroes.length;
     document.getElementById('stat-peak').innerText = getPeakCount();
     renderGrid('all', '');
     </script>
