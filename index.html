@@ -1021,6 +1021,303 @@
 
         .card { animation: fade-in 0.3s ease both; }
         @keyframes fade-in { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+
+        /* ─── CHARACTER GENERATOR ─── */
+        .gz-gen-tab { color: var(--gz-orange) !important; }
+        .gz-gen-tab.active { color: var(--gz-orange) !important; border-bottom-color: var(--gz-orange) !important; background: rgba(255,107,0,0.06) !important; }
+        .gz-gen-box {
+            background: var(--gz-s2);
+            border: 1px solid rgba(255,107,0,0.2);
+            border-radius: 12px;
+            padding: 14px;
+            display: flex; flex-direction: column; gap: 10px;
+        }
+        .gz-gen-label {
+            font-size: 0.75rem;
+            color: var(--gz-muted);
+            font-family: 'Cairo', sans-serif;
+        }
+        .gz-gen-input {
+            width: 100%;
+            background: var(--gz-s3);
+            border: 1px solid rgba(255,107,0,0.25);
+            border-radius: 9px;
+            padding: 10px 13px;
+            color: var(--gz-text);
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .gz-gen-input:focus { border-color: var(--gz-orange); box-shadow: 0 0 0 3px rgba(255,107,0,0.1); }
+        .gz-gen-input::placeholder { color: rgba(90,96,112,0.6); }
+        .gz-gen-row { display: flex; gap: 8px; }
+        .gz-gen-sel {
+            flex: 1;
+            background: var(--gz-s3);
+            border: 1px solid rgba(255,107,0,0.2);
+            border-radius: 8px;
+            padding: 8px 10px;
+            color: var(--gz-text);
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.8rem;
+            outline: none;
+            cursor: pointer;
+        }
+        .gz-gen-btn {
+            padding: 8px 18px;
+            border-radius: 9px;
+            border: none;
+            background: linear-gradient(135deg, var(--gz-orange), #ff4444);
+            color: #fff;
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+            box-shadow: 0 3px 12px rgba(255,107,0,0.3);
+        }
+        .gz-gen-btn:hover { transform: translateY(-1px); box-shadow: 0 5px 18px rgba(255,107,0,0.4); }
+        .gz-gen-btn:active { transform: scale(0.96); }
+        .gz-gen-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+        .gz-gen-status {
+            text-align: center;
+            padding: 12px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.72rem;
+            color: var(--gz-orange);
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .gz-gen-spin {
+            width: 14px; height: 14px;
+            border: 2px solid rgba(255,107,0,0.3);
+            border-top-color: var(--gz-orange);
+            border-radius: 50%;
+            animation: gz-spin 0.8s linear infinite;
+        }
+        @keyframes gz-spin { to { transform: rotate(360deg); } }
+        /* Character Preview Card */
+        .gz-gen-preview {
+            background: var(--gz-s2);
+            border: 1px solid rgba(255,215,0,0.2);
+            border-radius: 12px;
+            padding: 14px;
+            animation: gz-msgIn 0.3s cubic-bezier(0.16,1,0.3,1) both;
+        }
+        .gz-prev-header {
+            display: flex; align-items: center; gap: 12px; margin-bottom: 12px;
+        }
+        .gz-prev-ico {
+            font-size: 2.2rem;
+            width: 52px; height: 52px;
+            display: flex; align-items: center; justify-content: center;
+            background: var(--gz-s3);
+            border-radius: 12px;
+            border: 1px solid rgba(255,215,0,0.15);
+            flex-shrink: 0;
+        }
+        .gz-prev-info { flex: 1; min-width: 0; }
+        .gz-prev-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.85rem; font-weight: 900;
+            color: #ffd700;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .gz-prev-source {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.6rem; color: var(--gz-muted);
+            margin-top: 2px;
+        }
+        .gz-prev-pow {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.72rem; font-weight: 700;
+            color: var(--gz-orange);
+            background: rgba(255,107,0,0.1);
+            border: 1px solid rgba(255,107,0,0.25);
+            border-radius: 20px;
+            padding: 3px 10px;
+            white-space: nowrap;
+        }
+        .gz-prev-ability {
+            font-size: 0.72rem;
+            color: var(--gz-blue);
+            margin-bottom: 7px;
+            font-family: 'Share Tech Mono', monospace;
+        }
+        .gz-prev-lore {
+            font-size: 0.78rem;
+            color: var(--gz-text);
+            line-height: 1.6;
+            font-family: 'Cairo', sans-serif;
+        }
+        .gz-prev-actions { display: flex; gap: 8px; margin-top: 12px; }
+        .gz-prev-add {
+            flex: 1;
+            padding: 8px;
+            border-radius: 8px;
+            border: none;
+            background: linear-gradient(135deg, #ffd700, var(--gz-orange));
+            color: #000;
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.78rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .gz-prev-add:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(255,215,0,0.3); }
+        .gz-prev-retry {
+            padding: 8px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--gz-border);
+            background: rgba(255,255,255,0.03);
+            color: var(--gz-muted);
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .gz-prev-retry:hover { border-color: rgba(255,215,0,0.3); color: #ffd700; }
+        /* Custom Character Badge */
+        .gz-char-card.gz-custom::after {
+            content: 'AI';
+            position: absolute; top: 4px; left: 4px;
+            background: linear-gradient(135deg, var(--gz-orange), #ff4444);
+            color: #fff; font-size: 0.45rem; font-weight: 900;
+            font-family: 'Orbitron', sans-serif;
+            padding: 1px 4px; border-radius: 4px;
+            letter-spacing: 0.5px;
+        }
+        .gz-gen-saved { margin-top: 4px; }
+        /* Model badge color states */
+        #gz-modelBadge { transition: color 0.4s; }
+        .gz-model-gemini2 { color: #00e5cc !important; }
+        .gz-model-gemini15 { color: #00c8ff !important; }
+        .gz-model-pro { color: #b44dff !important; }
+        .gz-model-hack { color: var(--gz-orange) !important; }
+        .gz-model-pollinations { color: #00ff88 !important; }
+        .gz-model-openrouter { color: #b44dff !important; }
+        .gz-model-master { color: #ffd700 !important; }
+
+        /* ─── API SETTINGS TAB ─── */
+        .gz-settings-tab { color: #5a6070 !important; font-size: 0.75rem !important; }
+        .gz-settings-tab.active { color: #ffd700 !important; border-bottom-color: #ffd700 !important; }
+        .gz-api-box {
+            background: var(--gz-s2);
+            border: 1px solid rgba(255,215,0,0.15);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex; flex-direction: column; gap: 12px;
+        }
+        .gz-api-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.72rem; font-weight: 700;
+            color: #ffd700;
+            letter-spacing: 1px;
+        }
+        .gz-api-desc {
+            font-size: 0.72rem;
+            color: var(--gz-muted);
+            line-height: 1.6;
+            font-family: 'Cairo', sans-serif;
+        }
+        .gz-api-label {
+            font-size: 0.68rem;
+            color: #8090a0;
+            font-family: 'Share Tech Mono', monospace;
+            margin-bottom: 4px;
+        }
+        .gz-api-input {
+            width: 100%;
+            background: var(--gz-s3);
+            border: 1px solid rgba(255,215,0,0.2);
+            border-radius: 9px;
+            padding: 10px 13px;
+            color: var(--gz-text);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.8rem;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            letter-spacing: 0.5px;
+        }
+        .gz-api-input:focus { border-color: #ffd700; box-shadow: 0 0 0 3px rgba(255,215,0,0.08); }
+        .gz-api-input::placeholder { color: rgba(90,96,112,0.5); letter-spacing: 0; }
+        .gz-api-prov-row { display: flex; gap: 6px; }
+        .gz-prov-btn {
+            flex: 1;
+            padding: 7px 4px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.06);
+            background: var(--gz-s3);
+            color: var(--gz-muted);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.65rem;
+            cursor: pointer;
+            transition: all 0.18s;
+            text-align: center;
+        }
+        .gz-prov-btn.active { border-color: #ffd700; color: #ffd700; background: rgba(255,215,0,0.07); }
+        .gz-prov-btn:hover:not(.active) { border-color: rgba(255,215,0,0.2); color: #aaa; }
+        .gz-api-save-row { display: flex; gap: 8px; margin-top: 4px; }
+        .gz-api-save-btn {
+            flex: 1;
+            padding: 9px;
+            border-radius: 9px;
+            border: none;
+            background: linear-gradient(135deg, #ffd700, #cc9900);
+            color: #000;
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.8rem; font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .gz-api-save-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(255,215,0,0.3); }
+        .gz-api-clear-btn {
+            padding: 9px 14px;
+            border-radius: 9px;
+            border: 1px solid rgba(255,255,255,0.06);
+            background: rgba(255,255,255,0.02);
+            color: var(--gz-muted);
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.78rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .gz-api-clear-btn:hover { border-color: rgba(200,50,50,0.4); color: #ff6666; }
+        .gz-api-status {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.68rem;
+            padding: 8px 12px;
+            border-radius: 8px;
+            text-align: center;
+            display: none;
+        }
+        .gz-api-status.ok { display: block; background: rgba(0,255,136,0.08); color: #00ff88; border: 1px solid rgba(0,255,136,0.2); }
+        .gz-api-status.err { display: block; background: rgba(255,50,50,0.08); color: #ff6666; border: 1px solid rgba(255,50,50,0.2); }
+        .gz-api-active-badge {
+            display: inline-flex; align-items: center; gap: 5px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.62rem;
+            padding: 4px 10px;
+            border-radius: 20px;
+            background: rgba(255,215,0,0.08);
+            border: 1px solid rgba(255,215,0,0.2);
+            color: #ffd700;
+        }
+        .gz-free-apis {
+            background: rgba(0,255,136,0.04);
+            border: 1px solid rgba(0,255,136,0.12);
+            border-radius: 10px;
+            padding: 10px 12px;
+        }
+        .gz-free-apis-title { font-size: 0.65rem; color: #00ff88; font-family: 'Share Tech Mono', monospace; margin-bottom: 6px; }
+        .gz-free-api-item {
+            display: flex; align-items: center; gap: 6px;
+            font-size: 0.65rem; color: var(--gz-muted);
+            font-family: 'Share Tech Mono', monospace;
+            padding: 2px 0;
+        }
+        .gz-free-api-item::before { content: '✓'; color: #00ff88; font-size: 0.6rem; }
     </style>
 </head>
 <body id="main-body" lang="ar" dir="rtl">
@@ -1123,6 +1420,8 @@
                 <button class="ai-mode-tab" onclick="gzSwitchMode('battle')" id="gz-tab-battle"><span class="ti">⚔️</span>معركة</button>
                 <button class="ai-mode-tab" onclick="gzSwitchMode('debates')" id="gz-tab-debates"><span class="ti">🔥</span>ساخنة</button>
                 <button class="ai-mode-tab" onclick="gzSwitchMode('tier')" id="gz-tab-tier"><span class="ti">👑</span>Tier List</button>
+                <button class="ai-mode-tab gz-gen-tab" onclick="gzSwitchMode('generate')" id="gz-tab-generate"><span class="ti">⚡</span>توليد</button>
+                <button class="ai-mode-tab gz-settings-tab" onclick="gzSwitchMode('settings')" id="gz-tab-settings"><span class="ti">⚙️</span>API</button>
             </div>
 
             <!-- CHAT ZONE -->
@@ -1131,7 +1430,7 @@
                     <div class="gz-av">GZ</div>
                     <div class="gz-bot-info">
                         <div class="gz-bot-name">GAMZONE BOT</div>
-                        <div class="gz-bot-sub"><div class="gz-live-dot"></div><span>DEBATE MODE • ONLINE</span></div>
+                        <div class="gz-bot-sub"><div class="gz-live-dot"></div><span id="gz-modelBadge">MULTI-AI • ONLINE</span></div>
                     </div>
                     <div class="gz-hdr-btns">
                         <button class="gz-hbtn" onclick="gzToggleLang()">AR/EN</button>
@@ -1177,7 +1476,84 @@
                 <button class="gz-battle-btn" style="margin-top:6px;" onclick="gzAskTier()">🔥 ناقش هذا الـ Tier List</button>
             </div>
 
-            <div class="gz-footer"><strong style="color:#ffd700;font-weight:normal;">GZ BOT v2</strong> • Powered by Claude AI • نقاشات بلا حدود 🎮</div>
+            <!-- GENERATE PANEL -->
+            <div class="gz-panel" id="gz-panel-generate">
+                <div class="gz-p-title">⚡ توليد شخصية بالـ AI</div>
+                <div class="gz-gen-box">
+                    <div class="gz-gen-label">اكتب اسم أي شخصية من أي لعبة، أنمي، فيلم أو مسلسل:</div>
+                    <input type="text" class="gz-gen-input" id="gz-genInput" placeholder="مثال: Vergil, Rimuru, Sukuna, Darth Vader..." maxlength="100" onkeydown="if(event.key==='Enter')gzGenerateChar()">
+                    <div class="gz-gen-row">
+                        <select class="gz-gen-sel" id="gz-genType">
+                            <option value="game">🎮 لعبة</option>
+                            <option value="anime">⚡ أنمي</option>
+                            <option value="movie">🎬 فيلم</option>
+                            <option value="series">📺 مسلسل</option>
+                            <option value="comic">💥 كوميكس</option>
+                        </select>
+                        <button class="gz-gen-btn" id="gz-genBtn" onclick="gzGenerateChar()">⚡ توليد</button>
+                    </div>
+                </div>
+                <div class="gz-gen-status" id="gz-genStatus" style="display:none;"></div>
+                <div class="gz-gen-preview" id="gz-genPreview" style="display:none;"></div>
+                <div class="gz-gen-saved" id="gz-genSaved">
+                    <div class="gz-p-title" id="gz-savedTitle" style="display:none;">🏆 شخصياتك المولّدة</div>
+                    <div class="gz-char-grid" id="gz-customGrid"></div>
+                </div>
+            </div>
+
+            <!-- SETTINGS PANEL -->
+            <div class="gz-panel" id="gz-panel-settings">
+                <div class="gz-p-title">⚙️ إعدادات API</div>
+
+                <!-- Free APIs section -->
+                <div class="gz-free-apis">
+                    <div class="gz-free-apis-title">✅ APIs مجانية مفعّلة تلقائياً (بدون مفتاح)</div>
+                    <div class="gz-free-api-item">Gemini 2.0 Flash — Google AI</div>
+                    <div class="gz-free-api-item">Gemini 1.5 Flash — Google AI</div>
+                    <div class="gz-free-api-item">Gemini 1.5 Pro — Google AI</div>
+                    <div class="gz-free-api-item">Pollinations AI — مجاني 100%</div>
+                    <div class="gz-free-api-item">HackClub GPT-4o Mini — مجاني 100%</div>
+                </div>
+
+                <!-- Master Key box -->
+                <div class="gz-api-box">
+                    <div class="gz-api-title">🔑 MASTER API KEY</div>
+                    <div class="gz-api-desc">أضف مفتاحك الخاص لأولوية أعلى وحدود أكبر. المفتاح يُحفظ في المتصفح فقط ولا يُرسل لأي جهة خارجية.</div>
+
+                    <div>
+                        <div class="gz-api-label">نوع المزود / Provider</div>
+                        <div class="gz-api-prov-row">
+                            <button class="gz-prov-btn active" id="gz-prov-gemini" onclick="gzSetProv('gemini')">Gemini</button>
+                            <button class="gz-prov-btn" id="gz-prov-openrouter" onclick="gzSetProv('openrouter')">OpenRouter</button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="gz-api-label" id="gz-key-label">GEMINI API KEY</div>
+                        <input type="password" class="gz-api-input" id="gz-apiKeyInput"
+                            placeholder="AIza... أو sk-or-..."
+                            autocomplete="off" spellcheck="false">
+                    </div>
+
+                    <div class="gz-api-save-row">
+                        <button class="gz-api-save-btn" onclick="gzSaveApiKey()">💾 حفظ المفتاح</button>
+                        <button class="gz-api-clear-btn" onclick="gzClearApiKey()">مسح</button>
+                    </div>
+
+                    <div class="gz-api-status" id="gz-apiStatus"></div>
+
+                    <div id="gz-activeKeyBadge" style="display:none;">
+                        <span class="gz-api-active-badge">🔑 <span id="gz-activeKeyText">مفتاح مفعّل</span></span>
+                    </div>
+                </div>
+
+                <div class="gz-api-desc" style="font-size:0.62rem;opacity:0.5;text-align:center;">
+                    للحصول على مفتاح Gemini مجاني: <strong>aistudio.google.com</strong><br>
+                    للحصول على مفتاح OpenRouter مجاني: <strong>openrouter.ai</strong>
+                </div>
+            </div>
+
+            <div class="gz-footer"><strong style="color:#ffd700;font-weight:normal;">GZ BOT v3</strong> • Multi-AI: Gemini + Pollinations + HackClub • نقاشات بلا حدود 🎮</div>
         </div>
     </div>
 
@@ -2229,14 +2605,18 @@
         gzHistory.push({role:'user', content:txt});
         gzIsBusy = true; document.getElementById('gz-sbtn').disabled = true; gzShowType();
         try {
-                const res = await fetch('/.netlify/functions/claude', {
-                    method: 'POST',
-                    headers: {'Content-Type':'application/json'},
-                    body: JSON.stringify({model:'claude-sonnet-4-20250514', max_tokens:1100, system:gzLang==='ar'?GZ_SYS_AR:GZ_SYS_EN, messages:gzHistory})
-                });
-                const data = await res.json();
-                const reply = data.content?.[0]?.text || (gzLang==='ar' ? '⚠️ خطأ في الاتصال' : '⚠️ Connection Error');
-                gzRemoveType(); gzHistory.push({role:'assistant', content:reply}); gzAddBot(reply);
+            const res = await fetch('/.netlify/functions/claude', {
+                method: 'POST',
+                headers: {'Content-Type':'application/json'},
+                body: JSON.stringify({max_tokens:1100, system:gzLang==='ar'?GZ_SYS_AR:GZ_SYS_EN, messages:gzHistory, ...gzGetApiPayload()})
+            });
+            const data = await res.json();
+            if (data.error) throw new Error(data.error);
+            const reply = data.content?.[0]?.text || (gzLang==='ar' ? '⚠️ خطأ في الاتصال' : '⚠️ Connection Error');
+            gzRemoveType();
+            gzHistory.push({role:'assistant', content:reply});
+            gzAddBot(reply);
+            gzUpdateModelBadge(data.model_used);
             gzSetQ(gzLang === 'ar'
                 ? ['🔥 أنا مختلف!', 'أثبت بالـ Lore!', 'مثال من القصة؟', 'من يتفوق عليه؟']
                 : ['🔥 I disagree!', 'Prove it with lore!', 'Give a canon feat!', 'Who beats them?']);
@@ -2246,6 +2626,20 @@
         }
         gzIsBusy = false; document.getElementById('gz-sbtn').disabled = false;
         document.getElementById('gz-cinput').focus();
+    }
+
+    function gzUpdateModelBadge(model) {
+        const el = document.getElementById('gz-modelBadge');
+        if (!el || !model) return;
+        el.className = '';
+        if (model.includes('master'))             { el.textContent = '🔑 MASTER KEY • ONLINE';      el.classList.add('gz-model-master'); }
+        else if (model.includes('openrouter'))    { el.textContent = 'OPENROUTER • ONLINE';         el.classList.add('gz-model-openrouter'); }
+        else if (model.includes('pollinations'))  { el.textContent = 'POLLINATIONS AI • ONLINE';    el.classList.add('gz-model-pollinations'); }
+        else if (model.includes('2.0'))           { el.textContent = 'GEMINI 2.0 FLASH • ONLINE';   el.classList.add('gz-model-gemini2'); }
+        else if (model.includes('1.5-flash'))     { el.textContent = 'GEMINI 1.5 FLASH • ONLINE';   el.classList.add('gz-model-gemini15'); }
+        else if (model.includes('pro'))           { el.textContent = 'GEMINI 1.5 PRO • ONLINE';     el.classList.add('gz-model-pro'); }
+        else if (model.includes('hack') || model.includes('gpt')) { el.textContent = 'GPT-4O MINI • ONLINE'; el.classList.add('gz-model-hack'); }
+        else { el.textContent = `${model.toUpperCase().slice(0,22)} • ONLINE`; }
     }
 
     function gzBuildGrid() {
@@ -2292,13 +2686,15 @@
         gzDebC++; gzUpStats();
         gzIsBusy = true; document.getElementById('gz-sbtn').disabled = true; gzShowType();
         try {
-                const res = await fetch('/.netlify/functions/claude', {
-                    method:'POST',
-                    headers:{'Content-Type':'application/json'},
-                    body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1200,system:gzLang==='ar'?GZ_SYS_AR:GZ_SYS_EN,messages:gzHistory})
-                });
-                const data = await res.json();
-                let reply = data.content?.[0]?.text || '⚠️ Error';
+            const res = await fetch('/.netlify/functions/claude', {
+                method:'POST',
+                headers:{'Content-Type':'application/json'},
+                body:JSON.stringify({max_tokens:1200, system:gzLang==='ar'?GZ_SYS_AR:GZ_SYS_EN, messages:gzHistory, ...gzGetApiPayload()})
+            });
+            const data = await res.json();
+            if (data.error) throw new Error(data.error);
+            let reply = data.content?.[0]?.text || '⚠️ Error';
+            gzUpdateModelBadge(data.model_used);
             gzRemoveType(); gzHistory.push({role:'assistant', content:reply});
             const tot = c1.power + c2.power;
             const w = c1.power >= c2.power ? c1 : c2;
@@ -2350,8 +2746,76 @@
     function gzSwitchMode(mode) {
         document.querySelectorAll('.ai-mode-tab').forEach(t => t.classList.remove('active'));
         document.getElementById('gz-tab-' + mode).classList.add('active');
-        ['battle','debates','tier'].forEach(m => document.getElementById('gz-panel-' + m).classList.remove('active'));
-        if (mode !== 'chat') document.getElementById('gz-panel-' + mode).classList.add('active');
+        ['battle','debates','tier','generate','settings'].forEach(m => {
+            const p = document.getElementById('gz-panel-' + m);
+            if (p) p.classList.remove('active');
+        });
+        if (mode !== 'chat') {
+            const panel = document.getElementById('gz-panel-' + mode);
+            if (panel) panel.classList.add('active');
+        }
+        if (mode === 'generate') {
+            setTimeout(() => document.getElementById('gz-genInput')?.focus(), 80);
+        }
+        if (mode === 'settings') {
+            gzRefreshKeyUI();
+        }
+    }
+
+    // ── Master API Key management ─────────────────────────────────────────
+    let gzMasterKey  = localStorage.getItem('gz_master_key')  || '';
+    let gzMasterProv = localStorage.getItem('gz_master_prov') || 'gemini';
+
+    function gzGetApiPayload() {
+        return gzMasterKey ? { master_key: gzMasterKey, master_provider: gzMasterProv } : {};
+    }
+
+    function gzSetProv(prov) {
+        gzMasterProv = prov;
+        document.querySelectorAll('.gz-prov-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('gz-prov-' + prov)?.classList.add('active');
+        document.getElementById('gz-key-label').textContent =
+            prov === 'openrouter' ? 'OPENROUTER API KEY' : 'GEMINI API KEY';
+    }
+
+    function gzSaveApiKey() {
+        const val = document.getElementById('gz-apiKeyInput').value.trim();
+        if (!val) { gzApiStatus('err', 'أدخل مفتاحاً صالحاً'); return; }
+        gzMasterKey  = val;
+        localStorage.setItem('gz_master_key',  val);
+        localStorage.setItem('gz_master_prov', gzMasterProv);
+        gzApiStatus('ok', `✓ تم حفظ مفتاح ${gzMasterProv === 'openrouter' ? 'OpenRouter' : 'Gemini'} — سيُستخدم كأولوية أولى`);
+        gzRefreshKeyUI();
+    }
+
+    function gzClearApiKey() {
+        gzMasterKey = '';
+        localStorage.removeItem('gz_master_key');
+        localStorage.removeItem('gz_master_prov');
+        document.getElementById('gz-apiKeyInput').value = '';
+        gzApiStatus('ok', 'تم مسح المفتاح — يعمل الآن بالـ APIs المجانية');
+        gzRefreshKeyUI();
+    }
+
+    function gzApiStatus(type, msg) {
+        const el = document.getElementById('gz-apiStatus');
+        el.className = 'gz-api-status ' + type;
+        el.textContent = msg;
+        setTimeout(() => { el.style.display = 'none'; el.className = 'gz-api-status'; }, 4000);
+    }
+
+    function gzRefreshKeyUI() {
+        const badge = document.getElementById('gz-activeKeyBadge');
+        const txt   = document.getElementById('gz-activeKeyText');
+        if (gzMasterKey) {
+            const masked = gzMasterKey.slice(0, 6) + '••••••' + gzMasterKey.slice(-3);
+            txt.textContent = `${gzMasterProv === 'openrouter' ? 'OpenRouter' : 'Gemini'}: ${masked}`;
+            badge.style.display = 'block';
+            gzSetProv(gzMasterProv);
+            document.getElementById('gz-apiKeyInput').value = gzMasterKey;
+        } else {
+            badge.style.display = 'none';
+        }
     }
 
     function gzHandleKey(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); gzSendMsg(); } }
@@ -2362,10 +2826,173 @@
     }
     function gzClearChat() { gzShowWelcome(); }
 
+    // ════════════════════════════════════════
+    // CUSTOM CHARACTER SYSTEM (localStorage)
+    // ════════════════════════════════════════
+    const GZ_STORAGE_KEY = 'gz_custom_chars_v1';
+
+    function gzLoadCustomChars() {
+        try { return JSON.parse(localStorage.getItem(GZ_STORAGE_KEY) || '[]'); } catch { return []; }
+    }
+
+    function gzSaveCustomChars(arr) {
+        try { localStorage.setItem(GZ_STORAGE_KEY, JSON.stringify(arr)); } catch {}
+    }
+
+    function gzAddToRoster(charData) {
+        const list = gzLoadCustomChars();
+        // Prevent duplicates by id
+        if (list.some(c => c.id === charData.id)) {
+            // Make unique with timestamp suffix
+            charData.id = charData.id + '-' + Date.now().toString(36);
+        }
+        list.push(charData);
+        gzSaveCustomChars(list);
+        // Also add to GZ_CHARS for battle mode
+        if (!GZ_CHARS.find(c => c.id === charData.id)) {
+            GZ_CHARS.push({ id: charData.id, ico: charData.icon, name: charData[gzLang === 'ar' ? 'ar' : 'en'].name, game: charData.source, power: charData.p });
+        }
+        gzBuildGrid();
+        gzRenderCustomGrid();
+        return charData.id;
+    }
+
+    function gzRemoveCustomChar(id) {
+        const list = gzLoadCustomChars().filter(c => c.id !== id);
+        gzSaveCustomChars(list);
+        const idx = GZ_CHARS.findIndex(c => c.id === id);
+        if (idx !== -1) GZ_CHARS.splice(idx, 1);
+        gzBuildGrid();
+        gzRenderCustomGrid();
+    }
+
+    function gzRenderCustomGrid() {
+        const grid = document.getElementById('gz-customGrid');
+        const titleEl = document.getElementById('gz-savedTitle');
+        if (!grid) return;
+        const list = gzLoadCustomChars();
+        grid.innerHTML = '';
+        if (list.length === 0) { if (titleEl) titleEl.style.display = 'none'; return; }
+        if (titleEl) titleEl.style.display = 'flex';
+        list.forEach(c => {
+            const name = c[gzLang === 'ar' ? 'ar' : 'en']?.name || c.en?.name || c.id;
+            const d = document.createElement('div');
+            d.className = 'gz-char-card gz-custom';
+            d.innerHTML = `<div class="gz-cico">${c.icon || '⚡'}</div><div class="gz-cname" style="font-size:0.6rem">${name}</div><div class="gz-cgame">${c.source || ''}</div><div class="gz-cpow">⚡${c.p}</div>`;
+            d.onclick = () => gzPickChar({ id: c.id, ico: c.icon || '⚡', name, game: c.source, power: c.p });
+            // Long-press / right-click to remove
+            d.title = 'انقر للاختيار • اضغط مطولاً للحذف';
+            let pressTimer;
+            d.addEventListener('mousedown', () => { pressTimer = setTimeout(() => { if (confirm(`حذف "${name}"?`)) gzRemoveCustomChar(c.id); }, 600); });
+            d.addEventListener('mouseup', () => clearTimeout(pressTimer));
+            d.addEventListener('mouseleave', () => clearTimeout(pressTimer));
+            grid.appendChild(d);
+        });
+    }
+
+    // ── Character Generator ──────────────────────────────────────────────
+    let gzGenBusy = false;
+    let gzGenPreviewData = null;
+
+    async function gzGenerateChar() {
+        if (gzGenBusy) return;
+        const nameEl = document.getElementById('gz-genInput');
+        const typeEl = document.getElementById('gz-genType');
+        const name = nameEl?.value?.trim();
+        if (!name || name.length < 2) { nameEl?.focus(); return; }
+        const type = typeEl?.value || 'game';
+
+        gzGenBusy = true;
+        const btn = document.getElementById('gz-genBtn');
+        if (btn) btn.disabled = true;
+
+        const statusEl  = document.getElementById('gz-genStatus');
+        const previewEl = document.getElementById('gz-genPreview');
+        if (statusEl) {
+            statusEl.style.display = 'flex';
+            statusEl.innerHTML = `<div class="gz-gen-spin"></div><span>جاري توليد بيانات "${name}" بالـ AI...</span>`;
+        }
+        if (previewEl) previewEl.style.display = 'none';
+
+        try {
+            const res = await fetch('/.netlify/functions/generate-character', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, type, ...gzGetApiPayload() })
+            });
+            const data = await res.json();
+            if (!res.ok || data.error) throw new Error(data.error || 'فشل التوليد');
+            const char = data.character;
+            gzGenPreviewData = char;
+            if (statusEl) statusEl.style.display = 'none';
+            gzShowCharPreview(char);
+        } catch (err) {
+            if (statusEl) {
+                statusEl.innerHTML = `<span style="color:var(--gz-red)">⚠️ ${err.message}</span>`;
+            }
+        }
+
+        gzGenBusy = false;
+        if (btn) btn.disabled = false;
+    }
+
+    function gzShowCharPreview(c) {
+        const el = document.getElementById('gz-genPreview');
+        if (!el) return;
+        const arName = c.ar?.name || c.en?.name || c.id;
+        const enName = c.en?.name || arName;
+        const arAbility = c.ar?.ability || c.en?.ability || '';
+        const arLore = c.ar?.lore || c.en?.lore || '';
+        const peakTag = c.isPeak ? `<span style="background:var(--gz-red);color:#fff;font-size:0.52rem;font-family:'Orbitron',sans-serif;padding:2px 6px;border-radius:4px;margin-right:6px;">PEAK</span>` : '';
+        el.innerHTML = `
+            <div class="gz-prev-header">
+                <div class="gz-prev-ico">${c.icon || '⚡'}</div>
+                <div class="gz-prev-info">
+                    <div class="gz-prev-name">${peakTag}${arName}</div>
+                    <div class="gz-prev-source">${enName} • ${c.source || ''} • ${(c.type||'').toUpperCase()}</div>
+                </div>
+                <div class="gz-prev-pow">⚡ ${c.p}</div>
+            </div>
+            <div class="gz-prev-ability">⚔️ ${arAbility}</div>
+            <div class="gz-prev-lore">${arLore}</div>
+            <div class="gz-prev-actions">
+                <button class="gz-prev-add" onclick="gzConfirmAdd()">✅ أضف للميدان</button>
+                <button class="gz-prev-retry" onclick="gzGenerateChar()">🔄 توليد جديد</button>
+            </div>`;
+        el.style.display = 'block';
+    }
+
+    function gzConfirmAdd() {
+        if (!gzGenPreviewData) return;
+        const id = gzAddToRoster(gzGenPreviewData);
+        const el = document.getElementById('gz-genPreview');
+        if (el) el.innerHTML = `<div style="text-align:center;padding:16px;"><div style="font-size:1.5rem">✅</div><div style="color:#ffd700;font-family:'Orbitron',sans-serif;font-size:0.75rem;margin-top:6px;">تمت الإضافة للميدان!</div><div style="color:var(--gz-muted);font-size:0.65rem;margin-top:4px;">يمكنك استخدامها في وضع المعركة الآن</div></div>`;
+        gzGenPreviewData = null;
+        document.getElementById('gz-genInput').value = '';
+        // Flash the battle tab to hint user
+        const bt = document.getElementById('gz-tab-battle');
+        if (bt) { bt.style.color = '#ffd700'; setTimeout(() => bt.style.color = '', 1200); }
+    }
+
+    // ── Extend gzInit to load custom chars ──────────────────────────────
+    const _gzInitOrig = gzInit;
+    gzInit = function() {
+        _gzInitOrig();
+        // Load saved custom characters into GZ_CHARS
+        gzLoadCustomChars().forEach(c => {
+            if (!GZ_CHARS.find(x => x.id === c.id)) {
+                const name = c[gzLang === 'ar' ? 'ar' : 'en']?.name || c.en?.name || c.id;
+                GZ_CHARS.push({ id: c.id, ico: c.icon || '⚡', name, game: c.source, power: c.p });
+            }
+        });
+        gzBuildGrid();
+        gzRenderCustomGrid();
+    };
+
     // ── INIT ──
     document.getElementById('stat-total').innerText = heroes.length;
     document.getElementById('stat-peak').innerText = getPeakCount();
     renderGrid('all', '');
-    </script>
+</script>
 </body>
 </html>
