@@ -1195,6 +1195,129 @@
         .gz-model-gemini15 { color: #00c8ff !important; }
         .gz-model-pro { color: #b44dff !important; }
         .gz-model-hack { color: var(--gz-orange) !important; }
+        .gz-model-pollinations { color: #00ff88 !important; }
+        .gz-model-openrouter { color: #b44dff !important; }
+        .gz-model-master { color: #ffd700 !important; }
+
+        /* ─── API SETTINGS TAB ─── */
+        .gz-settings-tab { color: #5a6070 !important; font-size: 0.75rem !important; }
+        .gz-settings-tab.active { color: #ffd700 !important; border-bottom-color: #ffd700 !important; }
+        .gz-api-box {
+            background: var(--gz-s2);
+            border: 1px solid rgba(255,215,0,0.15);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex; flex-direction: column; gap: 12px;
+        }
+        .gz-api-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.72rem; font-weight: 700;
+            color: #ffd700;
+            letter-spacing: 1px;
+        }
+        .gz-api-desc {
+            font-size: 0.72rem;
+            color: var(--gz-muted);
+            line-height: 1.6;
+            font-family: 'Cairo', sans-serif;
+        }
+        .gz-api-label {
+            font-size: 0.68rem;
+            color: #8090a0;
+            font-family: 'Share Tech Mono', monospace;
+            margin-bottom: 4px;
+        }
+        .gz-api-input {
+            width: 100%;
+            background: var(--gz-s3);
+            border: 1px solid rgba(255,215,0,0.2);
+            border-radius: 9px;
+            padding: 10px 13px;
+            color: var(--gz-text);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.8rem;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            letter-spacing: 0.5px;
+        }
+        .gz-api-input:focus { border-color: #ffd700; box-shadow: 0 0 0 3px rgba(255,215,0,0.08); }
+        .gz-api-input::placeholder { color: rgba(90,96,112,0.5); letter-spacing: 0; }
+        .gz-api-prov-row { display: flex; gap: 6px; }
+        .gz-prov-btn {
+            flex: 1;
+            padding: 7px 4px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.06);
+            background: var(--gz-s3);
+            color: var(--gz-muted);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.65rem;
+            cursor: pointer;
+            transition: all 0.18s;
+            text-align: center;
+        }
+        .gz-prov-btn.active { border-color: #ffd700; color: #ffd700; background: rgba(255,215,0,0.07); }
+        .gz-prov-btn:hover:not(.active) { border-color: rgba(255,215,0,0.2); color: #aaa; }
+        .gz-api-save-row { display: flex; gap: 8px; margin-top: 4px; }
+        .gz-api-save-btn {
+            flex: 1;
+            padding: 9px;
+            border-radius: 9px;
+            border: none;
+            background: linear-gradient(135deg, #ffd700, #cc9900);
+            color: #000;
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.8rem; font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .gz-api-save-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(255,215,0,0.3); }
+        .gz-api-clear-btn {
+            padding: 9px 14px;
+            border-radius: 9px;
+            border: 1px solid rgba(255,255,255,0.06);
+            background: rgba(255,255,255,0.02);
+            color: var(--gz-muted);
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.78rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .gz-api-clear-btn:hover { border-color: rgba(200,50,50,0.4); color: #ff6666; }
+        .gz-api-status {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.68rem;
+            padding: 8px 12px;
+            border-radius: 8px;
+            text-align: center;
+            display: none;
+        }
+        .gz-api-status.ok { display: block; background: rgba(0,255,136,0.08); color: #00ff88; border: 1px solid rgba(0,255,136,0.2); }
+        .gz-api-status.err { display: block; background: rgba(255,50,50,0.08); color: #ff6666; border: 1px solid rgba(255,50,50,0.2); }
+        .gz-api-active-badge {
+            display: inline-flex; align-items: center; gap: 5px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.62rem;
+            padding: 4px 10px;
+            border-radius: 20px;
+            background: rgba(255,215,0,0.08);
+            border: 1px solid rgba(255,215,0,0.2);
+            color: #ffd700;
+        }
+        .gz-free-apis {
+            background: rgba(0,255,136,0.04);
+            border: 1px solid rgba(0,255,136,0.12);
+            border-radius: 10px;
+            padding: 10px 12px;
+        }
+        .gz-free-apis-title { font-size: 0.65rem; color: #00ff88; font-family: 'Share Tech Mono', monospace; margin-bottom: 6px; }
+        .gz-free-api-item {
+            display: flex; align-items: center; gap: 6px;
+            font-size: 0.65rem; color: var(--gz-muted);
+            font-family: 'Share Tech Mono', monospace;
+            padding: 2px 0;
+        }
+        .gz-free-api-item::before { content: '✓'; color: #00ff88; font-size: 0.6rem; }
     </style>
 </head>
 <body id="main-body" lang="ar" dir="rtl">
@@ -1298,6 +1421,7 @@
                 <button class="ai-mode-tab" onclick="gzSwitchMode('debates')" id="gz-tab-debates"><span class="ti">🔥</span>ساخنة</button>
                 <button class="ai-mode-tab" onclick="gzSwitchMode('tier')" id="gz-tab-tier"><span class="ti">👑</span>Tier List</button>
                 <button class="ai-mode-tab gz-gen-tab" onclick="gzSwitchMode('generate')" id="gz-tab-generate"><span class="ti">⚡</span>توليد</button>
+                <button class="ai-mode-tab gz-settings-tab" onclick="gzSwitchMode('settings')" id="gz-tab-settings"><span class="ti">⚙️</span>API</button>
             </div>
 
             <!-- CHAT ZONE -->
@@ -1377,7 +1501,59 @@
                 </div>
             </div>
 
-            <div class="gz-footer"><strong style="color:#ffd700;font-weight:normal;">GZ BOT v3</strong> • Multi-AI: Gemini 2.0 Flash + 1.5 Flash + 1.5 Pro + HackClub • نقاشات بلا حدود 🎮</div>
+            <!-- SETTINGS PANEL -->
+            <div class="gz-panel" id="gz-panel-settings">
+                <div class="gz-p-title">⚙️ إعدادات API</div>
+
+                <!-- Free APIs section -->
+                <div class="gz-free-apis">
+                    <div class="gz-free-apis-title">✅ APIs مجانية مفعّلة تلقائياً (بدون مفتاح)</div>
+                    <div class="gz-free-api-item">Gemini 2.0 Flash — Google AI</div>
+                    <div class="gz-free-api-item">Gemini 1.5 Flash — Google AI</div>
+                    <div class="gz-free-api-item">Gemini 1.5 Pro — Google AI</div>
+                    <div class="gz-free-api-item">Pollinations AI — مجاني 100%</div>
+                    <div class="gz-free-api-item">HackClub GPT-4o Mini — مجاني 100%</div>
+                </div>
+
+                <!-- Master Key box -->
+                <div class="gz-api-box">
+                    <div class="gz-api-title">🔑 MASTER API KEY</div>
+                    <div class="gz-api-desc">أضف مفتاحك الخاص لأولوية أعلى وحدود أكبر. المفتاح يُحفظ في المتصفح فقط ولا يُرسل لأي جهة خارجية.</div>
+
+                    <div>
+                        <div class="gz-api-label">نوع المزود / Provider</div>
+                        <div class="gz-api-prov-row">
+                            <button class="gz-prov-btn active" id="gz-prov-gemini" onclick="gzSetProv('gemini')">Gemini</button>
+                            <button class="gz-prov-btn" id="gz-prov-openrouter" onclick="gzSetProv('openrouter')">OpenRouter</button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="gz-api-label" id="gz-key-label">GEMINI API KEY</div>
+                        <input type="password" class="gz-api-input" id="gz-apiKeyInput"
+                            placeholder="AIza... أو sk-or-..."
+                            autocomplete="off" spellcheck="false">
+                    </div>
+
+                    <div class="gz-api-save-row">
+                        <button class="gz-api-save-btn" onclick="gzSaveApiKey()">💾 حفظ المفتاح</button>
+                        <button class="gz-api-clear-btn" onclick="gzClearApiKey()">مسح</button>
+                    </div>
+
+                    <div class="gz-api-status" id="gz-apiStatus"></div>
+
+                    <div id="gz-activeKeyBadge" style="display:none;">
+                        <span class="gz-api-active-badge">🔑 <span id="gz-activeKeyText">مفتاح مفعّل</span></span>
+                    </div>
+                </div>
+
+                <div class="gz-api-desc" style="font-size:0.62rem;opacity:0.5;text-align:center;">
+                    للحصول على مفتاح Gemini مجاني: <strong>aistudio.google.com</strong><br>
+                    للحصول على مفتاح OpenRouter مجاني: <strong>openrouter.ai</strong>
+                </div>
+            </div>
+
+            <div class="gz-footer"><strong style="color:#ffd700;font-weight:normal;">GZ BOT v3</strong> • Multi-AI: Gemini + Pollinations + HackClub • نقاشات بلا حدود 🎮</div>
         </div>
     </div>
 
@@ -2432,7 +2608,7 @@
             const res = await fetch('/.netlify/functions/claude', {
                 method: 'POST',
                 headers: {'Content-Type':'application/json'},
-                body: JSON.stringify({max_tokens:1100, system:gzLang==='ar'?GZ_SYS_AR:GZ_SYS_EN, messages:gzHistory})
+                body: JSON.stringify({max_tokens:1100, system:gzLang==='ar'?GZ_SYS_AR:GZ_SYS_EN, messages:gzHistory, ...gzGetApiPayload()})
             });
             const data = await res.json();
             if (data.error) throw new Error(data.error);
@@ -2456,11 +2632,14 @@
         const el = document.getElementById('gz-modelBadge');
         if (!el || !model) return;
         el.className = '';
-        if (model.includes('2.0')) { el.textContent = 'GEMINI 2.0 FLASH • ONLINE'; el.classList.add('gz-model-gemini2'); }
-        else if (model.includes('1.5-flash')) { el.textContent = 'GEMINI 1.5 FLASH • ONLINE'; el.classList.add('gz-model-gemini15'); }
-        else if (model.includes('pro')) { el.textContent = 'GEMINI 1.5 PRO • ONLINE'; el.classList.add('gz-model-pro'); }
+        if (model.includes('master'))             { el.textContent = '🔑 MASTER KEY • ONLINE';      el.classList.add('gz-model-master'); }
+        else if (model.includes('openrouter'))    { el.textContent = 'OPENROUTER • ONLINE';         el.classList.add('gz-model-openrouter'); }
+        else if (model.includes('pollinations'))  { el.textContent = 'POLLINATIONS AI • ONLINE';    el.classList.add('gz-model-pollinations'); }
+        else if (model.includes('2.0'))           { el.textContent = 'GEMINI 2.0 FLASH • ONLINE';   el.classList.add('gz-model-gemini2'); }
+        else if (model.includes('1.5-flash'))     { el.textContent = 'GEMINI 1.5 FLASH • ONLINE';   el.classList.add('gz-model-gemini15'); }
+        else if (model.includes('pro'))           { el.textContent = 'GEMINI 1.5 PRO • ONLINE';     el.classList.add('gz-model-pro'); }
         else if (model.includes('hack') || model.includes('gpt')) { el.textContent = 'GPT-4O MINI • ONLINE'; el.classList.add('gz-model-hack'); }
-        else { el.textContent = `${model.toUpperCase().slice(0,20)} • ONLINE`; }
+        else { el.textContent = `${model.toUpperCase().slice(0,22)} • ONLINE`; }
     }
 
     function gzBuildGrid() {
@@ -2510,7 +2689,7 @@
             const res = await fetch('/.netlify/functions/claude', {
                 method:'POST',
                 headers:{'Content-Type':'application/json'},
-                body:JSON.stringify({max_tokens:1200, system:gzLang==='ar'?GZ_SYS_AR:GZ_SYS_EN, messages:gzHistory})
+                body:JSON.stringify({max_tokens:1200, system:gzLang==='ar'?GZ_SYS_AR:GZ_SYS_EN, messages:gzHistory, ...gzGetApiPayload()})
             });
             const data = await res.json();
             if (data.error) throw new Error(data.error);
@@ -2567,7 +2746,7 @@
     function gzSwitchMode(mode) {
         document.querySelectorAll('.ai-mode-tab').forEach(t => t.classList.remove('active'));
         document.getElementById('gz-tab-' + mode).classList.add('active');
-        ['battle','debates','tier','generate'].forEach(m => {
+        ['battle','debates','tier','generate','settings'].forEach(m => {
             const p = document.getElementById('gz-panel-' + m);
             if (p) p.classList.remove('active');
         });
@@ -2575,9 +2754,67 @@
             const panel = document.getElementById('gz-panel-' + mode);
             if (panel) panel.classList.add('active');
         }
-        // Focus generator input when switching to generate mode
         if (mode === 'generate') {
             setTimeout(() => document.getElementById('gz-genInput')?.focus(), 80);
+        }
+        if (mode === 'settings') {
+            gzRefreshKeyUI();
+        }
+    }
+
+    // ── Master API Key management ─────────────────────────────────────────
+    let gzMasterKey  = localStorage.getItem('gz_master_key')  || '';
+    let gzMasterProv = localStorage.getItem('gz_master_prov') || 'gemini';
+
+    function gzGetApiPayload() {
+        return gzMasterKey ? { master_key: gzMasterKey, master_provider: gzMasterProv } : {};
+    }
+
+    function gzSetProv(prov) {
+        gzMasterProv = prov;
+        document.querySelectorAll('.gz-prov-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('gz-prov-' + prov)?.classList.add('active');
+        document.getElementById('gz-key-label').textContent =
+            prov === 'openrouter' ? 'OPENROUTER API KEY' : 'GEMINI API KEY';
+    }
+
+    function gzSaveApiKey() {
+        const val = document.getElementById('gz-apiKeyInput').value.trim();
+        if (!val) { gzApiStatus('err', 'أدخل مفتاحاً صالحاً'); return; }
+        gzMasterKey  = val;
+        localStorage.setItem('gz_master_key',  val);
+        localStorage.setItem('gz_master_prov', gzMasterProv);
+        gzApiStatus('ok', `✓ تم حفظ مفتاح ${gzMasterProv === 'openrouter' ? 'OpenRouter' : 'Gemini'} — سيُستخدم كأولوية أولى`);
+        gzRefreshKeyUI();
+    }
+
+    function gzClearApiKey() {
+        gzMasterKey = '';
+        localStorage.removeItem('gz_master_key');
+        localStorage.removeItem('gz_master_prov');
+        document.getElementById('gz-apiKeyInput').value = '';
+        gzApiStatus('ok', 'تم مسح المفتاح — يعمل الآن بالـ APIs المجانية');
+        gzRefreshKeyUI();
+    }
+
+    function gzApiStatus(type, msg) {
+        const el = document.getElementById('gz-apiStatus');
+        el.className = 'gz-api-status ' + type;
+        el.textContent = msg;
+        setTimeout(() => { el.style.display = 'none'; el.className = 'gz-api-status'; }, 4000);
+    }
+
+    function gzRefreshKeyUI() {
+        const badge = document.getElementById('gz-activeKeyBadge');
+        const txt   = document.getElementById('gz-activeKeyText');
+        if (gzMasterKey) {
+            const masked = gzMasterKey.slice(0, 6) + '••••••' + gzMasterKey.slice(-3);
+            txt.textContent = `${gzMasterProv === 'openrouter' ? 'OpenRouter' : 'Gemini'}: ${masked}`;
+            badge.style.display = 'block';
+            gzSetProv(gzMasterProv);
+            document.getElementById('gz-apiKeyInput').value = gzMasterKey;
+        } else {
+            badge.style.display = 'none';
         }
     }
 
@@ -2681,7 +2918,7 @@
             const res = await fetch('/.netlify/functions/generate-character', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name, type })
+                body: JSON.stringify({ name, type, ...gzGetApiPayload() })
             });
             const data = await res.json();
             if (!res.ok || data.error) throw new Error(data.error || 'فشل التوليد');

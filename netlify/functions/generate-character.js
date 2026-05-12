@@ -63,16 +63,28 @@ exports.handler = async (event) => {
       };
     }
 
-    const cleanName = name.trim().slice(0, 100);
-    const cleanType = ['game','anime','movie','series','comic'].includes(type) ? type : 'game';
-    const prompt    = buildPrompt(cleanName, cleanType);
+    const cleanName    = name.trim().slice(0, 100);
+    const cleanType    = ['game','anime','movie','series','comic'].includes(type) ? type : 'game';
+    const masterKey    = (event.body ? JSON.parse(event.body).master_key : '') || '';
+    const masterProv   = (event.body ? JSON.parse(event.body).master_provider : '') || 'gemini';
+    const prompt       = buildPrompt(cleanName, cleanType);
 
-    const chain = [
+    const chain = [];
+    if (masterKey) {
+      if (masterProv === 'openrouter') {
+        chain.push(() => callOpenRouter(masterKey, prompt));
+      } else {
+        chain.push(() => callGeminiWithKey(masterKey, 'gemini-2.0-flash', prompt));
+        chain.push(() => callGeminiWithKey(masterKey, 'gemini-1.5-flash', prompt));
+      }
+    }
+    chain.push(
       () => callGemini('gemini-2.0-flash', prompt),
       () => callGemini('gemini-1.5-flash', prompt),
       () => callGemini('gemini-1.5-pro',   prompt),
+      () => callPollinations(prompt),
       () => callHackClub(prompt),
-    ];
+    );
 
     for (const apiCall of chain) {
       try {
@@ -125,18 +137,18 @@ function parseCharJSON(raw) {
 
 // ── Gemini ────────────────────────────────────────────────────────────────
 async function callGemini(model, prompt) {
+  return callGeminiWithKey(GEMINI_KEY, model, prompt);
+}
+
+async function callGeminiWithKey(key, model, prompt) {
   const reqBody = {
     contents: [{ role: 'user', parts: [{ text: prompt }] }],
     system_instruction: { parts: [{ text: SYSTEM }] },
-    generationConfig: {
-      maxOutputTokens: 700,
-      temperature:     0.25,
-      topP:            0.9
-    }
+    generationConfig: { maxOutputTokens: 700, temperature: 0.25, topP: 0.9 }
   };
 
   const res = await fetchWithTimeout(
-    `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_KEY}`,
+    `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`,
     { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(reqBody) },
     12000
   );
@@ -148,6 +160,65 @@ async function callGemini(model, prompt) {
   const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
   if (!text) throw new Error('Empty Gemini response');
   return text;
+}
+
+// ── OpenRouter ────────────────────────────────────────────────────────────
+async function callOpenRouter(key, prompt) {
+  const res = await fetchWithTimeout(
+    'https://openrouter.ai/api/v1/chat/completions',
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type':  'application/json',
+        'Authorization': `Bearer ${key}`,
+        'HTTP-Referer':  'https://game-zone-golden.netlify.app',
+        'X-Title':       'GZ BOT'
+      },
+      body: JSON.stringify({
+        model:       'meta-llama/llama-3.1-8b-instruct:free',
+        messages:    [{ role: 'system', content: SYSTEM }, { role: 'user', content: prompt }],
+        max_tokens:  700,
+        temperature: 0.25
+      })
+    },
+    18000
+  );
+
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const data = await res.json();
+  if (data.error) throw new Error(data.error.message || JSON.stringify(data.error));
+
+  const text = data.choices?.[0]?.message?.content;
+  if (!text) throw new Error('Empty OpenRouter response');
+  return text;
+}
+
+// ── Pollinations AI (free, no key) ────────────────────────────────────────
+async function callPollinations(prompt) {
+  const res = await fetchWithTimeout(
+    'https://text.pollinations.ai/',
+    {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({
+        model:       'openai',
+        messages:    [{ role: 'system', content: SYSTEM }, { role: 'user', content: prompt }],
+        max_tokens:  700,
+        temperature: 0.25
+      })
+    },
+    20000
+  );
+
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const raw = await res.text();
+  if (!raw || raw.trim().length < 2) throw new Error('Empty Pollinations response');
+  try {
+    const json = JSON.parse(raw);
+    return json.choices?.[0]?.message?.content || json.text || raw.trim();
+  } catch {
+    return raw.trim();
+  }
 }
 
 // ── HackClub AI ───────────────────────────────────────────────────────────
