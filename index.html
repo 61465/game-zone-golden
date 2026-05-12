@@ -1508,10 +1508,9 @@
                 <!-- Free APIs section -->
                 <div class="gz-free-apis">
                     <div class="gz-free-apis-title">✅ APIs مجانية مفعّلة تلقائياً (بدون مفتاح)</div>
-                    <div class="gz-free-api-item">Gemini 2.0 Flash — Google AI</div>
-                    <div class="gz-free-api-item">Gemini 1.5 Flash — Google AI</div>
-                    <div class="gz-free-api-item">Gemini 1.5 Pro — Google AI</div>
-                    <div class="gz-free-api-item">Pollinations AI — مجاني 100%</div>
+                    <div class="gz-free-api-item">Pollinations OpenAI — مجاني 100% بلا حدود</div>
+                    <div class="gz-free-api-item">Pollinations Mistral — مجاني 100%</div>
+                    <div class="gz-free-api-item">Pollinations Llama — مجاني 100%</div>
                     <div class="gz-free-api-item">HackClub GPT-4o Mini — مجاني 100%</div>
                 </div>
 
@@ -2634,6 +2633,8 @@
         el.className = '';
         if (model.includes('master'))             { el.textContent = '🔑 MASTER KEY • ONLINE';      el.classList.add('gz-model-master'); }
         else if (model.includes('openrouter'))    { el.textContent = 'OPENROUTER • ONLINE';         el.classList.add('gz-model-openrouter'); }
+        else if (model.includes('pollinations-mistral')) { el.textContent = 'POLLINATIONS MISTRAL • ONLINE'; el.classList.add('gz-model-pollinations'); }
+        else if (model.includes('pollinations-llama'))   { el.textContent = 'POLLINATIONS LLAMA • ONLINE';   el.classList.add('gz-model-pollinations'); }
         else if (model.includes('pollinations'))  { el.textContent = 'POLLINATIONS AI • ONLINE';    el.classList.add('gz-model-pollinations'); }
         else if (model.includes('2.0'))           { el.textContent = 'GEMINI 2.0 FLASH • ONLINE';   el.classList.add('gz-model-gemini2'); }
         else if (model.includes('1.5-flash'))     { el.textContent = 'GEMINI 1.5 FLASH • ONLINE';   el.classList.add('gz-model-gemini15'); }
