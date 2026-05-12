@@ -69,49 +69,48 @@ exports.handler = async (event) => {
     const masterProv   = (event.body ? JSON.parse(event.body).master_provider : '') || 'gemini';
     const prompt       = buildPrompt(cleanName, cleanType);
 
-    const chain = [];
+    // Master key first
     if (masterKey) {
-      if (masterProv === 'openrouter') {
-        chain.push(() => callOpenRouter(masterKey, prompt));
-      } else {
-        chain.push(() => callGeminiWithKey(masterKey, 'gemini-2.0-flash', prompt));
-        chain.push(() => callGeminiWithKey(masterKey, 'gemini-1.5-flash', prompt));
-      }
-    }
-    // Free models first
-    chain.push(
-      () => callPollinations('openai',  prompt),
-      () => callPollinations('mistral', prompt),
-      () => callPollinations('llama',   prompt),
-      () => callHackClub(prompt),
-    );
-    if (GEMINI_KEY) {
-      chain.push(
-        () => callGemini('gemini-2.0-flash', prompt),
-        () => callGemini('gemini-1.5-flash', prompt),
-        () => callGemini('gemini-1.5-pro',   prompt),
-      );
+      try {
+        const raw = masterProv === 'openrouter'
+          ? await callOpenRouter(masterKey, prompt)
+          : await callGeminiWithKey(masterKey, 'gemini-2.0-flash', prompt);
+        const char = parseCharJSON(raw);
+        char.type = cleanType;
+        return { statusCode: 200, headers: HEADERS, body: JSON.stringify({ character: char }) };
+      } catch (_) {}
     }
 
-    for (const apiCall of chain) {
+    // Free APIs in parallel — fastest wins
+    const raw = await Promise.any([
+      callPollinations('openai',  prompt),
+      callPollinations('mistral', prompt),
+      callPollinations('llama',   prompt),
+      callHackClub(prompt),
+    ]).catch(() => null);
+
+    if (raw) {
       try {
-        const raw  = await apiCall();
         const char = parseCharJSON(raw);
-        // Ensure type matches what was requested
         char.type = cleanType;
-        return {
-          statusCode: 200,
-          headers: HEADERS,
-          body: JSON.stringify({ character: char })
-        };
-      } catch (err) {
-        console.warn(`[GZ-GEN] attempt failed: ${err.message}`);
+        return { statusCode: 200, headers: HEADERS, body: JSON.stringify({ character: char }) };
+      } catch (_) {}
+    }
+
+    // Gemini fallback
+    if (GEMINI_KEY) {
+      for (const model of ['gemini-2.0-flash', 'gemini-1.5-flash']) {
+        try {
+          const r = await callGemini(model, prompt);
+          const char = parseCharJSON(r);
+          char.type = cleanType;
+          return { statusCode: 200, headers: HEADERS, body: JSON.stringify({ character: char }) };
+        } catch (_) {}
       }
     }
 
     return {
-      statusCode: 503,
-      headers: HEADERS,
+      statusCode: 503, headers: HEADERS,
       body: JSON.stringify({ error: 'فشل توليد الشخصية. حاول مرة أخرى / Generation failed. Try again.' })
     };
 
@@ -157,7 +156,7 @@ async function callGeminiWithKey(key, model, prompt) {
   const res = await fetchWithTimeout(
     `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`,
     { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(reqBody) },
-    12000
+    7000
   );
 
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -188,7 +187,7 @@ async function callOpenRouter(key, prompt) {
         temperature: 0.25
       })
     },
-    18000
+    8000
   );
 
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -215,7 +214,7 @@ async function callPollinations(model, prompt) {
         seed: Math.floor(Math.random()*9999)
       })
     },
-    22000
+    8000
   );
 
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -249,7 +248,7 @@ async function callHackClub(prompt) {
         temperature: 0.25
       })
     },
-    15000
+    8000
   );
 
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -262,7 +261,7 @@ async function callHackClub(prompt) {
 }
 
 // ── Utility ───────────────────────────────────────────────────────────────
-function fetchWithTimeout(url, options, ms = 12000) {
+function fetchWithTimeout(url, options, ms = 8000) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), ms);
   return fetch(url, { ...options, signal: controller.signal })
