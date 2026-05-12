@@ -4,7 +4,7 @@
  * Uses same multi-API fallback chain as the main chat endpoint.
  */
 
-const GEMINI_KEY = process.env.GEMINI_API_KEY || 'AIzaSyAZnp40tb1zaex64t-e6jWHppiiCWN6K3A';
+const GEMINI_KEY = process.env.GEMINI_API_KEY || '';
 
 const HEADERS = {
   'Access-Control-Allow-Origin': '*',
@@ -78,13 +78,20 @@ exports.handler = async (event) => {
         chain.push(() => callGeminiWithKey(masterKey, 'gemini-1.5-flash', prompt));
       }
     }
+    // Free models first
     chain.push(
-      () => callGemini('gemini-2.0-flash', prompt),
-      () => callGemini('gemini-1.5-flash', prompt),
-      () => callGemini('gemini-1.5-pro',   prompt),
-      () => callPollinations(prompt),
+      () => callPollinations('openai',  prompt),
+      () => callPollinations('mistral', prompt),
+      () => callPollinations('llama',   prompt),
       () => callHackClub(prompt),
     );
+    if (GEMINI_KEY) {
+      chain.push(
+        () => callGemini('gemini-2.0-flash', prompt),
+        () => callGemini('gemini-1.5-flash', prompt),
+        () => callGemini('gemini-1.5-pro',   prompt),
+      );
+    }
 
     for (const apiCall of chain) {
       try {
@@ -193,21 +200,22 @@ async function callOpenRouter(key, prompt) {
   return text;
 }
 
-// ── Pollinations AI (free, no key) ────────────────────────────────────────
-async function callPollinations(prompt) {
+// ── Pollinations AI (free, no key, multiple models) ──────────────────────
+async function callPollinations(model, prompt) {
   const res = await fetchWithTimeout(
     'https://text.pollinations.ai/',
     {
       method:  'POST',
       headers: { 'Content-Type': 'application/json' },
       body:    JSON.stringify({
-        model:       'openai',
+        model,
         messages:    [{ role: 'system', content: SYSTEM }, { role: 'user', content: prompt }],
         max_tokens:  700,
-        temperature: 0.25
+        temperature: 0.25,
+        seed: Math.floor(Math.random()*9999)
       })
     },
-    20000
+    22000
   );
 
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
