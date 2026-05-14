@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GAME ZONE: GOLDEN ARENA 518</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#ff6b00">
+    <!-- SEO -->
+    <meta name="description" content="GamZone Golden Arena 518 — ناقش وحلل معارك الشخصيات الخيالية بالذكاء الاصطناعي. بطولات، Tier List، ونقاشات لا تنتهي.">
+    <meta name="keywords" content="golden arena, gamzone, character battle, AI debate, tier list, anime, gaming, comics, GZ bot">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="GamZone">
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="GamZone — Golden Arena 518 ⚔">
+    <meta property="og:description" content="حلل معارك الشخصيات الخيالية بالذكاء الاصطناعي — بطولات، Tier List، ونقاشات لا تنتهي">
+    <meta property="og:image" content="https://og-image.vercel.app/GamZone%20%E2%80%94%20Golden%20Arena%20518.png?theme=dark&md=1&fontSize=75px&images=https%3A%2F%2Fassets.vercel.com%2Fimage%2Fupload%2Ffront%2Fassets%2Fdesign%2Fvercel-triangle-white.svg">
+    <meta property="og:locale" content="ar_AR">
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="GamZone — Golden Arena 518 ⚔">
+    <meta name="twitter:description" content="حلل معارك الشخصيات الخيالية بالذكاء الاصطناعي — بطولات ونقاشات">
+    <!-- Canonical -->
+    <link rel="canonical" href="https://61465.github.io/game-zone-golden/">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Cairo:wght@300;400;600;700;900&family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+</head>
+<body id="main-body" lang="ar" dir="rtl">
+
+    <!-- NAV -->
+    <nav>
+        <div class="nav-left">
+            <div class="nav-logo">
+                <span id="txt-project">GAME ZONE PRESENTS</span>
+                GOLDEN ARENA
+            </div>
+            <div class="nav-tabs">
+                <button class="tab-btn active" id="btn-arena" onclick="showTab('arena')">ميدان القتال</button>
+                <button class="tab-btn" id="btn-lore" onclick="showTab('lore')">المخطوطات</button>
+                <button class="tab-btn ai-tab" id="btn-ai" onclick="showTab('ai')">🤖 AI GAME ZONE</button>
+            </div>
+        </div>
+        <div class="nav-right">
+            <div class="search-wrap">
+                🔍
+                <input type="text" id="search-input" placeholder="ابحث عن بطل..." oninput="handleSearch(this.value)">
+            </div>
+            <a href="https://61465.github.io/game-zone-archive/" target="_blank" class="nav-btn archive-btn">
+                <div class="led"></div>
+                <span id="txt-archive-nav">ARCHIVE</span>
+            </a>
+            <button class="nav-btn" onclick="toggleLanguage()" id="lang-btn">EN</button>
+            <button class="nav-btn gz-pwa-btn" id="gz-pwa-install" onclick="gzInstallPWA()" style="display:none;align-items:center;gap:4px;color:#ffd700;border-color:rgba(255,215,0,0.3)">📲 تثبيت</button>
+        </div>
+    </nav>
+
+    <!-- ARENA PAGE -->
+    <div id="arena-page">
+        <div class="hero-header">
+            <p class="sub" id="txt-sub">GOLDEN ARENA — 518 CHAMPIONS</p>
+            <h1>THE ULTIMATE SHOWDOWN</h1>
+            <div class="hero-divider"></div>
+        </div>
+        <div class="stats-bar">
+            <div class="stat-item">
+                <div class="stat-num" id="stat-total">518</div>
+                <div class="stat-label" id="stat-lbl-total">CHAMPIONS</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-num" id="stat-peak">80</div>
+                <div class="stat-label" id="stat-lbl-peak">PEAK FORMS</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-num" id="stat-selected">0</div>
+                <div class="stat-label" id="stat-lbl-sel">SELECTED</div>
+            </div>
+        </div>
+        <div class="filter-section">
+            <div class="filter-bar">
+                <button class="filter-btn active" onclick="filterHeroes('all',this)" id="f-all">الكل</button>
+                <button class="filter-btn" onclick="filterHeroes('game',this)" id="f-game">🎮 ألعاب</button>
+                <button class="filter-btn" onclick="filterHeroes('series',this)" id="f-series">📺 مسلسلات</button>
+                <button class="filter-btn" onclick="filterHeroes('movie',this)" id="f-movie">🎬 أفلام</button>
+                <button class="filter-btn" onclick="filterHeroes('anime',this)" id="f-anime">⚡ أنمي</button>
+                <button class="filter-btn" onclick="filterHeroes('comic',this)" id="f-comic">💥 كوميكس</button>
+                <button class="filter-btn peak-btn" onclick="filterHeroes('peak',this)" id="f-peak">🔥 الأساطير</button>
+            </div>
+        </div>
+        <div class="grid-section">
+            <div class="grid" id="hero-grid"></div>
+        </div>
+        <div style="height:120px;"></div>
+    </div>
+
+    <!-- LORE PAGE -->
+    <div id="lore-page">
+        <div class="grid" id="lore-grid" style="max-width:1400px;margin:0 auto;"></div>
+        <div class="lore-viewer" id="lore-viewer">
+            <button class="btn-action btn-secondary" onclick="closeLore()" style="margin-bottom:20px;" id="txt-back-lore">↩ العودة للقائمة</button>
+            <div class="manuscript">
+                <div class="m-title" id="m-name"></div>
+                <div class="m-divider"></div>
+                <div class="m-content" id="m-text"></div>
+                <br>
+                <center>
+                    <button class="btn-action btn-secondary" onclick="closeLore()" id="txt-close-lore">إغلاق المخطوطة</button>
+                </center>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════
+         AI GAME ZONE PAGE
+    ═══════════════════════════════════════ -->
+    <div id="ai-page">
+        <div class="ai-zone-wrapper">
+            <!-- AI Hero Banner -->
+            <div class="ai-hero-banner">
+                <div class="ai-wordmark">G<em>Z</em> BOT</div>
+                <div class="ai-tagline">GAMZONE AI • نقاشات الألعاب والشخصيات</div>
+            </div>
+
+            <!-- AI Mode Tabs -->
+            <div class="ai-mode-tabs">
+                <button class="ai-mode-tab active" onclick="gzSwitchMode('chat')" id="gz-tab-chat"><span class="ti">💬</span>نقاش حر</button>
+                <button class="ai-mode-tab" onclick="gzSwitchMode('battle')" id="gz-tab-battle"><span class="ti">⚔️</span>معركة</button>
+                <button class="ai-mode-tab" onclick="gzSwitchMode('debates')" id="gz-tab-debates"><span class="ti">🔥</span>ساخنة</button>
+                <button class="ai-mode-tab" onclick="gzSwitchMode('tier')" id="gz-tab-tier"><span class="ti">👑</span>Tier List</button>
+                <button class="ai-mode-tab gz-gen-tab" onclick="gzSwitchMode('generate')" id="gz-tab-generate"><span class="ti">⚡</span>توليد</button>
+                <button class="ai-mode-tab gz-settings-tab" onclick="gzSwitchMode('settings')" id="gz-tab-settings"><span class="ti">⚙️</span>API</button>
+                <button class="ai-mode-tab" onclick="gzSwitchMode('history')" id="gz-tab-history" style="font-size:0.68rem;"><span class="ti">📜</span>السجل</button>
+                <button class="ai-mode-tab" onclick="gzSwitchMode('tourney')" id="gz-tab-tourney" style="font-size:0.68rem;color:#ffd700;"><span class="ti">🏆</span>بطولة</button>
+                <button class="ai-mode-tab" onclick="gzSwitchMode('analytics')" id="gz-tab-analytics" style="font-size:0.68rem;color:#64c864;"><span class="ti">📊</span>إحصاء</button>
+            </div>
+
+            <!-- CHAT ZONE -->
+            <div class="gz-chat-zone" id="gz-chatZone">
+                <div class="gz-chat-header">
+                    <div class="gz-av">GZ</div>
+                    <div class="gz-bot-info">
+                        <div class="gz-bot-name">GAMZONE BOT</div>
+                        <div class="gz-bot-sub"><div class="gz-live-dot"></div><span id="gz-modelBadge">MULTI-AI • ONLINE</span></div>
+                    </div>
+                    <div class="gz-hdr-btns">
+                        <button class="gz-hbtn" onclick="gzToggleLang()">AR/EN</button>
+                        <button class="gz-hbtn" onclick="gzClearChat()">CLR</button>
+                    </div>
+                </div>
+                <div class="gz-chat-msgs" id="gz-chatMsgs"></div>
+                <div class="gz-qwrap" id="gz-qwrap"></div>
+                <div class="gz-stats-strip">
+                    <div class="gz-sst"><div class="gz-sst-v" id="gz-sMsgs">0</div><div class="gz-sst-l">MSGS</div></div>
+                    <div class="gz-sst"><div class="gz-sst-v" id="gz-sDebates">0</div><div class="gz-sst-l">DEBATES</div></div>
+                    <div class="gz-sst"><div class="gz-sst-v" id="gz-sGames">0</div><div class="gz-sst-l">GAMES</div></div>
+                    <div class="gz-sst"><div class="gz-sst-v" id="gz-sLang">AR</div><div class="gz-sst-l">LANG</div></div>
+                </div>
+                <div class="gz-chat-input-row">
+                    <textarea class="gz-cinput" id="gz-cinput" placeholder="ناقشني في أي لعبة أو شخصية... / Debate me!" rows="1" onkeydown="gzHandleKey(event)" oninput="gzAutoR(this)"></textarea>
+                    <button class="gz-sbtn" id="gz-sbtn" onclick="gzSendMsg()">▶</button>
+                </div>
+            </div>
+
+            <!-- BATTLE PANEL -->
+            <div class="gz-panel" id="gz-panel-battle">
+                <div class="gz-p-title">⚔️ اختر شخصيتين للمعركة</div>
+                <div class="gz-vs-pair">
+                    <div class="gz-vs-slot" id="gz-slot1"><span style="font-size:1.4rem;opacity:0.25">?</span><span style="font-size:0.62rem;color:var(--gz-muted)">Fighter 1</span></div>
+                    <div class="gz-vs-div">VS</div>
+                    <div class="gz-vs-slot" id="gz-slot2"><span style="font-size:1.4rem;opacity:0.25">?</span><span style="font-size:0.62rem;color:var(--gz-muted)">Fighter 2</span></div>
+                </div>
+                <div id="gz-stats-compare" style="display:none"></div>
+                <button class="gz-battle-btn" id="gz-battleBtn" onclick="gzStartBattle()" disabled>⚔️ ANALYZE BATTLE</button>
+                <div class="gz-filter-row" id="gz-charFilters">
+                    <button class="gz-filter-btn active" onclick="gzFilterChars('all')">الكل</button>
+                    <button class="gz-filter-btn" onclick="gzFilterChars('game')">🎮 ألعاب</button>
+                    <button class="gz-filter-btn" onclick="gzFilterChars('anime')">⛩ أنمي</button>
+                    <button class="gz-filter-btn" onclick="gzFilterChars('comic')">💥 كوميكس</button>
+                    <button class="gz-filter-btn" onclick="gzFilterChars('movie')">🎬 أفلام</button>
+                </div>
+                <div class="gz-char-grid" id="gz-charGrid"></div>
+            </div>
+
+            <!-- DEBATES PANEL -->
+            <div class="gz-panel" id="gz-panel-debates">
+                <div class="gz-p-title">🔥 نقاشات ساخنة</div>
+                <div id="gz-debatesList"></div>
+            </div>
+
+            <!-- TIER PANEL -->
+            <div class="gz-panel" id="gz-panel-tier">
+                <div class="gz-p-title">👑 TIER LIST الشخصيات</div>
+                <div id="gz-tierContent"></div>
+                <button class="gz-battle-btn" style="margin-top:6px;" onclick="gzAskTier()">🔥 ناقش هذا الـ Tier List</button>
+            </div>
+
+            <!-- GENERATE PANEL -->
+            <div class="gz-panel" id="gz-panel-generate">
+                <div class="gz-p-title">⚡ توليد شخصية بالـ AI</div>
+                <div class="gz-gen-box">
+                    <div class="gz-gen-label">اكتب اسم أي شخصية من أي لعبة، أنمي، فيلم أو مسلسل:</div>
+                    <input type="text" class="gz-gen-input" id="gz-genInput" placeholder="مثال: Vergil, Rimuru, Sukuna, Darth Vader..." maxlength="100" onkeydown="if(event.key==='Enter')gzGenerateChar()">
+                    <div class="gz-gen-row">
+                        <select class="gz-gen-sel" id="gz-genType">
+                            <option value="game">🎮 لعبة</option>
+                            <option value="anime">⚡ أنمي</option>
+                            <option value="movie">🎬 فيلم</option>
+                            <option value="series">📺 مسلسل</option>
+                            <option value="comic">💥 كوميكس</option>
+                        </select>
+                        <button class="gz-gen-btn" id="gz-genBtn" onclick="gzGenerateChar()">⚡ توليد</button>
+                    </div>
+                </div>
+                <div class="gz-gen-status" id="gz-genStatus" style="display:none;"></div>
+                <div class="gz-gen-preview" id="gz-genPreview" style="display:none;"></div>
+                <div class="gz-gen-saved" id="gz-genSaved">
+                    <div class="gz-p-title" id="gz-savedTitle" style="display:none;">✨ شخصياتك المولّدة</div>
+                    <div class="gz-char-grid" id="gz-customGrid"></div>
+                </div>
+            </div>
+
+            <!-- SETTINGS PANEL -->
+            <div class="gz-panel" id="gz-panel-settings">
+                <div class="gz-p-title">⚙️ إعدادات API</div>
+
+                <!-- Free APIs section -->
+                <div class="gz-free-apis">
+                    <div class="gz-free-apis-title">✅ APIs مجانية مفعّلة تلقائياً (بدون مفتاح من المستخدم)</div>
+                    <div class="gz-free-api-item" style="color:#ff9f43">🔥 Mistral Small — مجاني 100% (مفتاح مدمج)</div>
+                    <div class="gz-free-api-item">Pollinations OpenAI — مجاني 100% بلا حدود (احتياطي)</div>
+                    <div class="gz-free-api-item">Pollinations Llama — مجاني 100% (احتياطي)</div>
+                    <div class="gz-free-api-item">HackClub GPT-4o Mini — مجاني 100% (احتياطي)</div>
+                </div>
+
+                <!-- Master Key box -->
+                <div class="gz-api-box">
+                    <div class="gz-api-title">🔑 MASTER API KEY</div>
+                    <div class="gz-api-desc">أضف مفتاحك الخاص لأولوية أعلى وحدود أكبر. المفتاح يُحفَظ في المتصفح فقط ولا يُرسَل لأي جهة خارجية.</div>
+
+                    <div>
+                        <div class="gz-api-label">نوع المزود / Provider</div>
+                        <div class="gz-api-prov-row">
+                            <button class="gz-prov-btn active" id="gz-prov-gemini" onclick="gzSetProv('gemini')">Gemini</button>
+                            <button class="gz-prov-btn" id="gz-prov-openrouter" onclick="gzSetProv('openrouter')">OpenRouter</button>
+                            <button class="gz-prov-btn" id="gz-prov-mistral2" onclick="gzSetProv('mistral2')" style="color:#ff9f43;border-color:rgba(255,159,67,0.3)">Mistral ★</button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="gz-api-label" id="gz-key-label">GEMINI API KEY</div>
+                        <input type="password" class="gz-api-input" id="gz-apiKeyInput"
+                            placeholder="AIza... أو sk-or-..."
+                            autocomplete="off" spellcheck="false">
+                    </div>
+
+                    <div class="gz-api-save-row">
+                        <button class="gz-api-save-btn" onclick="gzSaveApiKey()">💾 حفظ المفتاح</button>
+                        <button class="gz-api-clear-btn" onclick="gzClearApiKey()">مسح</button>
+                    </div>
+
+                    <div class="gz-api-status" id="gz-apiStatus"></div>
+
+                    <div id="gz-activeKeyBadge" style="display:none;">
+                        <span class="gz-api-active-badge">🔑 <span id="gz-activeKeyText">مفتاح مفعّل</span></span>
+                    </div>
+                </div>
+
+                <div class="gz-api-desc" style="font-size:0.62rem;opacity:0.5;text-align:center;">
+                    مفتاح Mistral مدمج مجاناً — لا تحتاج أي مفتاح للبدء!<br>
+                    للحصول على مفتاح Gemini مجاني: <strong>aistudio.google.com</strong><br>
+                    للحصول على مفتاح OpenRouter مجاني: <strong>openrouter.ai</strong>
+                </div>
+            </div>
+
+
+            <!-- ANALYTICS PANEL -->
+            <div class="gz-panel" id="gz-panel-analytics" style="display:none;">
+                <div class="gz-p-title" style="display:flex;justify-content:space-between;align-items:center;">
+                    <span>📊 إحصائيات محلية</span>
+                    <button onclick="gzAnaSave({});gzRenderAnalytics()" style="font-size:0.62rem;background:rgba(255,34,68,0.1);border:1px solid rgba(255,34,68,0.3);color:var(--gz-red);padding:3px 10px;border-radius:4px;cursor:pointer;">إعادة ضبط</button>
+                </div>
+                <div id="gz-analytics-panel" style="margin-top:8px;"></div>
+            </div>
+
+
+            <!-- HISTORY PANEL -->
+            <div class="gz-panel" id="gz-panel-history" style="display:none;">
+                <div class="gz-p-title" style="display:flex;justify-content:space-between;align-items:center;">
+                    <span>📜 سجل النقاشات</span>
+                    <button onclick="gzHistClear()" style="font-size:0.62rem;background:rgba(255,34,68,0.1);border:1px solid rgba(255,34,68,0.3);color:var(--gz-red);padding:3px 10px;border-radius:4px;cursor:pointer;">مسح الكل</button>
+                </div>
+                <div id="gz-histList" style="display:flex;flex-direction:column;gap:6px;margin-top:8px;"></div>
+            </div>
+
+
+            <!-- TOURNAMENT PANEL -->
+            <div class="gz-panel" id="gz-panel-tourney" style="display:none;">
+                <div class="gz-p-title">🏆 بطولة الشخصيات</div>
+                <button onclick="gzStartTourney()" class="gz-tourney-start-btn">⚡ ابدأ بطولة جديدة (8 مقاتلين)</button>
+                <div id="gz-tourney-bracket" style="margin-top:12px;display:flex;flex-direction:column;gap:8px;"></div>
+            </div>
+
+            <div class="gz-footer"><strong style="color:#ffd700;font-weight:normal;">GZ BOT v4</strong> • Multi-AI: Mistral + Pollinations + Gemini + OpenRouter • مجاني 100% 🎮</div>
+        </div>
+    </div>
+
+    <!-- BATTLE CONTROLS -->
+    <div class="battle-controls" id="battle-controls">
+        <div class="selected-names" id="selected-names">
+            <span class="s-name" id="sel-name-1">—</span>
+            <span class="vs-dot">VS</span>
+            <span class="s-name" id="sel-name-2">—</span>
+        </div>
+        <button class="btn-battle" onclick="runBattle()" id="txt-analyze">⚔️ تحليل القوة</button>
+        <button class="btn-luck" onclick="startLuck()" id="txt-luck">🎲 تحدي الحظ</button>
+        <button class="btn-clear" onclick="clearSelection()" title="مسح">✕</button>
+    </div>
+
+    <!-- HELPER LINK -->
+    <a href="https://61465.github.io/game-zone-CONFIGURATOR/" target="_blank" class="helper-link" id="helper-btn">
+        ⚡ <span id="txt-helper">لنساعدك على الاختيار</span>
+    </a>
+
+    <!-- BATTLE OVERLAY -->
+    <div id="battle-overlay">
+        <div class="battle-arena" id="battle-content">
+            <div class="countdown-num" id="countdown">3</div>
+            <div id="battle-result" style="display:none;">
+                <div class="battle-label" id="txt-battle-system">GAME ZONE — BATTLE SYSTEM</div>
+                <div class="battle-title" id="winner-title">—</div>
+                <div class="intensity-badge" id="intensity-badge"></div>
+                <div class="battle-fighters">
+                    <div class="fighter-card" id="fc-1">
+                        <div class="fighter-icon" id="fi-1">—</div>
+                        <div class="fighter-name" id="fn-1">—</div>
+                        <div class="fighter-ability" id="fa-1">—</div>
+                        <div class="fighter-score" id="fs-1">—</div>
+                    </div>
+                    <div class="vs-center">VS</div>
+                    <div class="fighter-card" id="fc-2">
+                        <div class="fighter-icon" id="fi-2">—</div>
+                        <div class="fighter-name" id="fn-2">—</div>
+                        <div class="fighter-ability" id="fa-2">—</div>
+                        <div class="fighter-score" id="fs-2">—</div>
+                    </div>
+                </div>
+                <div class="hp-section">
+                    <div class="hp-label">
+                        <span id="hp-name-1">—</span>
+                        <span id="hp-pct">—%</span>
+                        <span id="hp-name-2">—</span>
+                    </div>
+                    <div class="hp-track"><div class="hp-fill" id="hp-fill"></div></div>
+                </div>
+                <div class="battle-story" id="battle-story"></div>
+                <div class="battle-actions">
+                    <button class="btn-action btn-primary" onclick="closeBattle()" id="txt-new-battle">↺ نزال جديد</button>
+                    <a href="https://61465.github.io/game-zone-archive/" target="_blank" class="btn-action btn-secondary" id="txt-archive-btn">📜 سجل الأبطال</a>
+                    <a href="https://61465.github.io/GAME-ZONE-CHAT/" target="_blank" class="btn-action btn-cyan" id="txt-discuss">💬 ناقش القوة</a>
+                </div>
+            </div>
+            <div id="luck-section" class="luck-section">
+                <div class="battle-label">LUCK BATTLE</div>
+                <div class="battle-title" id="luck-title">معركة الحظ</div>
+                <div class="luck-fighters-row">
+                    <span class="luck-fname" id="rps-h1-name">—</span>
+                    <span class="luck-vs-dot">VS</span>
+                    <span class="luck-fname" id="rps-h2-name">—</span>
+                </div>
+                <div id="rps-pick-phase">
+                    <p style="color:var(--text-dim);font-size:0.82rem;margin-bottom:18px;" id="txt-rps-desc">اختر سلاحك لحسم المعركة:</p>
+                    <div class="rps-btns">
+                        <button class="rps-btn" onclick="playRPS('rock')"><span class="rps-emoji-big">✊</span><span class="rps-btn-label" id="lbl-rock">حجرة</span></button>
+                        <button class="rps-btn" onclick="playRPS('paper')"><span class="rps-emoji-big">✋</span><span class="rps-btn-label" id="lbl-paper">ورقة</span></button>
+                        <button class="rps-btn" onclick="playRPS('scissors')"><span class="rps-emoji-big">✌️</span><span class="rps-btn-label" id="lbl-scissors">مقص</span></button>
+                    </div>
+                </div>
+                <div id="rps-result-phase" style="display:none;">
+                    <div class="rps-showdown">
+                        <div class="rps-player" id="rps-p1">
+                            <div class="rps-player-tag" id="rps-tag-you">أنت</div>
+                            <span class="rps-chosen-emoji" id="rps-user-emoji">✊</span>
+                            <div class="rps-player-hero-name" id="rps-p1-name">—</div>
+                        </div>
+                        <div class="rps-mid-col">
+                            <span class="rps-mid-vs">VS</span>
+                            <span class="rps-clash-icon" id="rps-clash">⚡</span>
+                        </div>
+                        <div class="rps-player" id="rps-p2">
+                            <div class="rps-player-tag" id="rps-tag-bot">الخصم</div>
+                            <span class="rps-chosen-emoji" id="rps-bot-emoji">✋</span>
+                            <div class="rps-player-hero-name" id="rps-p2-name">—</div>
+                        </div>
+                    </div>
+                    <div class="rps-verdict-box">
+                        <div class="rps-verdict-text" id="rps-verdict">—</div>
+                        <div class="rps-winner-line" id="rps-winner-line"></div>
+                    </div>
+                    <div class="battle-actions" style="margin-top:20px;gap:12px;">
+                        <button class="btn-action btn-primary" onclick="resetRPS()" id="txt-play-again">🔄 جولة أخرى</button>
+                        <button class="btn-action btn-secondary" onclick="closeBattle()" id="txt-back-rps">↺ العودة</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="app.js"></script>
+    <script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => navigator.serviceWorker.register('/game-zone-golden/sw.js').catch(() => {}));
+    }
+    let gzPwaPrompt = null;
+    window.addEventListener('beforeinstallprompt', e => {
+        e.preventDefault(); gzPwaPrompt = e;
+        const btn = document.getElementById('gz-pwa-install');
+        if (btn) btn.style.display = 'flex';
+    });
+    window.addEventListener('appinstalled', () => {
+        gzPwaPrompt = null;
+        const btn = document.getElementById('gz-pwa-install');
+        if (btn) btn.style.display = 'none';
+    });
+    function gzInstallPWA() {
+        if (!gzPwaPrompt) return;
+        gzPwaPrompt.prompt();
+        gzPwaPrompt.userChoice.then(() => { gzPwaPrompt = null; });
+    }
+    </script>
+</body>
+</html>
