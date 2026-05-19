@@ -1,4 +1,4 @@
-const GZ_CACHE = 'gamzone-v5';
+const GZ_CACHE = 'gamzone-v6';
 const GZ_BASE = '/game-zone-golden';
 const GZ_ASSETS = [
     GZ_BASE + '/',

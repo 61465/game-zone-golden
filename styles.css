@@ -1099,7 +1099,7 @@
             /* AI panel mobile */
             .gz-container { max-width: 100%; padding: 0; }
             .gz-header { padding: 14px 16px 10px; }
-            .gz-modes { gap: 4px; padding: 0 12px; flex-wrap: wrap; }
+            .ai-mode-tabs { padding: 0 0; }
             .gz-ai-mode-tab, .ai-mode-tab { font-size: 0.68rem; padding: 5px 9px; }
             .gz-chat-box { padding: 10px 12px; gap: 8px; }
             .gz-bubble { max-width: 90%; font-size: 0.84rem; }
@@ -1119,7 +1119,9 @@
             .gz-stats-row { gap: 4px; }
         }
         @media (max-width: 480px) {
-            .nav-tabs { display: none; }
+            /* Fix: nav-tabs scrollable instead of hidden — users must be able to navigate */
+            .nav-tabs { overflow-x: auto; flex-wrap: nowrap; gap: 2px; padding-bottom: 4px; -webkit-overflow-scrolling: touch; }
+            .tab-btn { font-size: 0.6rem; padding: 3px 8px; white-space: nowrap; flex-shrink: 0; }
             .hero-header h1 { font-size: 1.3rem; }
             .gz-header-title { font-size: 1rem; }
             .gz-chat-box { min-height: 200px; }
@@ -1127,6 +1129,18 @@
             .gz-vs-pair { gap: 8px; }
             .gz-stats-box { padding: 8px; }
             .gz-stat-val1, .gz-stat-val2 { font-size: 0.62rem; }
+            /* AI mode tabs: smaller on tiny screens */
+            .ai-mode-tab { min-width: 54px; font-size: 0.58rem; padding: 6px 4px; }
+            .ai-mode-tab .ti { font-size: 0.8rem; }
+            /* Tournament picker: keep 4-col slot grid but smaller slots */
+            .gz-t-slots-grid { gap: 4px; }
+            .gz-t-slot { height: 44px; font-size: 0.54rem; }
+            .gz-t-char-grid { max-height: 170px; }
+            /* Leaderboard: allow horizontal scroll to fit all columns */
+            .gz-lb-table { overflow-x: auto; }
+            .gz-lb-thead, .gz-lb-row { min-width: 310px; }
+            /* Profile stats: 2 columns instead of 3 on very small screens */
+            .gz-profile-stats { grid-template-columns: repeat(2, 1fr); }
         }
 
         /* ─── EMPTY STATE ─── */
