@@ -119,7 +119,7 @@
     { id: 88, type: "game", p: 97, isPeak: true, icon: '🛡️', source: "HALO Infinite", ar: { name: "ماستر شيف (Spartan 117)", ability: "الدرع المثالي", lore: "ماستر شيف في ذروة كفاءته القتالية، مع أحدث درع سبارتان." }, en: { name: "MASTER CHIEF (Spartan 117)", ability: "Perfect Shield", lore: "Master Chief at peak combat efficiency, with the latest Spartan armor." } },
     { id: 89, type: "comic", p: 101, isPeak: true, icon: '🕷️', source: "Marvel Comics", ar: { name: "سبايدر مان (Cosmic)", ability: "قوة الإنيغما", lore: "سبايدر مان عندما يكتسب قوة الإنيغما الكونية، مما يجعله كائناً شبه إلهي." }, en: { name: "SPIDER-MAN (Cosmic)", ability: "Enigma Force", lore: "Spider-Man imbued with the cosmic Enigma Force, making him a near-deity." } },
     { id: 90, type: "game", p: 96, isPeak: true, icon: '⚔️', source: "Witcher 3", ar: { name: "جيرالت (سيد الوحوش)", ability: "إتقان التحول", lore: "جيرالت في ذروة مهاراته، يجمع بين السيوف، الكيمياء، والسحر." }, en: { name: "GERALT (Master Witcher)", ability: "Mutation Mastery", lore: "Geralt at his peak skills, combining swords, alchemy, and signs." } },
-    { id: 91, type: "series", p: 98, isPeak: true, icon: '🇺🇸', source: "The Boys", ar: { name: "هوملاندر (الهيمنة الكاملة)", ability: "القوة المطلقة", lore: "هوملاندر في ذروة قوته، لا يعترف بأي قانون أو سلطة فوق قوته." }, en: { name: "HOMELANDER (Absolute)", ability: "Absolute Power", lore: "Homelander at his peak, recognizing no law above his own strength." } },
+    { id: 91, type: "series", p: 90, isPeak: true, icon: '🇺🇸', source: "The Boys", ar: { name: "هوملاندر (الهيمنة الكاملة)", ability: "القوة المطلقة", lore: "هوملاندر في ذروة قوته، لا يعترف بأي قانون أو سلطة فوق قوته." }, en: { name: "HOMELANDER (Absolute)", ability: "Absolute Power", lore: "Homelander at his peak, recognizing no law above his own strength." } },
     { id: 92, type: "anime", p: 93, isPeak: true, icon: '🩸', source: "Hellsing", ar: { name: "ألوكارد (المستوى 0)", ability: "جيش الدم", lore: "ألوكارد يطلق العنان لجيش كامل من الأرواح المعذبة المحبوسة في دمه." }, en: { name: "ALUCARD (Level 0)", ability: "Blood Army", lore: "Alucard unleashing an entire army of tormented souls imprisoned within his blood." } },
     { id: 93, type: "comic", p: 96, isPeak: true, icon: '🧙', source: "Marvel Comics", ar: { name: "دكتور سترينج (الساحر الأعظم)", ability: "السحر المطلق", lore: "دكتور سترينج الساحر الأعظم للأرض، يتقن جميع فنون السحر." }, en: { name: "DR. STRANGE (Supreme)", ability: "Absolute Sorcery", lore: "Dr. Strange as Earth's Sorcerer Supreme, mastering all mystic arts." } },
     { id: 94, type: "movie", p: 95, isPeak: true, icon: '🪄', source: "Lord of the Rings", ar: { name: "قاندالف الأبيض", ability: "الحكمة القديمة", lore: "قاندالف الأبيض أقوى مايا في الأرض الوسطى، عاد من الموت أكثر قوة." }, en: { name: "GANDALF (White)", ability: "Ancient Wisdom", lore: "Gandalf the White, the most powerful Maia in Middle-earth, who returned stronger from death." } },
@@ -1081,6 +1081,7 @@ ${GZ_CHAR_BRIEF}`;
             if (streamEl) gzFinalizeStreamBubble(streamEl, result.text);
             else { gzRemoveType(); gzAddBot(result.text); }
             gzHistory.push({role:'assistant', content:result.text});
+            gzHistSave();
             gzUpdateModelBadge(result.model_used);
             gzSetQ(gzLang === 'ar'
                 ? ['🔥 أنا مختلف!', 'أثبت بالـ Lore!', 'مثال من القصة؟', 'من يتفوق عليه؟']
@@ -1318,6 +1319,7 @@ ${GZ_CHAR_BRIEF}`;
             const reply = result.text || '⚠️ Error';
             gzUpdateModelBadge(result.model_used);
             if (streamEl2) gzFinalizeStreamBubble(streamEl2, reply); gzHistory.push({role:'assistant', content:reply});
+            gzHistSave();
             const tot = c1.power + c2.power;
             const w = c1.power >= c2.power ? c1 : c2;
             const l = w === c1 ? c2 : c1;
@@ -2053,13 +2055,35 @@ Rules: p (power) is 50-100 based on actual strength. isPeak=true only for univer
 
     // 
     // TOURNAMENT SYSTEM
-    // 
+    //
     let gzTourney = null;
+    let gzTourneySlots = [];
+
+    function gzTourneyAdd(charId) {
+        if (gzTourneySlots.length >= 8) return;
+        const c = GZ_CHARS.find(x => x.id === charId);
+        if (!c || gzTourneySlots.find(s => s.id === charId)) return;
+        gzTourneySlots.push(c);
+        gzRenderTourney();
+    }
+
+    function gzTourneyRemove(idx) {
+        gzTourneySlots.splice(idx, 1);
+        gzRenderTourney();
+    }
+
+    function gzTourneyRandom() {
+        const used = new Set(gzTourneySlots.map(s => s.id));
+        const avail = GZ_CHARS.filter(c => !used.has(c.id)).sort(() => Math.random() - 0.5);
+        const need = 8 - gzTourneySlots.length;
+        gzTourneySlots.push(...avail.slice(0, need));
+        gzRenderTourney();
+    }
 
     function gzStartTourney() {
-        const pool = [...GZ_CHARS].sort(() => Math.random() - 0.5).slice(0, 8);
-        gzTourney = { round: 1, matches: [], winners: [], pool };
-        // Build first round pairs
+        if (gzTourneySlots.length < 8) { gzTourneyRandom(); return; }
+        const pool = [...gzTourneySlots];
+        gzTourney = { round: 1, matches: [], pool };
         for (let i = 0; i < pool.length; i += 2)
             gzTourney.matches.push({ c1: pool[i], c2: pool[i+1], winner: null, done: false });
         gzRenderTourney();
@@ -2067,17 +2091,55 @@ Rules: p (power) is 50-100 based on actual strength. isPeak=true only for univer
 
     function gzRenderTourney() {
         const el = document.getElementById('gz-tourney-bracket');
-        if (!el || !gzTourney) return;
+        if (!el) return;
+        if (!gzTourney) { _gzRenderTourneyPicker(el); return; }
+        _gzRenderTourneyBracket(el);
+    }
+
+    function _gzRenderTourneyPicker(el) {
+        const slots = Array(8).fill(null).map((_, i) => gzTourneySlots[i] || null);
+        const slotsHTML = slots.map((c, i) => c
+            ? `<div class="gz-t-slot gz-t-slot-filled" onclick="gzTourneyRemove(${i})" title="انقر للإزالة">${c.ico}<span class="gz-t-slot-name">${c.name.split(' ')[0]}</span><span class="gz-t-slot-x">✕</span></div>`
+            : `<div class="gz-t-slot gz-t-slot-empty">${i+1}</div>`
+        ).join('');
+        const used = new Set(gzTourneySlots.map(s => s.id));
+        const charGrid = GZ_CHARS.map(c => {
+            const sel = used.has(c.id);
+            return `<div class="gz-t-char ${sel ? 'gz-t-char-used' : ''}" onclick="${sel ? '' : `gzTourneyAdd('${c.id}')`}">${c.ico} <span>${c.name}</span></div>`;
+        }).join('');
+        const ready = gzTourneySlots.length === 8;
+        el.innerHTML = `
+        <div class="gz-t-picker-title">اختر 8 مقاتلين <span style="color:var(--gz-muted)">(${gzTourneySlots.length}/8)</span></div>
+        <div class="gz-t-slots-grid">${slotsHTML}</div>
+        <div class="gz-t-picker-actions">
+            <button class="gz-t-random-btn" onclick="gzTourneyRandom()">🎲 عشوائي</button>
+            <button class="gz-tourney-start-btn${ready ? '' : ' gz-t-disabled'}" onclick="gzStartTourney()" ${ready ? '' : 'disabled'}>⚡ ابدأ البطولة!</button>
+        </div>
+        <div class="gz-t-char-grid">${charGrid}</div>`;
+    }
+
+    function _gzRenderTourneyBracket(el) {
         const { matches, round } = gzTourney;
-        el.innerHTML = `<div class="gz-t-title">🏆 البطولة — الجولة ${round}</div>` +
+        const allDone = matches.every(m => m.done);
+        el.innerHTML = `<div class="gz-t-title">🏆 الجولة ${round}</div>` +
             matches.map((m, i) => `
-            <div class="gz-t-match ${m.done ? 'gz-t-done' : ''}">
-                <div class="gz-t-fighter ${m.winner?.id===m.c1.id?'gz-t-win':''}">${m.c1.ico} ${m.c1.name} <span>⚡${m.c1.power}</span></div>
-                <div class="gz-t-vs">VS</div>
-                <div class="gz-t-fighter ${m.winner?.id===m.c2.id?'gz-t-win':''}">${m.c2.ico} ${m.c2.name} <span>⚡${m.c2.power}</span></div>
-                ${!m.done ? `<button class="gz-t-fight-btn" onclick="gzRunTourneyMatch(${i})">⚔️ قاتل!</button>` : `<div class="gz-t-verdict">🏆 ${m.winner?.name} يتقدم</div>`}
+            <div class="gz-t-match ${m.done ? 'gz-t-done' : 'gz-t-active'}" style="animation-delay:${i * 0.08}s">
+                <div class="gz-t-fighter ${m.winner?.id===m.c1.id ? 'gz-t-win' : m.done ? 'gz-t-lose' : ''}">
+                    <span class="gz-t-ico">${m.c1.ico}</span>
+                    <span class="gz-t-fname">${m.c1.name}</span>
+                    <span class="gz-t-pow">⚡${m.c1.power}</span>
+                </div>
+                <div class="gz-t-vs"><span>VS</span></div>
+                <div class="gz-t-fighter ${m.winner?.id===m.c2.id ? 'gz-t-win' : m.done ? 'gz-t-lose' : ''}">
+                    <span class="gz-t-ico">${m.c2.ico}</span>
+                    <span class="gz-t-fname">${m.c2.name}</span>
+                    <span class="gz-t-pow">⚡${m.c2.power}</span>
+                </div>
+                ${!m.done
+                    ? `<button class="gz-t-fight-btn" onclick="gzRunTourneyMatch(${i})">⚔️ قاتل!</button>`
+                    : `<div class="gz-t-verdict">🏆 ${m.winner?.name} يتقدم</div>`}
             </div>`).join('') +
-            (matches.every(m => m.done) ? `<button class="gz-t-next-btn" onclick="gzNextTourneyRound()">🏆 الجولة التالية ←</button>` : '');
+            (allDone ? `<button class="gz-t-next-btn" onclick="gzNextTourneyRound()">⚡ الجولة التالية</button>` : '');
     }
 
     async function gzRunTourneyMatch(idx) {
@@ -2129,6 +2191,8 @@ Rules: p (power) is 50-100 based on actual strength. isPeak=true only for univer
 
 ${winners[0].ico} ${winners[0].name} فاز بالبطولة!`);
             gzTourney = null;
+            gzTourneySlots = [];
+            gzRenderTourney();
             return;
         }
         gzTourney.round++;
@@ -2236,8 +2300,8 @@ ${winners[0].ico} ${winners[0].name} فاز بالبطولة!`);
     function gzBuildScale() {
         const el = document.getElementById('gz-scaleGrid');
         if (!el) return;
-        el.innerHTML = GZ_SCALE_TOPICS.map(t => `
-            <div class="gz-scale-item" onclick="gzSwitchMode('chat');document.getElementById('gz-cinput').value=${JSON.stringify(t.p)};gzSendMsg()">
+        el.innerHTML = GZ_SCALE_TOPICS.map((t, i) => `
+            <div class="gz-scale-item" onclick="gzScalePick(${i})">
                 <div class="gz-scale-ico">${t.e}</div>
                 <div class="gz-scale-info">
                     <div class="gz-scale-title">${t.t}</div>
@@ -2245,6 +2309,14 @@ ${winners[0].ico} ${winners[0].name} فاز بالبطولة!`);
                 </div>
                 <div class="gz-scale-arr">▶</div>
             </div>`).join('');
+    }
+
+    function gzScalePick(i) {
+        const t = GZ_SCALE_TOPICS[i];
+        if (!t) return;
+        gzSwitchMode('chat');
+        const inp = document.getElementById('gz-cinput');
+        if (inp) { inp.value = t.p; setTimeout(() => gzSendMsg(), 80); }
     }
 
     // 
