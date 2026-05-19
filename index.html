@@ -141,6 +141,7 @@
                 <button class="ai-mode-tab" onclick="gzSwitchMode('tourney')" id="gz-tab-tourney" style="font-size:0.68rem;color:#ffd700;"><span class="ti">🏆</span>بطولة</button>
                 <button class="ai-mode-tab" onclick="gzSwitchMode('analytics')" id="gz-tab-analytics" style="font-size:0.68rem;color:#64c864;"><span class="ti">📊</span>إحصاء</button>
                 <button class="ai-mode-tab" onclick="gzSwitchMode('scale')" id="gz-tab-scale" style="font-size:0.68rem;color:#b44dff;"><span class="ti">📐</span>Scale</button>
+                <button class="ai-mode-tab" onclick="gzSwitchMode('leaderboard')" id="gz-tab-leaderboard" style="font-size:0.68rem;color:#ffd700;font-weight:900;"><span class="ti">🏆</span>ترتيب</button>
             </div>
 
             <!-- CHAT ZONE -->
@@ -315,6 +316,15 @@
                 <div class="gz-scale-grid" id="gz-scaleGrid"></div>
             </div>
 
+            <!-- LEADERBOARD PANEL -->
+            <div class="gz-panel" id="gz-panel-leaderboard" style="display:none;">
+                <div class="gz-p-title" style="display:flex;justify-content:space-between;align-items:center;">
+                    <span>🏆 ترتيب الأبطال — ELO حقيقي</span>
+                    <button onclick="gzRenderLeaderboard()" class="gz-lb-refresh-btn" style="font-size:0.6rem;">🔄</button>
+                </div>
+                <div id="gz-leaderboard-content" style="margin-top:8px;"></div>
+            </div>
+
             <div class="gz-footer"><strong style="color:#ffd700;font-weight:normal;">GZ BOT v4</strong> • Multi-AI: Mistral + Pollinations + Gemini + OpenRouter • مجاني 100% 🎮</div>
         </div>
     </div>
@@ -372,6 +382,7 @@
                 <div id="gz-battle-comments"></div>
                 <div class="battle-actions">
                     <button class="btn-action btn-primary" onclick="closeBattle()" id="txt-new-battle">↺ نزال جديد</button>
+                    <button id="gz-share-battle-btn" class="btn-action gz-share-btn" onclick="gzShareCurrentBattle()" style="display:none;background:rgba(29,161,242,0.1);border:1px solid rgba(29,161,242,0.3);color:#1da1f2;">📤 مشاركة</button>
                     <a href="https://61465.github.io/game-zone-archive/" target="_blank" class="btn-action btn-secondary" id="txt-archive-btn">📜 سجل الأبطال</a>
                     <a href="https://61465.github.io/GAME-ZONE-CHAT/" target="_blank" class="btn-action btn-cyan" id="txt-discuss">💬 ناقش القوة</a>
                 </div>

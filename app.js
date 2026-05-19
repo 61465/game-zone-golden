@@ -585,7 +585,12 @@
 
     function getPeakCount() { return heroes.filter(h => h.isPeak).length; }
 
+    let _heroFiltered = [];
+    const GZ_PER_PAGE = 60;
+    let _heroPage = 1;
+
     function renderGrid(filter, query) {
+        _heroPage = 1;
         const grid = document.getElementById('hero-grid');
         grid.innerHTML = '';
         let list = [...heroes];
@@ -596,15 +601,22 @@
             const q = query.trim().toLowerCase();
             list = list.filter(h => h[currentLang].name.toLowerCase().includes(q) || h.source.toLowerCase().includes(q));
         }
+        _heroFiltered = list;
         if (list.length === 0) {
             grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><p>${currentLang === 'ar' ? 'لا توجد نتائج' : 'NO RESULTS FOUND'}</p></div>`;
             return;
         }
-        list.forEach((h, i) => {
+        _renderHeroSlice(grid, list.slice(0, GZ_PER_PAGE), 0);
+        _renderLoadMore(grid);
+    }
+
+    function _renderHeroSlice(grid, slice, startIdx) {
+        const frag = document.createDocumentFragment();
+        slice.forEach((h, i) => {
             const isSelected = selected.find(s => s.id === h.id);
             const card = document.createElement('div');
             card.className = `card ${isSelected ? 'selected' : ''} ${h.isPeak ? 'peak' : ''}`;
-            card.style.animationDelay = `${Math.min(i * 0.02, 0.5)}s`;
+            card.style.animationDelay = `${Math.min((startIdx + i) * 0.02, 0.5)}s`;
             const selNum = isSelected ? (selected.indexOf(isSelected) + 1) : '';
             const isFav = gzFavSet.has(h.id);
             const powerPct = Math.min(100, Math.max(3, (h.p - 70) / 40 * 100));
@@ -622,8 +634,33 @@
             card.onclick = () => selectHero(card, h);
             card.querySelector('.fav-btn').onclick = (e) => { e.stopPropagation(); gzToggleFav(h.id); };
             card.querySelector('.card-info-btn').onclick = (e) => { e.stopPropagation(); gzOpenDetail(h.id); };
-            grid.appendChild(card);
+            frag.appendChild(card);
         });
+        grid.appendChild(frag);
+    }
+
+    function _renderLoadMore(grid) {
+        const old = grid.querySelector('.gz-load-more');
+        if (old) old.remove();
+        const shown = grid.querySelectorAll('.card').length;
+        if (shown >= _heroFiltered.length) return;
+        const rem = _heroFiltered.length - shown;
+        const wrap = document.createElement('div');
+        wrap.className = 'gz-load-more';
+        wrap.style.cssText = 'grid-column:1/-1;text-align:center;padding:20px 0 10px;';
+        wrap.innerHTML = `<button onclick="gzLoadMoreHeroes()" style="background:rgba(255,215,0,0.08);border:1px solid rgba(255,215,0,0.25);color:#ffd700;padding:10px 30px;border-radius:8px;cursor:pointer;font-family:\'Cairo\',sans-serif;font-size:0.82rem;transition:background 0.2s;" onmouseover="this.style.background='rgba(255,215,0,0.16)'" onmouseout="this.style.background='rgba(255,215,0,0.08)'">${currentLang === 'ar' ? `تحميل المزيد (${rem} بطل متبقٍ)` : `Load More (${rem} remaining)`}</button>`;
+        grid.appendChild(wrap);
+    }
+
+    function gzLoadMoreHeroes() {
+        const grid = document.getElementById('hero-grid');
+        _heroPage++;
+        const start = (_heroPage - 1) * GZ_PER_PAGE;
+        const slice = _heroFiltered.slice(start, start + GZ_PER_PAGE);
+        const old = grid.querySelector('.gz-load-more');
+        if (old) old.remove();
+        _renderHeroSlice(grid, slice, start);
+        _renderLoadMore(grid);
     }
 
     function selectHero(el, hero) {
@@ -655,7 +692,8 @@
         renderGrid(type, searchQuery);
     }
 
-    function handleSearch(q) { searchQuery = q; renderGrid(currentFilter, q); }
+    let _searchTimer;
+    function handleSearch(q) { clearTimeout(_searchTimer); _searchTimer = setTimeout(() => { searchQuery = q; renderGrid(currentFilter, q); }, 180); }
 
     function runBattle() {
         if (selected.length < 2) return;
@@ -697,6 +735,15 @@
                 en: { epic: `⚔️ HISTORIC CLASH! <strong>${winner[currentLang].name}</strong> defeated <strong>${loser[currentLang].name}</strong> by ${diff} points.`, hard: `💥 FIERCE BATTLE! <strong>${winner[currentLang].name}</strong> proved worth by ${diff} points.`, med: `⚡ Balanced duel won by <strong>${winner[currentLang].name}</strong>, ${diff} points ahead.`, easy: `👑 TOTAL DOMINANCE. <strong>${winner[currentLang].name}</strong> overwhelmed by ${diff} points.` }
             };
             document.getElementById('battle-story').innerHTML = stories[currentLang][intensity];
+            window._gzLastBattle = { n1: h1[currentLang].name, n2: h2[currentLang].name, winner: winner[currentLang].name, story: stories[currentLang][intensity] };
+            const _shareBtn = document.getElementById('gz-share-battle-btn');
+            if (_shareBtn) { _shareBtn.style.display = 'inline-flex'; }
+            // ELO update — fire and forget, show toast when done
+            gzUpdateEloFromBattle(winner, loser).then(delta => {
+                if (!delta) return;
+                const stEl = document.getElementById('battle-story');
+                if (stEl) stEl.insertAdjacentHTML('beforeend', `<div class="gz-elo-delta"><span class="gz-elo-w">▲ ${delta.wName} <strong>+${delta.wChange}</strong> ELO</span><span class="gz-elo-l">▼ ${delta.lName} <strong>${delta.lChange}</strong> ELO</span></div>`);
+            });
             setTimeout(() => gzRenderComments(gzBattleKey(h1.id, h2.id)), 150);
         }
         if (showCount) {
@@ -747,7 +794,18 @@
         document.getElementById('rps-result-phase').style.display = 'block';
     }
 
-    function closeBattle() { document.getElementById('battle-overlay').classList.remove('show'); document.getElementById('hp-fill').style.width = '50%'; }
+    function closeBattle() {
+        document.getElementById('battle-overlay').classList.remove('show');
+        document.getElementById('hp-fill').style.width = '50%';
+        const _shareBtn = document.getElementById('gz-share-battle-btn');
+        if (_shareBtn) _shareBtn.style.display = 'none';
+    }
+
+    function gzShareCurrentBattle() {
+        if (!window._gzLastBattle) return;
+        const b = window._gzLastBattle;
+        gzShareBattle(b.n1, b.n2, b.winner, b.story);
+    }
 
     function showTab(tab) {
         document.getElementById('arena-page').style.display = tab === 'arena' ? 'block' : 'none';
@@ -1187,7 +1245,9 @@ ${GZ_CHAR_BRIEF}`;
             if (streamEl2) gzFinalizeStreamBubble(streamEl2, reply); gzHistory.push({role:'assistant', content:reply});
             const tot = c1.power + c2.power;
             const w = c1.power >= c2.power ? c1 : c2;
+            const l = w === c1 ? c2 : c1;
             const pct1 = Math.round((c1.power/tot)*100), pct2 = 100 - pct1;
+            gzUpdateEloFromBattle(w, l).then(gzShowEloToast);
             const card = `<div class="gz-battle-result"><div class="gz-br-title">⚔️ BATTLE ANALYSIS • GZ BOT</div><div class="gz-br-vs"><div class="gz-br-side${w.id===c1.id?' gz-winner':''}"><div>${c1.ico} <span class="gz-sn">${c1.name}</span></div><div class="gz-sb"><div class="gz-sf" style="width:${pct1}%;background:linear-gradient(90deg,#ffd700,#ff6b00)"></div></div></div><div class="gz-vs-badge">VS</div><div class="gz-br-side${w.id===c2.id?' gz-winner':''}"><div>${c2.ico} <span class="gz-sn">${c2.name}</span></div><div class="gz-sb"><div class="gz-sf" style="width:${pct2}%;background:linear-gradient(90deg,#00c8ff,#b44dff)"></div></div></div></div><div class="gz-br-verdict">️ <strong style="color:#ffd700">${w.name}</strong> — الفائز المرجح</div><div class="gz-br-share"><button class="gz-share-btn" onclick="gzShareBattle('${c1.name}','${c2.name}','${w.name}',null)">📤 شارك النتيجة</button></div></div>`;
             const battleId = Date.now().toString(36);
             const voteBlock = gzCreateVoteBlock(battleId);
@@ -1343,7 +1403,7 @@ ${GZ_CHAR_BRIEF}`;
     function gzSwitchMode(mode) {
         document.querySelectorAll('.ai-mode-tab').forEach(t => t.classList.remove('active'));
         document.getElementById('gz-tab-' + mode).classList.add('active');
-        ['battle','debates','tier','generate','settings','history','tourney','analytics','scale'].forEach(m => {
+        ['battle','debates','tier','generate','settings','history','tourney','analytics','scale','leaderboard'].forEach(m => {
             const p = document.getElementById('gz-panel-' + m);
             if (p) p.classList.remove('active');
         });
@@ -1360,6 +1420,7 @@ ${GZ_CHAR_BRIEF}`;
         if (mode === 'settings') { gzRefreshKeyUI(); }
         if (mode === 'analytics') { gzRenderAnalytics(); }
         if (mode === 'scale') { gzBuildScale(); }
+        if (mode === 'leaderboard') { gzRenderLeaderboard(); }
     }
 
     // ── Built-in Free Keys ──────────────────────────────────────────────────
@@ -1945,13 +2006,27 @@ Rules: p (power) is 50-100 based on actual strength. isPeak=true only for univer
         gzIsBusy = true;
         const btn = document.querySelectorAll('.gz-t-fight-btn')[idx];
         if (btn) btn.textContent = '⏳...';
-        const prompt = `Quick 2-sentence battle verdict: ${m.c1.name} (power ${m.c1.power}) vs ${m.c2.name} (power ${m.c2.power}). Who wins and why? State winner clearly.`;
+        const prompt = `Battle verdict (2 sentences): ${m.c1.name} (power ${m.c1.power}) vs ${m.c2.name} (power ${m.c2.power}). Who wins and why? End your response with exactly: WINNER: [winner name]`;
         try {
-            const result = await gzCallAI([{role:'user',content:prompt}], null, 200);
+            const result = await gzCallAI([{role:'user',content:prompt}], null, 220);
             const text = result.text || '';
-            const c1wins = text.toLowerCase().includes(m.c1.name.toLowerCase()) && m.c1.power >= m.c2.power;
-            m.winner = c1wins ? m.c1 : m.c2;
+            const winLine = text.match(/WINNER:\s*(.+)/i);
+            let winner;
+            if (winLine) {
+                winner = winLine[1].trim().toLowerCase().includes(m.c1.name.toLowerCase()) ? m.c1 : m.c2;
+            } else {
+                const ltext = text.toLowerCase();
+                const c1idx = ltext.lastIndexOf(m.c1.name.toLowerCase());
+                const c2idx = ltext.lastIndexOf(m.c2.name.toLowerCase());
+                winner = (c1idx > c2idx && c1idx !== -1) ? m.c1 : m.c2;
+            }
+            m.winner = winner;
             m.done = true; m.analysis = text;
+            const loserChar = winner === m.c1 ? m.c2 : m.c1;
+            // Update ELO in background
+            gzUpdateEloFromBattle(winner, loserChar).then(delta => {
+                if (delta) gzShowEloToast(delta);
+            });
             // Switch to chat and show result
             gzSwitchMode('chat');
             gzAddBot(`⚔️ **${m.c1.name} VS ${m.c2.name}** — ${text}
@@ -2023,12 +2098,28 @@ ${winners[0].ico} ${winners[0].name} فاز بالبطولة!`);
             <div class="gz-det-pbar"><div class="gz-det-pfill" style="width:${powerPct}%"></div></div>
             <div class="gz-det-ability">⚔️ ${data.ability}</div>
             <div class="gz-det-lore">${data.lore}</div>
+            <div id="gz-det-elo-${h.id}" class="gz-det-elo-wrap">
+                <span style="font-size:0.6rem;color:var(--gz-muted);">⏳ جاري تحميل سجل ELO...</span>
+            </div>
             <div style="display:flex;gap:8px;margin-top:2px;">
                 <button class="gz-det-select" style="flex:1;" onclick="document.getElementById('gz-detail-modal').classList.remove('show');selectHero(null,gzHeroMap.get(${h.id}))">⚔️ اختر للمعركة</button>
                 <button class="gz-det-select" style="flex:0 0 auto;padding:10px 14px;" onclick="gzToggleFav(${h.id});this.textContent=gzFavSet.has(${h.id})?'💔':'❤️'">${isFav?'💔':'❤️'}</button>
             </div>`;
         modal.classList.add('show');
         modal.onclick = (e) => { if (e.target === modal) modal.classList.remove('show'); };
+        // Load ELO record async
+        gzGetEloRecord(h).then(rec => {
+            const el = document.getElementById('gz-det-elo-' + h.id);
+            if (!el) return;
+            const wr = rec.battles ? Math.round((rec.wins/rec.battles)*100) : 0;
+            el.innerHTML = `
+                <div class="gz-det-elo-row">
+                    <div class="gz-det-elo-stat"><div class="gz-det-elo-val" style="color:#ffd700;font-family:'Orbitron',sans-serif">${rec.elo}</div><div class="gz-det-elo-lbl">ELO</div></div>
+                    <div class="gz-det-elo-stat"><div class="gz-det-elo-val" style="color:#64c864">${rec.wins}</div><div class="gz-det-elo-lbl">انتصار</div></div>
+                    <div class="gz-det-elo-stat"><div class="gz-det-elo-val" style="color:#ff4466">${rec.losses}</div><div class="gz-det-elo-lbl">هزيمة</div></div>
+                    <div class="gz-det-elo-stat"><div class="gz-det-elo-val" style="color:var(--gz-muted)">${wr}%</div><div class="gz-det-elo-lbl">نسبة الفوز</div></div>
+                </div>`;
+        });
     }
 
     // 
@@ -2188,6 +2279,127 @@ ${winners[0].ico} ${winners[0].name} فاز بالبطولة!`);
         try { await gzSaveCmt(key, text, null); } catch { inp.value = text; }
         await gzRenderComments(key);
     }
+
+    // ════════════════════════════════════════════════════════════
+    // ELO RATING SYSTEM — ترتيب حقيقي مبني على Firebase
+    // ════════════════════════════════════════════════════════════
+    const GZ_ELO_BASE = 1200;
+    const GZ_ELO_K    = 32;
+    const GZ_ELO_COL  = 'gz_elo_v2';
+
+    function gzCharSlug(c) {
+        const n = c.en?.name || c.name || String(c.id);
+        return n.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '');
+    }
+    function gzCharName(c) { return c.en?.name || c.name || String(c.id); }
+
+    function _eloExpected(a, b) { return 1 / (1 + Math.pow(10, (b - a) / 400)); }
+
+    function _eloCalc(wElo, lElo) {
+        const exp = _eloExpected(wElo, lElo);
+        return {
+            wChange: Math.round(GZ_ELO_K * (1 - exp)),
+            lChange: Math.round(GZ_ELO_K * (0 - (1 - exp)))
+        };
+    }
+
+    async function gzGetEloRecord(c) {
+        if (!window.gzDB) return { elo: GZ_ELO_BASE, wins: 0, losses: 0, battles: 0 };
+        try {
+            const doc = await window.gzDB.collection(GZ_ELO_COL).doc(gzCharSlug(c)).get();
+            return doc.exists ? doc.data() : { elo: GZ_ELO_BASE, wins: 0, losses: 0, battles: 0 };
+        } catch { return { elo: GZ_ELO_BASE, wins: 0, losses: 0, battles: 0 }; }
+    }
+
+    async function gzUpdateEloFromBattle(winner, loser) {
+        if (!window.gzDB) return null;
+        const wKey = gzCharSlug(winner), lKey = gzCharSlug(loser);
+        const wName = gzCharName(winner), lName = gzCharName(loser);
+        try {
+            const [wDoc, lDoc] = await Promise.all([
+                window.gzDB.collection(GZ_ELO_COL).doc(wKey).get(),
+                window.gzDB.collection(GZ_ELO_COL).doc(lKey).get()
+            ]);
+            const wData = wDoc.exists ? wDoc.data() : { elo: GZ_ELO_BASE, wins: 0, losses: 0, battles: 0 };
+            const lData = lDoc.exists ? lDoc.data() : { elo: GZ_ELO_BASE, wins: 0, losses: 0, battles: 0 };
+            const { wChange, lChange } = _eloCalc(wData.elo, lData.elo);
+            const newWElo = Math.max(800, wData.elo + wChange);
+            const newLElo = Math.max(800, lData.elo + lChange);
+            await Promise.all([
+                window.gzDB.collection(GZ_ELO_COL).doc(wKey).set({
+                    elo: newWElo, wins: (wData.wins||0)+1, losses: wData.losses||0,
+                    battles: (wData.battles||0)+1, name: wName, updatedAt: Date.now()
+                }),
+                window.gzDB.collection(GZ_ELO_COL).doc(lKey).set({
+                    elo: newLElo, wins: lData.wins||0, losses: (lData.losses||0)+1,
+                    battles: (lData.battles||0)+1, name: lName, updatedAt: Date.now()
+                })
+            ]);
+            return { wChange, lChange, newWElo, newLElo, wName, lName };
+        } catch { return null; }
+    }
+
+    function gzShowEloToast(delta) {
+        if (!delta) return;
+        const t = document.createElement('div');
+        t.className = 'gz-elo-toast';
+        t.innerHTML = `<span class="gz-elo-w-t">▲ ${delta.wName} <strong>+${delta.wChange}</strong> → ${delta.newWElo}</span><span class="gz-elo-l-t">▼ ${delta.lName} <strong>${delta.lChange}</strong> → ${delta.newLElo}</span>`;
+        document.body.appendChild(t);
+        requestAnimationFrame(() => t.classList.add('gz-elo-toast-in'));
+        setTimeout(() => { t.classList.remove('gz-elo-toast-in'); t.addEventListener('transitionend', () => t.remove(), {once:true}); }, 3500);
+    }
+
+    async function gzFetchLeaderboard(lim = 25) {
+        if (!window.gzDB) return [];
+        try {
+            const snap = await window.gzDB.collection(GZ_ELO_COL).orderBy('elo', 'desc').limit(lim).get();
+            return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        } catch { return []; }
+    }
+
+    async function gzRenderLeaderboard() {
+        const el = document.getElementById('gz-leaderboard-content');
+        if (!el) return;
+        el.innerHTML = `<div style="text-align:center;padding:24px;color:var(--gz-muted)"><div class="gz-gen-spin" style="margin:auto;"></div><div style="margin-top:10px;font-size:0.7rem;">جاري تحميل الترتيب...</div></div>`;
+        const rows = await gzFetchLeaderboard(25);
+        if (!rows.length) {
+            el.innerHTML = `<div class="gz-lb-empty">لا توجد بيانات بعد — ابدأ معارك لبناء الترتيب الحقيقي! 🏆</div>`;
+            return;
+        }
+        const medals = ['🥇','🥈','🥉'];
+        const winRate = r => r.battles ? Math.round((r.wins/r.battles)*100) + '%' : '—';
+        el.innerHTML = `
+        <div class="gz-lb-header">
+            <span>ترتيب المقاتلين بناءً على المعارك الحقيقية</span>
+            <span style="font-size:0.6rem;color:var(--gz-muted);">${rows.length} بطل مصنّف</span>
+        </div>
+        <div class="gz-lb-table">
+            <div class="gz-lb-thead">
+                <span>#</span><span>البطل</span><span>ELO</span><span>✅ فوز</span><span>❌ خسارة</span><span>% انتصار</span>
+            </div>
+            ${rows.map((r, i) => `
+            <div class="gz-lb-row ${i < 3 ? 'gz-lb-top' : ''}" style="${i === 0 ? 'border-color:rgba(255,215,0,0.3);background:rgba(255,215,0,0.05)' : i === 1 ? 'border-color:rgba(192,192,192,0.2)' : i === 2 ? 'border-color:rgba(205,127,50,0.2)' : ''}">
+                <span class="gz-lb-rank">${medals[i] || (i+1)}</span>
+                <span class="gz-lb-name">${r.name || r.id}</span>
+                <span class="gz-lb-elo" style="color:${r.elo >= 1400 ? '#ffd700' : r.elo >= 1300 ? '#00d4aa' : 'var(--gz-text)'}">${r.elo}</span>
+                <span style="color:#64c864">${r.wins||0}</span>
+                <span style="color:var(--gz-red)">${r.losses||0}</span>
+                <span style="color:var(--gz-muted)">${winRate(r)}</span>
+            </div>`).join('')}
+        </div>
+        <div style="text-align:center;margin-top:12px;">
+            <button onclick="gzRenderLeaderboard()" class="gz-lb-refresh-btn">🔄 تحديث الترتيب</button>
+        </div>`;
+    }
+
+    // ── Escape key: close overlays ──
+    document.addEventListener('keydown', (e) => {
+        if (e.key !== 'Escape') return;
+        const overlay = document.getElementById('battle-overlay');
+        if (overlay?.classList.contains('show')) { closeBattle(); return; }
+        const detail = document.getElementById('gz-detail-modal');
+        if (detail?.classList.contains('show')) { detail.classList.remove('show'); }
+    });
 
     // ── INIT ──
     document.getElementById('stat-total').innerText = heroes.length;
