@@ -142,6 +142,7 @@
                 <button class="ai-mode-tab" onclick="gzSwitchMode('analytics')" id="gz-tab-analytics" style="font-size:0.68rem;color:#64c864;"><span class="ti">📊</span>إحصاء</button>
                 <button class="ai-mode-tab" onclick="gzSwitchMode('scale')" id="gz-tab-scale" style="font-size:0.68rem;color:#b44dff;"><span class="ti">📐</span>Scale</button>
                 <button class="ai-mode-tab" onclick="gzSwitchMode('leaderboard')" id="gz-tab-leaderboard" style="font-size:0.68rem;color:#ffd700;font-weight:900;"><span class="ti">🏆</span>ترتيب</button>
+                <button class="ai-mode-tab" onclick="gzSwitchMode('profile')" id="gz-tab-profile" style="font-size:0.68rem;color:#00e5ff;"><span class="ti">👤</span>ملفي</button>
             </div>
 
             <!-- CHAT ZONE -->
@@ -285,11 +286,12 @@
 
             <!-- ANALYTICS PANEL -->
             <div class="gz-panel" id="gz-panel-analytics" style="display:none;">
-                <div class="gz-p-title" style="display:flex;justify-content:space-between;align-items:center;">
-                    <span>📊 إحصائيات محلية</span>
-                    <button onclick="gzAnaSave({});gzRenderAnalytics()" style="font-size:0.62rem;background:rgba(255,34,68,0.1);border:1px solid rgba(255,34,68,0.3);color:var(--gz-red);padding:3px 10px;border-radius:4px;cursor:pointer;">إعادة ضبط</button>
+                <div class="gz-p-title">📊 إحصائيات</div>
+                <div style="display:flex;gap:6px;">
+                    <button class="gz-ana-tab active" id="gz-ana-tab-local" onclick="gzAnaTab('local')">📱 محلي</button>
+                    <button class="gz-ana-tab" id="gz-ana-tab-global" onclick="gzAnaTab('global')">🌍 عالمي</button>
                 </div>
-                <div id="gz-analytics-panel" style="margin-top:8px;"></div>
+                <div id="gz-analytics-panel"></div>
             </div>
 
 
@@ -323,6 +325,12 @@
                     <button onclick="gzRenderLeaderboard()" class="gz-lb-refresh-btn" style="font-size:0.6rem;">🔄</button>
                 </div>
                 <div id="gz-leaderboard-content" style="margin-top:8px;"></div>
+            </div>
+
+            <!-- PROFILE PANEL -->
+            <div class="gz-panel" id="gz-panel-profile" style="display:none;">
+                <div class="gz-p-title">👤 ملفي الشخصي</div>
+                <div id="gz-profile-content"></div>
             </div>
 
             <div class="gz-footer"><strong style="color:#ffd700;font-weight:normal;">GZ BOT v4</strong> • Multi-AI: Mistral + Pollinations + Gemini + OpenRouter • مجاني 100% 🎮</div>

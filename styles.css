@@ -1565,3 +1565,14 @@
     transition: background 0.2s;
 }
 .gz-lb-refresh-btn:hover { background: rgba(255,215,0,0.15); }
+
+/* Analytics tabs */
+.gz-ana-tab { flex:1; padding:5px 8px; background:var(--gz-bg); border:1px solid var(--gz-border); color:var(--gz-muted); border-radius:6px; font-family:inherit; font-size:0.72rem; font-weight:600; cursor:pointer; transition:all 0.2s; }
+.gz-ana-tab.active { background:rgba(255,215,0,0.08); border-color:rgba(255,215,0,0.3); color:#ffd700; }
+
+/* Profile panel */
+.gz-profile-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:12px; }
+.gz-profile-stat { background:var(--gz-bg); border:1px solid var(--gz-border); border-radius:8px; padding:10px 6px; text-align:center; }
+.gz-profile-stat-v { font-family:'Orbitron',sans-serif; font-size:1.3rem; font-weight:900; line-height:1; }
+.gz-profile-stat-l { font-size:0.6rem; color:var(--gz-muted); margin-top:4px; letter-spacing:1px; }
+.gz-profile-spirit { background:linear-gradient(135deg,rgba(255,215,0,0.05),rgba(168,85,247,0.05)); border:1px solid rgba(255,215,0,0.15); border-radius:10px; padding:14px; text-align:center; margin-bottom:10px; }

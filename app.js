@@ -1157,27 +1157,102 @@ ${GZ_CHAR_BRIEF}`;
     function gzAnaSave(d) { localStorage.setItem(GZ_ANA_KEY, JSON.stringify(d)); }
     function gzAnalyticsPick(id) {
         const d = gzAnaLoad(); d[id] = (d[id] || 0) + 1; gzAnaSave(d);
+        if (window.gzDB) window.gzDB.collection('gz_char_picks').doc(String(id)).set(
+            { picks: firebase.firestore.FieldValue.increment(1), charId: id }, { merge: true }
+        ).catch(()=>{});
     }
     function gzAnalyticsBattle() {
         const d = gzAnaLoad(); d['_battles'] = (d['_battles'] || 0) + 1; gzAnaSave(d);
+        if (window.gzDB) window.gzDB.collection('gz_global_stats').doc('main').set(
+            { battles: firebase.firestore.FieldValue.increment(1) }, { merge: true }
+        ).catch(()=>{});
     }
     function gzAnalyticsDebate() {
         const d = gzAnaLoad(); d['_debates'] = (d['_debates'] || 0) + 1; gzAnaSave(d);
+        if (window.gzDB) window.gzDB.collection('gz_global_stats').doc('main').set(
+            { debates: firebase.firestore.FieldValue.increment(1) }, { merge: true }
+        ).catch(()=>{});
     }
-    function gzRenderAnalytics() {
+
+    let _anaTab = 'local';
+    function gzAnaTab(tab) {
+        _anaTab = tab;
+        document.getElementById('gz-ana-tab-local')?.classList.toggle('active', tab === 'local');
+        document.getElementById('gz-ana-tab-global')?.classList.toggle('active', tab === 'global');
+        _gzRenderAnaContent();
+    }
+
+    function _gzLocalAnaBars(limit = 8) {
+        const d = gzAnaLoad();
+        const chars = Object.entries(d).filter(([k]) => !k.startsWith('_')).sort((a,b)=>b[1]-a[1]).slice(0, limit);
+        const maxV = chars[0]?.[1] || 1;
+        return chars.map(([id, cnt]) => {
+            const c = GZ_CHARS.find(x => x.id === id);
+            if (!c) return '';
+            const pct = Math.round(cnt / maxV * 100);
+            return `<div class="gz-ana-row"><span class="gz-ana-ico">${c.ico}</span><span class="gz-ana-name">${c.name}</span><div class="gz-ana-bar-wrap"><div class="gz-ana-bar" style="width:${pct}%"></div></div><span class="gz-ana-cnt">${cnt}</span></div>`;
+        }).join('');
+    }
+
+    async function _gzRenderAnaContent() {
         const el = document.getElementById('gz-analytics-panel');
         if (!el) return;
         const d = gzAnaLoad();
+        if (_anaTab === 'local') {
+            const battles = d['_battles'] || 0, debates = d['_debates'] || 0;
+            const bars = _gzLocalAnaBars();
+            el.innerHTML = `<div class="gz-ana-summary"><span>⚔️ معارك: <b>${battles}</b></span><span>💬 نقاشات: <b>${debates}</b></span></div>${bars || '<div style="color:var(--gz-muted);font-size:0.72rem;text-align:center;padding:10px">لا توجد بيانات بعد — ابدأ معارك!</div>'}`;
+        } else {
+            el.innerHTML = `<div style="text-align:center;padding:20px;color:var(--gz-muted);font-size:0.75rem">🌍 جارٍ تحميل الإحصائيات...</div>`;
+            if (!window.gzDB) { el.innerHTML = `<div style="text-align:center;padding:20px;color:var(--gz-muted);font-size:0.75rem">Firebase غير متاح</div>`; return; }
+            try {
+                const [statsSnap, picksSnap] = await Promise.all([
+                    window.gzDB.collection('gz_global_stats').doc('main').get(),
+                    window.gzDB.collection('gz_char_picks').orderBy('picks','desc').limit(10).get()
+                ]);
+                const stats = statsSnap.exists ? statsSnap.data() : {};
+                const battles = stats.battles || 0, debates = stats.debates || 0;
+                const picks = picksSnap.docs.map(d => d.data());
+                const maxV = picks[0]?.picks || 1;
+                const bars = picks.map(p => {
+                    const c = GZ_CHARS.find(x => x.id === p.charId);
+                    if (!c) return '';
+                    const pct = Math.round(p.picks / maxV * 100);
+                    return `<div class="gz-ana-row"><span class="gz-ana-ico">${c.ico}</span><span class="gz-ana-name">${c.name}</span><div class="gz-ana-bar-wrap"><div class="gz-ana-bar" style="width:${pct}%;background:linear-gradient(90deg,#a855f7,#ffd700)"></div></div><span class="gz-ana-cnt">${p.picks}</span></div>`;
+                }).join('');
+                el.innerHTML = `<div class="gz-ana-summary"><span>⚔️ معارك: <b>${battles.toLocaleString()}</b></span><span>💬 نقاشات: <b>${debates.toLocaleString()}</b></span></div>${bars || '<div style="color:var(--gz-muted);font-size:0.72rem;text-align:center;padding:10px">لا توجد بيانات عالمية بعد</div>'}`;
+            } catch { el.innerHTML = `<div style="text-align:center;padding:20px;color:var(--gz-red);font-size:0.75rem">خطأ في التحميل</div>`; }
+        }
+    }
+
+    function gzRenderAnalytics() { _gzRenderAnaContent(); }
+
+    // ── PROFILE ──────────────────────────────────────────────────────────────
+    function gzRenderProfile() {
+        const el = document.getElementById('gz-profile-content');
+        if (!el) return;
+        const d = gzAnaLoad();
         const battles = d['_battles'] || 0, debates = d['_debates'] || 0;
-        const chars = Object.entries(d).filter(([k]) => !k.startsWith('_')).sort((a,b)=>b[1]-a[1]).slice(0,8);
-        const maxV = chars[0]?.[1] || 1;
-        const bars = chars.map(([id, cnt]) => {
+        const chars = Object.entries(d).filter(([k]) => !k.startsWith('_')).sort((a,b)=>b[1]-a[1]);
+        const spirit = chars[0] ? GZ_CHARS.find(x => x.id === chars[0][0]) : null;
+        const topBars = chars.slice(0,5).map(([id, cnt]) => {
             const c = GZ_CHARS.find(x => x.id === id);
-            if (!c) return '';
-            const pct = Math.round(cnt/maxV*100);
-            return `<div class="gz-ana-row"><span class="gz-ana-ico">${c.ico}</span><span class="gz-ana-name">${c.name}</span><div class="gz-ana-bar-wrap"><div class="gz-ana-bar" style="width:${pct}%"></div></div><span class="gz-ana-cnt">${cnt}</span></div>`;
+            return c ? `<div class="gz-ana-row"><span class="gz-ana-ico">${c.ico}</span><span class="gz-ana-name">${c.name}</span><span class="gz-ana-cnt">${cnt}</span></div>` : '';
         }).join('');
-        el.innerHTML = `<div class="gz-ana-summary"><span>⚔️ معارك: <b>${battles}</b></span><span>💬 نقاشات: <b>${debates}</b></span></div>${bars || '<div style="color:var(--gz-muted);font-size:0.72rem;text-align:center;padding:10px">لا توجد بيانات بعد</div>'}`;
+        el.innerHTML = `
+        <div class="gz-profile-stats">
+            <div class="gz-profile-stat"><div class="gz-profile-stat-v" style="color:#ffd700">${battles}</div><div class="gz-profile-stat-l">⚔️ معارك</div></div>
+            <div class="gz-profile-stat"><div class="gz-profile-stat-v" style="color:#a855f7">${debates}</div><div class="gz-profile-stat-l">💬 نقاشات</div></div>
+            <div class="gz-profile-stat"><div class="gz-profile-stat-v" style="color:#00e676">${chars.length}</div><div class="gz-profile-stat-l">🧑 شخصيات</div></div>
+        </div>
+        ${spirit ? `<div class="gz-profile-spirit">
+            <div style="font-size:0.6rem;color:var(--gz-muted);letter-spacing:2px;margin-bottom:6px">🔥 شخصيتك المفضّلة</div>
+            <div style="font-size:2.4rem">${spirit.ico}</div>
+            <div style="font-family:'Orbitron',sans-serif;font-size:0.8rem;color:#ffd700;margin-top:6px;font-weight:700">${spirit.name}</div>
+            <div style="font-size:0.65rem;color:var(--gz-muted);margin-top:2px">اخترتها ${chars[0][1]} مرة</div>
+        </div>` : ''}
+        ${topBars ? `<div style="font-size:0.6rem;color:var(--gz-muted);letter-spacing:2px;margin:10px 0 6px">TOP PICKS</div>${topBars}` : '<div style="text-align:center;color:var(--gz-muted);font-size:0.8rem;padding:20px">ابدأ معارك لبناء ملفك! ⚔️</div>'}
+        <button onclick="gzAnaSave({});gzRenderProfile()" style="margin-top:14px;width:100%;padding:8px;background:rgba(255,34,68,0.08);border:1px solid rgba(255,34,68,0.25);color:var(--gz-red);border-radius:8px;font-family:inherit;font-size:0.72rem;cursor:pointer;">🗑 إعادة ضبط الإحصائيات</button>`;
     }
 
     function gzUpdSlots() {
@@ -1407,13 +1482,13 @@ ${GZ_CHAR_BRIEF}`;
         const chatZone = document.getElementById('gz-chatZone');
         if (chatZone) chatZone.style.display = mode === 'chat' ? '' : 'none';
 
-        ['battle','debates','tier','generate','settings','history','tourney','analytics','scale','leaderboard'].forEach(m => {
+        ['battle','debates','tier','generate','settings','history','tourney','analytics','scale','leaderboard','profile'].forEach(m => {
             const p = document.getElementById('gz-panel-' + m);
-            if (p) p.classList.remove('active');
+            if (p) { p.classList.remove('active'); p.style.display = 'none'; }
         });
         if (mode !== 'chat') {
             const panel = document.getElementById('gz-panel-' + mode);
-            if (panel) panel.classList.add('active');
+            if (panel) { panel.classList.add('active'); panel.style.display = 'flex'; }
         }
         if (mode === 'history') { gzHistRender(); }
         if (mode === 'tourney') { gzRenderTourney(); }
@@ -1425,6 +1500,7 @@ ${GZ_CHAR_BRIEF}`;
         if (mode === 'analytics') { gzRenderAnalytics(); }
         if (mode === 'scale') { gzBuildScale(); }
         if (mode === 'leaderboard') { gzRenderLeaderboard(); }
+        if (mode === 'profile') { gzRenderProfile(); }
     }
 
     // ── Built-in Free Keys ──────────────────────────────────────────────────
