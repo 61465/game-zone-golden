@@ -1402,7 +1402,11 @@ ${GZ_CHAR_BRIEF}`;
 
     function gzSwitchMode(mode) {
         document.querySelectorAll('.ai-mode-tab').forEach(t => t.classList.remove('active'));
-        document.getElementById('gz-tab-' + mode).classList.add('active');
+        document.getElementById('gz-tab-' + mode)?.classList.add('active');
+
+        const chatZone = document.getElementById('gz-chatZone');
+        if (chatZone) chatZone.style.display = mode === 'chat' ? '' : 'none';
+
         ['battle','debates','tier','generate','settings','history','tourney','analytics','scale','leaderboard'].forEach(m => {
             const p = document.getElementById('gz-panel-' + m);
             if (p) p.classList.remove('active');
@@ -2037,7 +2041,7 @@ Rules: p (power) is 50-100 based on actual strength. isPeak=true only for univer
             m.done = true;
         }
         gzIsBusy = false;
-        gzSwitchMode('battle');
+        gzSwitchMode('tourney');
         gzRenderTourney();
     }
 
