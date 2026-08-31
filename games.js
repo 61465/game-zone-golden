@@ -1358,6 +1358,46 @@ const MYST_QUESTIONS = [
   { q: 'هل هو شخصية أنثى؟',                prop: h => !!(h.ar && ['مالينيا','إيلوي','إيلي','بايونيتا','كيتانا','بياتريكس','لارا','ساموس','إيلين'].includes(h.ar.name)) },
 ];
 
+
+// Build progressive hints revealed as Q&A answers come in
+function gzBuildHints(m, lang) {
+  const h = m.hero;
+  const revealed = [];
+  m.answers.forEach(a => {
+    if (a.q.includes('عالم الأ')) revealed.push(a.ans ? { label: '🎮 من عالم الألعاب', color: '#a855f7' } : { label: '🎬 ليس من الألعاب', color: '#64748b' });
+    if (a.q.includes('الأنمي')) revealed.push(a.ans ? { label: '🌸 من عالم الأنمي', color: '#ec4899' } : { label: '🌍 ليس أنمي', color: '#64748b' });
+    if (a.q.includes('الأفلام')) revealed.push(a.ans ? { label: '🎬 من الأفلام/مسلسلات', color: '#38bdf8' } : { label: '📖 ليس من الأفلام', color: '#64748b' });
+    if (a.q.includes('85')) revealed.push(a.ans ? { label: '💪 قوة > 85', color: '#f59e0b' } : { label: '⚡ قوة ≤ 85', color: '#64748b' });
+    if (a.q.includes('90')) revealed.push(a.ans ? { label: '🔥 قوة > 90', color: '#ef4444' } : { label: '⚡ قوة ≤ 90', color: '#64748b' });
+    if (a.q.includes('PEAK')) revealed.push(a.ans ? { label: '🌟 شكل PEAK نهائي', color: '#ffd700' } : { label: '🔰 ليس PEAK', color: '#64748b' });
+    if (a.q.includes('يبدأ بحرف G')) revealed.push(a.ans ? { label: '📗 مصدره يبدأ بـ G', color: '#10b981' } : { label: '📛 مصدره لا يبدأ بـ G', color: '#64748b' });
+    if (a.q.includes('يبدأ بـ "ك"')) revealed.push(a.ans ? { label: '🔤 اسمه يبدأ بـ ك', color: '#8b5cf6' } : { label: '🔤 اسمه لا يبدأ بـ ك', color: '#64748b' });
+    if (a.q.includes('سحرية')) revealed.push(a.ans ? { label: '✨ يملك قوة سحرية', color: '#818cf8' } : { label: '⚔️ لا سحر لديه', color: '#64748b' });
+    if (a.q.includes('أنثى')) revealed.push(a.ans ? { label: '👩 شخصية أنثى', color: '#f472b6' } : { label: '👨 ليس أنثى', color: '#64748b' });
+  });
+  // Always show source category hint after 2 answers
+  if (m.answers.length >= 2 && h.source) {
+    const srcWords = h.source.split(' ');
+    const hint = srcWords[0].slice(0, 1) + '*'.repeat(Math.max(0, srcWords[0].length - 1));
+    revealed.push({ label: '📚 يبدأ مصدره بـ: ' + hint, color: '#94a3b8' });
+  }
+  // Show power range after 3 answers
+  if (m.answers.length >= 3) {
+    const pRange = h.p >= 95 ? '95-100' : h.p >= 90 ? '90-94' : h.p >= 85 ? '85-89' : h.p >= 80 ? '80-84' : '70-79';
+    revealed.push({ label: '📊 قوته بين ' + pRange, color: '#fb923c' });
+  }
+  // Show first letter of name after 4 answers
+  if (m.answers.length >= 4 && h.ar && h.ar.name) {
+    revealed.push({ label: '🔠 أول حرف باسمه: ' + h.ar.name[0], color: '#22d3ee' });
+  }
+  // Show ability hint after 5 answers
+  if (m.answers.length >= 5 && h.ar && h.ar.ability) {
+    const abilWords = h.ar.ability.split(' ').slice(0,3).join(' ');
+    revealed.push({ label: '⚡ قدرته: ' + abilWords + '...', color: '#a3e635' });
+  }
+  return revealed;
+}
+
 function gzInitMystery() {
   const hero = window.heroes[Math.floor(Math.random() * window.heroes.length)];
   const shuffledQ = [...MYST_QUESTIONS].sort(() => 0.5 - Math.random()).slice(0, 6);
@@ -1389,14 +1429,34 @@ function gzRenderMystery() {
         <div style="font-size:12px;color:rgba(255,255,255,0.5);">أسئلة متبقية: ${remaining}</div>
       </div>
 
-      <!-- Mystery hero silhouette -->
-      <div style="text-align:center;margin-bottom:18px;">
-        <div style="display:inline-block;width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,#1e293b,#0f172a);border:3px solid rgba(255,215,0,0.3);
-          display:inline-flex;align-items:center;justify-content:center;font-size:50px;filter:blur(0px);box-shadow:0 0 30px rgba(255,215,0,0.15);">
-          ${m.done ? (m.hero.icon || '⚔️') : '❓'}
+      <!-- Mystery hero silhouette + progressive hints -->
+      <div style="text-align:center;margin-bottom:14px;">
+        <div style="display:inline-flex;align-items:center;justify-content:center;width:100px;height:100px;border-radius:50%;
+          background:${m.done ? 'transparent' : 'linear-gradient(135deg,#1e293b,#0f172a)'};
+          border:3px solid ${m.done?'var(--gz-gold)':'rgba(255,215,0,0.3)'};
+          font-size:50px;box-shadow:0 0 30px rgba(255,215,0,0.2);overflow:hidden;">
+          ${m.done
+            ? (gzGetHeroImageUrl && gzGetHeroImageUrl(m.hero)
+                ? `<img src="${gzGetHeroImageUrl(m.hero)}" style="width:100%;height:100%;object-fit:cover;" referrerpolicy="no-referrer" onerror="this.parentElement.innerHTML='${m.hero.icon||'⚔️'}'"`
+                : (m.hero.icon || '⚔️'))
+            : '❓'}
         </div>
-        <div style="font-size:13px;color:rgba(255,255,255,0.4);margin-top:8px;">${m.done ? (m.hero[lang]?m.hero[lang].name:m.hero.name) : 'بطل غامض من بين 700 أسطورة'}</div>
+        <div style="font-size:13px;color:${m.done?'#ffd700':'rgba(255,255,255,0.4)'};margin-top:8px;font-weight:${m.done?900:400};">
+          ${m.done ? (m.hero[lang]?m.hero[lang].name:m.hero.name) : 'بطل غامض من بين 700 أسطورة'}
+        </div>
       </div>
+
+      <!-- REVEALED HINTS -->
+      ${!m.done && m.answers.length > 0 ? `
+        <div style="margin-bottom:12px;">
+          <div style="font-size:11px;color:rgba(255,255,255,0.4);text-align:center;margin-bottom:6px;">💡 ما تعرفه حتى الآن:</div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;">
+            ${gzBuildHints(m, lang).map(h => `
+              <span style="background:${h.color}22;border:1px solid ${h.color}66;color:${h.color};font-size:11px;font-weight:800;padding:4px 10px;border-radius:99px;">${h.label}</span>
+            `).join('')}
+          </div>
+        </div>
+      ` : ''}
 
       <!-- Q&A History -->
       ${m.answers.length ? `
@@ -1484,60 +1544,219 @@ function gzInitAuction() {
   if (window.gzAuctionInterval) { clearInterval(window.gzAuctionInterval); window.gzAuctionInterval = null; }
   if (window.gzAuctionCountdown) { clearInterval(window.gzAuctionCountdown); window.gzAuctionCountdown = null; }
 
-  const pool = [...window.heroes].sort(() => 0.5 - Math.random()).slice(0, 20);
+  const shuffled = [...window.heroes].sort(() => 0.5 - Math.random());
+  const pool = shuffled.slice(0, 25);
+
   auctState = {
     pool,
     budget: 150,
+    aiBudget: 150,       // AI opponent has same budget
     team: [],
+    aiTeam: [],          // AI's team
     currentIdx: 0,
     currentBid: 0,
     minBid: 5,
     maxTeam: 5,
-    bidTimer: 0,
-    phase: 'bid' // bid → done
+    aiMaxTeam: 5,
+    phase: 'bid',        // bid → battle → done
+    battleLog: [],
+    bidLog: []
   };
   gzNextAuction();
 }
 
+function gzAiDecidesBid(st, baseVal, heroP) {
+  // AI bidding logic: more aggressive for stronger heroes
+  const desire = heroP >= 90 ? 0.85 : heroP >= 80 ? 0.65 : heroP >= 75 ? 0.45 : 0.3;
+  const willBid = Math.random() < desire && st.aiBudget >= st.currentBid + 5;
+  if (!willBid) return false;
+  // AI bids 1-3 increments above current
+  const inc = Math.floor(Math.random() * 3 + 1) * 5;
+  const newBid = st.currentBid + inc;
+  if (newBid > st.aiBudget || newBid > st.aiBudget * 0.4) return false; // AI doesn't over-commit
+  return newBid;
+}
+
 function gzNextAuction() {
   const st = auctState;
-  if (st.team.length >= st.maxTeam || st.currentIdx >= st.pool.length) {
-    st.phase = 'done';
-    gzRenderAuction();
+  // Check if both teams full or pool exhausted
+  if ((st.team.length >= st.maxTeam && st.aiTeam.length >= st.aiMaxTeam) || st.currentIdx >= st.pool.length) {
+    // If player team not full but pool is done — go to battle anyway
+    st.phase = 'battle';
+    gzAuctionStartBattle();
     return;
   }
+  // If player is done but AI not — AI keeps buying silently
+  if (st.team.length >= st.maxTeam) {
+    while (st.aiTeam.length < st.aiMaxTeam && st.currentIdx < st.pool.length) {
+      const h = st.pool[st.currentIdx++];
+      const val = Math.round(h.p / 10) * 5;
+      if (st.aiBudget >= val) { st.aiBudget -= val; st.aiTeam.push({ hero: h, price: val }); }
+    }
+    st.phase = 'battle';
+    gzAuctionStartBattle();
+    return;
+  }
+
   st.currentHero = st.pool[st.currentIdx];
   const baseVal = Math.round(st.currentHero.p / 10) * 5;
   st.currentBid = baseVal;
   st.minBid = baseVal;
+  st.aiLastBid = false;
+
+  // Schedule AI first bid after 1.5s if player hasn't raised
+  clearTimeout(window._gzAIBidTimer);
+  window._gzAIBidTimer = setTimeout(() => gzAiCounterBid(), 1500);
+
   gzRenderAuction();
+}
+
+function gzAiCounterBid() {
+  const st = auctState;
+  if (st.phase !== 'bid' || !st.currentHero) return;
+  const aiBid = gzAiDecidesBid(st, st.minBid, st.currentHero.p);
+  if (aiBid) {
+    st.currentBid = aiBid;
+    st.aiLastBid = true;
+    st.bidLog.unshift(`🤖 الخصم زاد العرض إلى ${aiBid}M!`);
+    gzToast(`🤖 الخصم زايد! العرض الآن ${aiBid}M`, 'warn', 2000);
+    gzRenderAuction();
+    // AI may bid again if player doesn't react
+    clearTimeout(window._gzAIBidTimer2);
+    window._gzAIBidTimer2 = setTimeout(() => gzAiCounterBid(), 2500);
+  }
 }
 
 function gzAuctionBid(amount) {
   const st = auctState;
+  clearTimeout(window._gzAIBidTimer);
+  clearTimeout(window._gzAIBidTimer2);
   const newBid = st.currentBid + amount;
   if (newBid > st.budget) { gzToast('⚠️ ميزانيتك لا تسمح بهذا العرض!', 'warn'); return; }
   st.currentBid = newBid;
+  st.aiLastBid = false;
+  st.bidLog.unshift(`👤 رفعت العرض إلى ${newBid}M`);
   gzRenderAuction();
-  gzToast(`💰 رفعت العرض إلى ${newBid}M!`, 'info');
+  gzToast(`💰 عرضك: ${newBid}M — الخصم يفكر...`, 'info', 1800);
+  // AI counter-bid after 1.8s
+  window._gzAIBidTimer = setTimeout(() => gzAiCounterBid(), 1800);
 }
 
 function gzAuctionBuy() {
   const st = auctState;
+  clearTimeout(window._gzAIBidTimer);
+  clearTimeout(window._gzAIBidTimer2);
   if (st.currentBid > st.budget) { gzToast('⚠️ ليس لديك ميزانية كافية!', 'warn'); return; }
+
+  // If AI was last bidder, player outbids → player wins but AI might still contest
+  const heroName = st.currentHero.ar ? st.currentHero.ar.name : st.currentHero.name;
+
+  // Final AI counter? Only if AI was NOT last bidder (player just raised)
+  if (!st.aiLastBid) {
+    // One final AI attempt
+    const finalAI = gzAiDecidesBid(st, st.minBid, st.currentHero.p);
+    if (finalAI && finalAI > st.currentBid) {
+      st.currentBid = finalAI;
+      st.aiLastBid = true;
+      st.bidLog.unshift(`🤖 الخصم دخل بعرض أخير: ${finalAI}M!`);
+      gzToast(`🤖 الخصم يزايد بشكل أخير! ${finalAI}M — هل ترد؟`, 'warn', 2500);
+      gzRenderAuction();
+      return; // Player must click buy again
+    }
+  }
+
   st.budget -= st.currentBid;
   st.team.push({ hero: st.currentHero, price: st.currentBid });
   st.currentIdx++;
-  gzToast(`🏆 اقتنيت [${st.currentHero.ar?st.currentHero.ar.name:st.currentHero.name}] بـ ${st.currentBid}M!`, 'gold');
-  if (st.team.length >= st.maxTeam) { st.phase = 'done'; gzRenderAuction(); return; }
-  setTimeout(gzNextAuction, 500);
+  st.bidLog.unshift(`🏆 اقتنيت [${heroName}] بـ ${st.currentBid}M!`);
+  gzToast(`🏆 فزت بـ [${heroName}] بـ ${st.currentBid}M!`, 'gold');
+
+  // AI buys next hero with its remaining budget (background)
+  if (st.aiTeam.length < st.aiMaxTeam && st.currentIdx < st.pool.length) {
+    const nextH = st.pool[st.currentIdx];
+    const aiVal = Math.round(nextH.p / 10) * 5;
+    if (st.aiBudget >= aiVal) {
+      st.aiBudget -= aiVal;
+      st.aiTeam.push({ hero: nextH, price: aiVal });
+      st.currentIdx++;
+      st.bidLog.unshift(`🤖 الخصم اشترى [${nextH.ar?nextH.ar.name:nextH.name}] بـ ${aiVal}M`);
+    }
+  }
+
+  if (st.team.length >= st.maxTeam) {
+    // Fill AI team
+    while (st.aiTeam.length < st.aiMaxTeam && st.currentIdx < st.pool.length) {
+      const h = st.pool[st.currentIdx++];
+      const val = Math.round(h.p / 10) * 5;
+      if (st.aiBudget >= val) { st.aiBudget -= val; st.aiTeam.push({ hero: h, price: val }); }
+    }
+    setTimeout(() => { st.phase = 'battle'; gzAuctionStartBattle(); }, 800);
+    return;
+  }
+  setTimeout(gzNextAuction, 600);
 }
 
 function gzAuctionSkip() {
-  auctState.currentIdx++;
-  gzToast('⏭️ تخطيت هذا البطل', 'info');
+  clearTimeout(window._gzAIBidTimer);
+  clearTimeout(window._gzAIBidTimer2);
+  const st = auctState;
+  const hero = st.currentHero;
+
+  // If AI was last bidder, AI wins this hero automatically
+  if (st.aiLastBid && hero && st.aiBudget >= st.currentBid) {
+    st.aiBudget -= st.currentBid;
+    st.aiTeam.push({ hero, price: st.currentBid });
+    const hn = hero.ar ? hero.ar.name : hero.name;
+    st.bidLog.unshift(`🤖 الخصم اشترى [${hn}] بعد انسحابك!`);
+    gzToast(`🤖 الخصم أخذ [${hn}]!`, 'warn', 2000);
+  } else {
+    gzToast('⏭️ تخطيت هذا البطل — انتقل للتالي', 'info');
+  }
+
+  st.currentIdx++;
   gzNextAuction();
 }
+
+// ─── Team Battle after Auction ───
+function gzAuctionStartBattle() {
+  const st = auctState;
+  if (!st.aiTeam.length) {
+    // Fill AI team from remaining pool if somehow empty
+    const remaining = st.pool.slice(st.currentIdx, st.currentIdx + 5);
+    remaining.forEach(h => st.aiTeam.push({ hero: h, price: 10 }));
+  }
+
+  const lang = typeof currentLang !== 'undefined' ? currentLang : 'ar';
+  st.battleLog = [];
+  st.battleRound = 0;
+
+  // Run 5 rounds of battles: player card vs AI card
+  const rounds = Math.min(st.team.length, st.aiTeam.length, 5);
+  let playerWins = 0, aiWins = 0;
+
+  for (let i = 0; i < rounds; i++) {
+    const pm = st.team[i]; const am = st.aiTeam[i];
+    const pp = pm.hero.p; const ap = am.hero.p;
+    const playerRoll = pp + Math.floor(Math.random() * 20);
+    const aiRoll = ap + Math.floor(Math.random() * 20);
+    const pName = pm.hero[lang] ? pm.hero[lang].name : pm.hero.name;
+    const aName = am.hero[lang] ? am.hero[lang].name : am.hero.name;
+
+    if (playerRoll >= aiRoll) {
+      playerWins++;
+      st.battleLog.push({ winner: 'player', pName, aName, pRoll: playerRoll, aRoll: aiRoll, pp, ap });
+    } else {
+      aiWins++;
+      st.battleLog.push({ winner: 'ai', pName, aName, pRoll: playerRoll, aRoll: aiRoll, pp, ap });
+    }
+  }
+
+  st.playerBattleWins = playerWins;
+  st.aiBattleWins = aiWins;
+  st.matchWinner = playerWins > aiWins ? 'player' : playerWins < aiWins ? 'ai' : 'draw';
+  gzRenderAuction();
+}
+
 
 function gzRenderAuction() {
   const c = document.getElementById('gz-game-view');
@@ -1545,25 +1764,47 @@ function gzRenderAuction() {
   const st = auctState;
   const lang = typeof currentLang !== 'undefined' ? currentLang : 'ar';
 
-  if (st.phase === 'done') {
-    // Final team display
-    const totalPower = st.team.reduce((a, m) => a + m.hero.p, 0);
-    const avgPower = st.team.length ? Math.round(totalPower / st.team.length) : 0;
+  if (st.phase === 'battle' || st.phase === 'done') {
+    const lang2 = typeof currentLang !== 'undefined' ? currentLang : 'ar';
+    const won = st.matchWinner === 'player';
+    const draw = st.matchWinner === 'draw';
+    const pAvg = st.team.length ? Math.round(st.team.reduce((a,m)=>a+m.hero.p,0)/st.team.length) : 0;
+    const aAvg = st.aiTeam.length ? Math.round(st.aiTeam.reduce((a,m)=>a+m.hero.p,0)/st.aiTeam.length) : 0;
     c.innerHTML = `
-      <div style="max-width:800px;margin:0 auto;font-family:'Cairo',sans-serif;text-align:center;">
-        <div style="margin-bottom:20px;">
-          <h2 style="color:var(--gz-gold);font-size:24px;font-weight:900;margin-bottom:8px;">🏆 فريقك الأسطوري مكتمل!</h2>
-          <p style="color:rgba(255,255,255,0.6);">ميزانية متبقية: <strong style="color:#4ade80;">${st.budget}M</strong> | متوسط القوة: <strong style="color:#ffd700;">${avgPower}</strong></p>
+      <div style="max-width:900px;margin:0 auto;font-family:'Cairo',sans-serif;">
+        <div style="text-align:center;margin-bottom:20px;">
+          <div style="font-size:52px;margin-bottom:8px;">${won?'🏆':draw?'⚖️':'💀'}</div>
+          <h2 style="font-family:'Cinzel',serif;color:${won?'#ffd700':draw?'#f59e0b':'#f87171'};font-size:26px;font-weight:900;margin-bottom:6px;">
+            ${won?'انتصار أسطوري على فريق الـ AI!':draw?'تعادل حماسي!':'هزيمة — فريق الـ AI كان أكثر توازناً'}
+          </h2>
+          <p style="color:rgba(255,255,255,0.6);">فوز فريقك: <strong style="color:#4ade80;">${st.playerBattleWins||0}</strong> جولات | فوز الخصم: <strong style="color:#f87171;">${st.aiBattleWins||0}</strong> جولات</p>
         </div>
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:20px;">
-          ${st.team.map(m => `
-            <div style="background:linear-gradient(135deg,rgba(255,215,0,0.08),rgba(10,15,25,0.95));border:2px solid rgba(255,215,0,0.35);border-radius:16px;padding:16px;text-align:center;">
-              ${gzRenderHeroAvatar(m.hero, 56, true)}
-              <div style="font-size:11px;color:var(--gz-gold);font-weight:800;margin-top:6px;">${m.price}M</div>
-              <div style="font-size:10px;color:rgba(255,255,255,0.5);">قوة: ${m.hero.p}</div>
-            </div>
-          `).join('')}
+
+        <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:start;margin-bottom:18px;">
+          <div style="background:rgba(16,185,129,0.08);border:2px solid rgba(16,185,129,0.35);border-radius:16px;padding:14px;">
+            <div style="text-align:center;font-size:13px;font-weight:900;color:#4ade80;margin-bottom:10px;">👑 فريقك (معدل القوة: ${pAvg})</div>
+            ${st.team.map((m,i) => {
+              const r = st.battleLog && st.battleLog[i];
+              const didWin = r && r.winner === 'player';
+              return `<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;padding:8px;border-radius:10px;background:${r?(didWin?'rgba(16,185,129,0.15)':'rgba(239,68,68,0.1)'):'rgba(255,255,255,0.04)'};"><span style="flex-shrink:0;">${gzRenderHeroAvatar(m.hero, 36)}</span><div style="flex:1;"><div style="font-size:11px;font-weight:900;color:#fff;">${m.hero[lang2]?m.hero[lang2].name:m.hero.name}</div><div style="font-size:10px;color:rgba(255,255,255,0.4);">قوة ${m.hero.p} | ${m.price}M</div>${r ? `<div style="font-size:10px;color:${didWin?'#4ade80':'#f87171'};font-weight:800;">${didWin?'✅ فاز النزال':'❌ خسر النزال'} (${r.pRoll} vs ${r.aRoll})</div>` : ''}</div></div>`;
+            }).join('')}
+          </div>
+
+          <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding-top:36px;">
+            <div style="font-family:'Cinzel',serif;font-size:24px;font-weight:900;color:var(--gz-gold);">VS</div>
+            ${(st.battleLog||[]).map(r => `<div style="font-size:16px;">${r.winner==='player'?'👑':'🤖'}</div>`).join('')}
+          </div>
+
+          <div style="background:rgba(239,68,68,0.08);border:2px solid rgba(239,68,68,0.35);border-radius:16px;padding:14px;">
+            <div style="text-align:center;font-size:13px;font-weight:900;color:#f87171;margin-bottom:10px;">🤖 فريق الـ AI (معدل القوة: ${aAvg})</div>
+            ${(st.aiTeam||[]).map((m,i) => {
+              const r = st.battleLog && st.battleLog[i];
+              const aiWon = r && r.winner === 'ai';
+              return `<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;padding:8px;border-radius:10px;background:${r?(aiWon?'rgba(16,185,129,0.15)':'rgba(239,68,68,0.1)'):'rgba(255,255,255,0.04)'};"><span style="flex-shrink:0;">${gzRenderHeroAvatar(m.hero, 36)}</span><div style="flex:1;"><div style="font-size:11px;font-weight:900;color:#fff;">${m.hero[lang2]?m.hero[lang2].name:m.hero.name}</div><div style="font-size:10px;color:rgba(255,255,255,0.4);">قوة ${m.hero.p}</div>${r ? `<div style="font-size:10px;color:${aiWon?'#4ade80':'#f87171'};font-weight:800;">${aiWon?'✅ فاز النزال':'❌ خسر النزال'}</div>` : ''}</div></div>`;
+            }).join('')}
+          </div>
         </div>
+
         <div style="display:flex;gap:12px;justify-content:center;">
           <button onclick="gzInitAuction()" style="background:linear-gradient(135deg,#ffd700,#ff6b00);color:#000;border:none;padding:12px 28px;border-radius:12px;font-weight:900;cursor:pointer;font-family:'Cairo',sans-serif;">مزاد جديد 👑</button>
           <button onclick="gzRenderLobby()" style="background:rgba(255,255,255,0.1);color:#fff;border:none;padding:12px 20px;border-radius:12px;font-weight:700;cursor:pointer;font-family:'Cairo',sans-serif;">رجوع</button>
@@ -1623,18 +1864,40 @@ function gzRenderAuction() {
         </div>
       </div>
 
-      <!-- TEAM PREVIEW -->
-      ${st.team.length ? `
-        <div style="display:flex;gap:8px;flex-wrap:wrap;">
-          ${st.team.map(m => `
-            <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,215,0,0.2);border-radius:10px;padding:8px;display:flex;align-items:center;gap:8px;">
-              ${gzRenderHeroAvatar(m.hero, 32)}
-              <div>
-                <div style="font-size:11px;font-weight:700;color:#fff;">${m.hero[lang]?m.hero[lang].name:m.hero.name}</div>
-                <div style="font-size:10px;color:var(--gz-gold);">${m.price}M</div>
-              </div>
+      <!-- TEAMS PREVIEW (player + AI) -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px;">
+        ${st.team.length ? `
+          <div>
+            <div style="font-size:11px;color:#4ade80;font-weight:800;margin-bottom:5px;">👑 فريقك (${st.team.length}/${st.maxTeam})</div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px;">
+              ${st.team.map(m => `
+                <div style="background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.3);border-radius:8px;padding:5px 8px;display:flex;align-items:center;gap:6px;">
+                  ${gzRenderHeroAvatar(m.hero, 28)}
+                  <div style="font-size:10px;font-weight:700;color:#fff;">${(m.hero[lang]?m.hero[lang].name:m.hero.name).slice(0,10)}</div>
+                </div>
+              `).join('')}
             </div>
-          `).join('')}
+          </div>
+        ` : '<div></div>'}
+        ${st.aiTeam.length ? `
+          <div>
+            <div style="font-size:11px;color:#f87171;font-weight:800;margin-bottom:5px;">🤖 فريق الخصم (${st.aiTeam.length}/${st.aiMaxTeam})</div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px;">
+              ${st.aiTeam.map(m => `
+                <div style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.3);border-radius:8px;padding:5px 8px;display:flex;align-items:center;gap:6px;">
+                  ${gzRenderHeroAvatar(m.hero, 28)}
+                  <div style="font-size:10px;font-weight:700;color:#fff;">${(m.hero[lang]?m.hero[lang].name:m.hero.name).slice(0,10)}</div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        ` : '<div style="font-size:11px;color:rgba(255,255,255,0.3);">🤖 الخصم يجمع فريقه...</div>'}
+      </div>
+
+      <!-- BID LOG -->
+      ${st.bidLog && st.bidLog.length ? `
+        <div style="margin-top:10px;background:rgba(0,0,0,0.3);border-radius:8px;padding:8px;border:1px solid rgba(255,255,255,0.07);">
+          ${st.bidLog.slice(0,3).map((l,i) => `<div style="font-size:11px;color:${i===0?'#fef08a':'rgba(255,255,255,0.4)'};padding:2px 0;">${l}</div>`).join('')}
         </div>
       ` : ''}
     </div>`;
@@ -1669,6 +1932,7 @@ window.gzMystGuess    = gzMystGuess;
 window.gzInitMystery  = gzInitMystery;
 
 // Auction exposures
+window.gzAuctionStartBattle = gzAuctionStartBattle;
 window.gzAuctionBid   = gzAuctionBid;
 window.gzAuctionBuy   = gzAuctionBuy;
 window.gzAuctionSkip  = gzAuctionSkip;
