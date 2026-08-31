@@ -806,7 +806,9 @@
                 <span class="card-badge">${h.type.toUpperCase()}</span>
                 <div class="selected-indicator">${selNum}</div>
                 <button class="fav-btn${isFav?' fav-on':''}" title="${isFav?'إزالة من المفضلة':'إضافة للمفضلة'}">♥</button>
-                <div class="card-icon">${h.icon}</div>
+                <div class="card-icon" style="position:relative;overflow:hidden;">
+                  ${(()=>{ const _u = window.gzGetHeroImageUrl ? window.gzGetHeroImageUrl(h) : ''; return _u ? `<img src="${_u}" alt="${h[currentLang].name}" style="width:100%;height:100%;object-fit:cover;display:block;" referrerpolicy="no-referrer" onerror="this.style.display='none';this.insertAdjacentHTML('afterend','<span style=font-size:2rem>${h.icon}</span>')" />` : `<span style="font-size:2.2rem;">${h.icon}</span>`; })()}
+                </div>
                 <div class="card-name">${h[currentLang].name}</div>
                 <div class="card-source">${h.source}</div>
                 <div class="card-pbar"><div class="card-pfill" style="width:${powerPct}%"></div></div>
@@ -900,9 +902,11 @@
             document.getElementById('winner-title').innerText = winner[currentLang].name + (currentLang === 'ar' ? " ينتصر!" : " WINS!");
             const badge = document.getElementById('intensity-badge');
             badge.className = `intensity-badge ${intClass}`; badge.innerText = intText;
-            document.getElementById('fi-1').innerHTML = h1.icon; document.getElementById('fn-1').innerText = h1[currentLang].name;
+            const _fi1 = document.getElementById('fi-1'); if(_fi1){ const _u1 = window.gzGetHeroImageUrl ? window.gzGetHeroImageUrl(h1) : ''; _fi1.innerHTML = _u1 ? `<img src="${_u1}" style="width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit;" referrerpolicy="no-referrer" onerror="this.parentElement.innerHTML='${h1.icon}'" />` : h1.icon; }
+document.getElementById('fn-1').innerText = h1[currentLang].name;
             document.getElementById('fa-1').innerText = h1[currentLang].ability; document.getElementById('fs-1').innerText = h1.p;
-            document.getElementById('fi-2').innerHTML = h2.icon; document.getElementById('fn-2').innerText = h2[currentLang].name;
+            const _fi2 = document.getElementById('fi-2'); if(_fi2){ const _u2 = window.gzGetHeroImageUrl ? window.gzGetHeroImageUrl(h2) : ''; _fi2.innerHTML = _u2 ? `<img src="${_u2}" style="width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit;" referrerpolicy="no-referrer" onerror="this.parentElement.innerHTML='${h2.icon}'" />` : h2.icon; }
+document.getElementById('fn-2').innerText = h2[currentLang].name;
             document.getElementById('fa-2').innerText = h2[currentLang].ability; document.getElementById('fs-2').innerText = h2.p;
             document.getElementById('fc-1').className = 'fighter-card ' + (winner === h1 ? 'winner' : 'loser');
             document.getElementById('fc-2').className = 'fighter-card ' + (winner === h2 ? 'winner' : 'loser');

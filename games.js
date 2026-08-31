@@ -1682,3 +1682,7 @@ window.gzShareRoomLink = gzShareRoomLink;
 window.gzJoinFriendRoom = gzJoinFriendRoom;
 window.gzLaunchActiveGame = gzLaunchActiveGame;
 window.gzInitGwent    = gzInitGwent;
+
+// Export portrait helper for use across all pages (arena, lore, games)
+window.gzGetHeroImageUrl = gzGetHeroImageUrl;
+window.gzRenderHeroAvatar = gzRenderHeroAvatar;
