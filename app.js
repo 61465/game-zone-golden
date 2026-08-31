@@ -1768,6 +1768,11 @@ ${GZ_CHAR_BRIEF}`;
     }
     window.gzCallAI = gzCallAI;
 
+    // Export heroes array globally so games.js can use it
+    window.heroes = heroes;
+    window.currentLang = currentLang;
+
+
     async function gzCallGemini(messages, system, maxTokens, apiKey, onChunk) {
         const contents = messages.map(m => ({
             role: m.role === 'assistant' ? 'model' : 'user',

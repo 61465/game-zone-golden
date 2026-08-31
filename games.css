@@ -1,529 +1,136 @@
-/* ══════════════════════════════════════════════════════════
-   GAME ZONE: GOLDEN ARENA — INTERACTIVE GAMES STYLESHEET
-   Cyberpunk Gold, Game Lobby, Room Codes & Real Portraits UI
-   ══════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════════
+   GAME ZONE: GOLDEN ARENA — COMPLETE PROFESSIONAL STYLESHEET
+   Authentic Witcher 3 Gwent Board + All 5 Games
+   ═══════════════════════════════════════════════════════════════ */
 
 :root {
   --gz-gold: #ffd700;
-  --gz-gold-dim: #c5a059;
+  --gz-gold-glow: rgba(255,215,0,0.4);
   --gz-orange: #ff6b00;
-  --gz-dark-bg: #090a0f;
-  --gz-card-bg: rgba(18, 20, 29, 0.85);
-  --gz-border: rgba(255, 215, 0, 0.2);
-  --gz-border-glow: rgba(255, 215, 0, 0.5);
   --gz-emerald: #10b981;
-  --gz-purple: #a855f7;
   --gz-blue: #38bdf8;
+  --gz-purple: #a855f7;
   --gz-red: #ef4444;
+  --gz-dark: #090a0f;
+  --gz-card-bg: rgba(18,20,29,0.92);
+  --gz-board-bg: #0e1220;
+  --gz-melee-color: #ef4444;
+  --gz-ranged-color: #10b981;
+  --gz-siege-color: #a855f7;
 }
 
+/* ── Base ── */
 #games-page {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 24px 16px 100px;
-  animation: gzFadeIn 0.3s ease-out;
+  padding: 20px 14px 100px;
   box-sizing: border-box;
+  font-family: 'Cairo', sans-serif;
 }
 
 @keyframes gzFadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
-
 @keyframes gzToastSlide {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+@keyframes gzPulseGold {
+  0%,100% { box-shadow: 0 0 8px rgba(255,215,0,0.3); }
+  50%     { box-shadow: 0 0 22px rgba(255,215,0,0.8); }
+}
+@keyframes gzGemWin {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.4); }
+  100% { transform: scale(1); }
+}
+@keyframes gzCardPlay {
+  0%   { transform: translateY(-20px) scale(0.85); opacity: 0; }
+  60%  { transform: translateY(4px) scale(1.04); }
+  100% { transform: translateY(0) scale(1); opacity: 1; }
+}
+@keyframes gzWeatherFlash {
+  0%,100% { background: rgba(56,189,248,0.04); }
+  50%     { background: rgba(56,189,248,0.12); }
 }
 
-/* ── GAME ZONE HUB HEADER ── */
-.games-hub-header {
-  text-align: center;
-  margin-bottom: 24px;
-  position: relative;
-}
+/* ── Navigation Pills ── */
+.games-hub-header { text-align: center; margin-bottom: 18px; }
+.games-hub-title  { font-family: 'Cinzel','Cairo',serif; font-size: clamp(1.6rem,4vw,2.6rem); font-weight: 900; background: linear-gradient(135deg,#fff 0%,var(--gz-gold) 50%,var(--gz-orange) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.games-hub-sub    { color: rgba(255,255,255,0.65); font-size: 13px; }
 
-.games-hub-title {
-  font-family: 'Cinzel', 'Cairo', serif;
-  font-size: clamp(1.8rem, 5vw, 2.8rem);
-  font-weight: 900;
-  background: linear-gradient(135deg, #fff 0%, var(--gz-gold) 50%, var(--gz-orange) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  text-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
-  margin-bottom: 6px;
-  letter-spacing: 2px;
-}
-
-.games-hub-sub {
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 14px;
-  max-width: 650px;
-  margin: 0 auto 18px;
-  line-height: 1.6;
-}
-
-/* ── GAME SELECTOR TABS ── */
-.games-nav-pills {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-bottom: 24px;
-}
-
+.games-nav-pills  { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-bottom: 18px; }
 .game-pill-btn {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 215, 0, 0.2);
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,215,0,0.18);
   color: #cbd5e1;
-  padding: 10px 18px;
+  padding: 8px 16px;
   border-radius: 99px;
-  font-family: 'Cairo', sans-serif;
-  font-size: 13px;
+  font-family: 'Cairo',sans-serif;
+  font-size: 12px;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.2s ease;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
 }
+.game-pill-btn:hover { background: rgba(255,215,0,0.1); border-color: var(--gz-gold); color: #fff; transform: translateY(-2px); }
+.game-pill-btn.active { background: linear-gradient(135deg,rgba(255,215,0,0.2),rgba(255,107,0,0.25)); border-color: var(--gz-gold); color: var(--gz-gold); box-shadow: 0 0 16px rgba(255,215,0,0.3); }
 
-.game-pill-btn:hover {
-  background: rgba(255, 215, 0, 0.12);
-  border-color: var(--gz-gold);
-  color: #fff;
-  transform: translateY(-2px);
-}
-
-.game-pill-btn.active {
-  background: linear-gradient(135deg, rgba(255, 215, 0, 0.25), rgba(255, 107, 0, 0.3));
-  border-color: var(--gz-gold);
-  color: var(--gz-gold);
-  box-shadow: 0 0 20px rgba(255, 215, 0, 0.35);
-}
-
-/* ══════════════════════════════════════════════════════════
-   LOBBY & GAME CARDS GRID
-   ══════════════════════════════════════════════════════════ */
-.gz-lobby-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 20px;
-}
-
-.gz-lobby-card {
-  background: linear-gradient(145deg, rgba(25, 30, 45, 0.7) 0%, rgba(10, 13, 22, 0.95) 100%);
-  border: 1.5px solid rgba(255, 215, 0, 0.25);
-  border-radius: 20px;
-  padding: 24px 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-}
-
-.gz-lobby-card:hover {
-  transform: translateY(-8px) scale(1.02);
-  border-color: var(--gz-gold);
-  box-shadow: 0 20px 40px rgba(255, 215, 0, 0.25);
-}
-
-.gz-lobby-badge {
-  position: absolute;
-  top: 14px;
-  right: 14px;
-  font-size: 11px;
-  font-weight: 800;
-  padding: 4px 10px;
-  border-radius: 99px;
-}
-
-.gz-play-btn {
-  border: none;
-  color: #fff;
-  padding: 8px 18px;
-  border-radius: 10px;
-  font-weight: 800;
-  font-size: 13px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  font-family: 'Cairo', sans-serif;
-}
-
-.gz-play-btn:hover {
-  transform: scale(1.05);
-}
-
-/* Setup Modal */
-.gz-setup-modal {
-  background: radial-gradient(circle at center, #182032 0%, #0c0f18 100%);
-  border: 2px solid var(--gz-gold);
-  border-radius: 24px;
-  padding: 28px;
-  max-width: 650px;
-  margin: 0 auto;
-  box-shadow: 0 0 50px rgba(255, 215, 0, 0.25);
-}
-
+/* ── Mode Options (game setup) ── */
 .gz-mode-option {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1.5px solid rgba(255, 255, 255, 0.1);
-  border-radius: 16px;
-  padding: 18px 14px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.gz-mode-option:hover {
-  border-color: rgba(255, 215, 0, 0.4);
-  background: rgba(255, 215, 0, 0.05);
-}
-
-.gz-mode-option.active {
-  border-color: var(--gz-gold);
-  background: rgba(255, 215, 0, 0.12);
-  box-shadow: 0 0 20px rgba(255, 215, 0, 0.25);
-}
-
-/* ══════════════════════════════════════════════════════════
-   1. GWENT (جوينت الأساطير) BOARD & CARD STYLES
-   ══════════════════════════════════════════════════════════ */
-.gwent-board-container {
-  background: radial-gradient(circle at center, #181d2a 0%, #0c0e17 100%);
-  border: 2px solid rgba(255, 215, 0, 0.3);
-  border-radius: 24px;
-  padding: 20px;
-  box-shadow: 0 0 50px rgba(0, 0, 0, 0.8), inset 0 0 30px rgba(255, 215, 0, 0.05);
-  position: relative;
-  overflow: hidden;
-}
-
-.gwent-header-scores {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: center;
-  padding: 12px 18px;
-  background: rgba(0, 0, 0, 0.4);
-  border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  margin-bottom: 16px;
-  gap: 12px;
-}
-
-.gwent-player-status {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.gwent-gem-wins {
-  display: flex;
-  gap: 6px;
-}
-
-.gwent-gem {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.15);
-  border: 1.5px solid rgba(255, 255, 255, 0.3);
-  transition: all 0.3s ease;
-}
-
-.gwent-gem.won {
-  background: #fbbf24;
-  border-color: #f59e0b;
-  box-shadow: 0 0 12px #fbbf24;
-}
-
-.gwent-total-score-badge {
-  font-family: 'Cinzel', sans-serif;
-  font-size: clamp(1.8rem, 4vw, 2.5rem);
-  font-weight: 900;
-  color: var(--gz-gold);
-  text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
-  min-width: 45px;
-  text-align: center;
-}
-
-/* 3 Tactical Rows */
-.gwent-rows-zone {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-bottom: 16px;
-}
-
-.gwent-row {
-  display: grid;
-  grid-template-columns: 120px 1fr 60px;
-  background: rgba(255, 255, 255, 0.025);
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(255,255,255,0.03);
+  border: 1.5px solid rgba(255,255,255,0.1);
   border-radius: 14px;
-  padding: 8px 12px;
-  min-height: 90px;
-  align-items: center;
-  gap: 10px;
-  position: relative;
-  transition: all 0.2s ease;
-}
-
-.gwent-row.weather-active {
-  background: rgba(56, 189, 248, 0.08);
-  border-color: rgba(56, 189, 248, 0.4);
-  box-shadow: inset 0 0 15px rgba(56, 189, 248, 0.15);
-}
-
-.gwent-row-label {
-  display: flex;
-  flex-direction: column;
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.6);
-  font-weight: 700;
-}
-
-.gwent-row-label .row-icon {
-  font-size: 20px;
-  margin-bottom: 2px;
-}
-
-.gwent-row-cards {
-  display: flex;
-  gap: 8px;
-  overflow-x: auto;
-  padding: 4px 2px;
-  align-items: center;
-}
-
-.gwent-row-score {
-  font-family: 'Cinzel', sans-serif;
-  font-size: 1.5rem;
-  font-weight: 900;
-  color: #fff;
+  padding: 16px 12px;
   text-align: center;
-  background: rgba(0, 0, 0, 0.35);
-  padding: 6px;
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-/* Card Styling in Gwent */
-.gwent-card {
-  width: 80px;
-  height: 118px;
-  border-radius: 10px;
-  background: linear-gradient(145deg, #1f293d 0%, #0d131f 100%);
-  border: 1px solid rgba(255, 215, 0, 0.3);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 6px 5px;
-  position: relative;
-  cursor: pointer;
-  user-select: none;
-  flex-shrink: 0;
-  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-  box-sizing: border-box;
-}
-
-.gwent-card:hover {
-  transform: translateY(-8px) scale(1.08);
-  border-color: var(--gz-gold);
-  box-shadow: 0 10px 25px rgba(255, 215, 0, 0.35);
-  z-index: 10;
-}
-
-.gwent-card.peak {
-  border: 2px solid #ffd700;
-  box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
-  background: linear-gradient(145deg, #2d2412 0%, #151006 100%);
-}
-
-.gwent-card.special-card {
-  border-color: #38bdf8;
-  background: linear-gradient(145deg, #112233 0%, #08101a 100%);
-}
-
-.gwent-card-power {
-  position: absolute;
-  top: 3px;
-  left: 3px;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: #000;
-  border: 1.5px solid var(--gz-gold);
-  color: var(--gz-gold);
-  font-size: 11px;
-  font-weight: 900;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Cinzel', sans-serif;
-  z-index: 3;
-}
-
-.gwent-card.peak .gwent-card-power {
-  background: var(--gz-gold);
-  color: #000;
-}
-
-.gwent-card-icon {
-  font-size: 26px;
-  text-align: center;
-  margin-top: 14px;
-}
-
-.gwent-card-name {
-  font-size: 9px;
-  font-weight: 800;
-  color: #fff;
-  text-align: center;
-  line-height: 1.2;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.gwent-card-row-type {
-  position: absolute;
-  top: 3px;
-  right: 3px;
-  font-size: 11px;
-  z-index: 3;
-}
-
-/* Hand Section */
-.gwent-hand-zone {
-  background: rgba(0, 0, 0, 0.3);
-  border-radius: 16px;
-  border: 1px dashed rgba(255, 215, 0, 0.25);
-  padding: 12px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.gwent-hand-cards {
-  display: flex;
-  gap: 8px;
-  overflow-x: auto;
-  padding: 8px 4px;
-  flex: 1;
-}
-
-.gwent-action-btn {
-  padding: 12px 22px;
-  border-radius: 12px;
-  font-family: 'Cairo', sans-serif;
-  font-size: 14px;
-  font-weight: 900;
   cursor: pointer;
   transition: all 0.2s ease;
-  border: none;
 }
+.gz-mode-option:hover { border-color: rgba(255,215,0,0.4); background: rgba(255,215,0,0.04); }
+.gz-mode-option.active { border-color: var(--gz-gold); background: rgba(255,215,0,0.1); box-shadow: 0 0 16px rgba(255,215,0,0.2); }
 
-.gwent-pass-btn {
-  background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
-  color: #fff;
-  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.35);
-}
+/* ═══════════════════════════════════════════════════════════════
+   GWENT BOARD — WITCHER 3 FAITHFUL STYLE
+   ═══════════════════════════════════════════════════════════════ */
 
-.gwent-pass-btn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 6px 20px rgba(239, 68, 68, 0.5);
-}
-
-/* ══════════════════════════════════════════════════════════
-   2. CHAMPIONS AUCTION & DRAFT STYLES
-   ══════════════════════════════════════════════════════════ */
-.auction-hero-box {
-  background: linear-gradient(145deg, rgba(255, 215, 0, 0.08) 0%, rgba(10, 15, 25, 0.95) 100%);
-  border: 2px solid var(--gz-gold);
-  box-shadow: 0 0 35px rgba(255, 215, 0, 0.2);
-  border-radius: 20px;
-  padding: 24px;
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.auction-timer-circle {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  border: 3px solid var(--gz-gold);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 12px;
-  font-family: 'Cinzel', sans-serif;
-  font-size: 24px;
-  font-weight: 900;
-  color: var(--gz-gold);
-  animation: pulseGold 1s infinite alternate;
-}
-
-@keyframes pulseGold {
-  from { box-shadow: 0 0 10px rgba(255, 215, 0, 0.3); }
-  to { box-shadow: 0 0 25px rgba(255, 215, 0, 0.8); }
-}
-
-.auction-bid-buttons {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-top: 16px;
-}
-
-.bid-btn-action {
-  background: linear-gradient(135deg, #10b981 0%, #047857 100%);
-  border: none;
-  color: #fff;
-  padding: 10px 20px;
-  border-radius: 12px;
-  font-weight: 800;
-  font-size: 14px;
+/* Gwent card hand hover animation */
+.gwent-hand-card-wrap {
+  transition: transform 0.18s cubic-bezier(0.34,1.56,0.64,1);
   cursor: pointer;
-  transition: all 0.15s ease;
-  font-family: 'Cairo', sans-serif;
 }
+.gwent-hand-card-wrap:hover { transform: translateY(-14px) scale(1.1); z-index: 20; }
 
-.bid-btn-action:active {
-  transform: scale(0.95);
-}
+/* Row-specific accent colors */
+.gz-row-melee  { --row-col: var(--gz-melee-color); }
+.gz-row-ranged { --row-col: var(--gz-ranged-color); }
+.gz-row-siege  { --row-col: var(--gz-siege-color); }
 
-/* Responsive constraints for phones */
-@media (max-width: 768px) {
-  .gwent-row {
-    grid-template-columns: 85px 1fr 45px;
-    padding: 6px 8px;
-    min-height: 75px;
-  }
-  .gwent-card {
-    width: 65px;
-    height: 96px;
-  }
-  .gwent-card-icon {
-    font-size: 20px;
-    margin-top: 8px;
-  }
-  .gwent-card-power {
-    width: 20px;
-    height: 20px;
-    font-size: 9px;
-  }
-  .gwent-card-name {
-    font-size: 8px;
-  }
-  .gz-mode-option {
-    padding: 12px 8px;
-  }
+/* Weather state animation */
+.gz-weather-row { animation: gzWeatherFlash 2s ease infinite; }
+
+/* Gem win animation */
+.gz-gem-won { background: #ffd700 !important; box-shadow: 0 0 10px #ffd700; animation: gzGemWin 0.4s ease-out; }
+
+/* Card played animation */
+.gz-card-played { animation: gzCardPlay 0.3s ease-out; }
+
+/* ── Gwent Scrollbars ── */
+.gwent-row-cards::-webkit-scrollbar { height: 3px; }
+.gwent-row-cards::-webkit-scrollbar-track { background: rgba(255,255,255,0.03); }
+.gwent-row-cards::-webkit-scrollbar-thumb { background: rgba(255,215,0,0.3); border-radius: 2px; }
+
+.gwent-hand-scroll::-webkit-scrollbar { height: 4px; }
+.gwent-hand-scroll::-webkit-scrollbar-thumb { background: rgba(255,215,0,0.4); border-radius: 2px; }
+
+/* ── Auction timer pulse ── */
+.gz-auction-timer { animation: gzPulseGold 1s ease-in-out infinite; }
+
+/* ── Toast custom ── */
+#gz-app-toast { transition: opacity 0.4s ease; }
+
+/* ── Mobile Responsive ── */
+@media (max-width: 600px) {
+  #games-page { padding: 12px 10px 80px; }
+  .games-nav-pills { gap: 5px; }
+  .game-pill-btn { padding: 6px 10px; font-size: 11px; }
 }
