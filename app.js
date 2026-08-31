@@ -811,13 +811,23 @@
         document.getElementById('arena-page').style.display = tab === 'arena' ? 'block' : 'none';
         document.getElementById('lore-page').style.display = tab === 'lore' ? 'block' : 'none';
         document.getElementById('ai-page').style.display = tab === 'ai' ? 'block' : 'none';
+        const gamesEl = document.getElementById('games-page');
+        if (gamesEl) gamesEl.style.display = tab === 'games' ? 'block' : 'none';
+
         document.getElementById('btn-arena').classList.toggle('active', tab === 'arena');
         document.getElementById('btn-lore').classList.toggle('active', tab === 'lore');
         document.getElementById('btn-ai').classList.toggle('active', tab === 'ai');
-        // Hide battle controls when switching to AI tab
-        if (tab === 'ai') document.getElementById('battle-controls').classList.remove('show');
+        const btnGames = document.getElementById('btn-games');
+        if (btnGames) btnGames.classList.toggle('active', tab === 'games');
+
+        // Hide battle controls when switching tabs
+        if (tab !== 'arena') {
+            const bc = document.getElementById('battle-controls');
+            if (bc) bc.classList.remove('show');
+        }
         if (tab === 'lore') renderLoreList();
         if (tab === 'ai' && !gzInitialized) { gzInit(); gzInitialized = true; }
+        if (tab === 'games' && window.gzSwitchGame) { window.gzSwitchGame(window.gzActiveGame || 'gwent'); }
     }
 
     function renderLoreList() {
@@ -1540,8 +1550,25 @@ ${GZ_CHAR_BRIEF}`;
         return full;
     }
 
+    // ── Local Ollama Provider ─────────────────────────────────────────────
+    async function gzCallOllama(messages, system, maxTokens, onChunk) {
+        const msgs = system ? [{role:'system', content:system}, ...messages] : [...messages];
+        const res = await fetch('http://localhost:11434/v1/chat/completions', {
+            method: 'POST',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({model: 'qwen2.5:1.5b', messages: msgs, max_tokens: maxTokens, stream: !!onChunk})
+        });
+        if (!res.ok) throw new Error('Ollama ' + res.status);
+        if (onChunk) {
+            const full = await gzReadSSE(res, onChunk);
+            return { text: full, model_used: 'ollama-local-qwen' };
+        }
+        const data = await res.json();
+        return { text: data.choices[0].message.content, model_used: 'ollama-local-qwen' };
+    }
+
     // ── Main dispatcher ──────────────────────────────────────────────────
-    async function gzCallAI(messages, system, maxTokens, onChunk) {
+    async function gzCallAI(messages, system, maxTokens = 600, onChunk) {
         if (gzMasterKey) {
             try {
                 if (gzMasterProv === 'openrouter') return await gzCallOpenRouter(messages, system, maxTokens, gzMasterKey, onChunk);
@@ -1549,9 +1576,15 @@ ${GZ_CHAR_BRIEF}`;
                 return await gzCallGemini(messages, system, maxTokens, gzMasterKey, onChunk);
             } catch(e) { /* fall through to free */ }
         }
+        // Try Local Ollama first if running
+        try {
+            return await gzCallOllama(messages, system, maxTokens, onChunk);
+        } catch(e) { /* fall through if local Ollama not running */ }
+
         try { return await gzCallMistral(messages, system, maxTokens, onChunk); } catch(e) { /* fall through */ }
         return await gzCallPollinations(messages, system, onChunk);
     }
+    window.gzCallAI = gzCallAI;
 
     async function gzCallGemini(messages, system, maxTokens, apiKey, onChunk) {
         const contents = messages.map(m => ({
