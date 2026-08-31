@@ -1009,7 +1009,7 @@
         }
         if (tab === 'lore') renderLoreList();
         if (tab === 'ai' && !gzInitialized) { gzInit(); gzInitialized = true; }
-        if (tab === 'games' && window.gzSwitchGame) { window.gzSwitchGame(window.gzActiveGame || 'gwent'); }
+        if (tab === 'games' && window.gzSwitchGame) { window.gzSwitchGame(window.gzActiveGame || 'lobby'); }
     }
 
     function renderLoreList() {

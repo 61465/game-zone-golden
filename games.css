@@ -1,6 +1,6 @@
 /* ══════════════════════════════════════════════════════════
    GAME ZONE: GOLDEN ARENA — INTERACTIVE GAMES STYLESHEET
-   Cyberpunk Gold, Witcher 3 Gwent & Live Arena Gaming UI
+   Cyberpunk Gold, Game Lobby, Room Codes & Real Portraits UI
    ══════════════════════════════════════════════════════════ */
 
 :root {
@@ -30,10 +30,15 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes gzToastSlide {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 /* ── GAME ZONE HUB HEADER ── */
 .games-hub-header {
   text-align: center;
-  margin-bottom: 28px;
+  margin-bottom: 24px;
   position: relative;
 }
 
@@ -94,6 +99,95 @@
   border-color: var(--gz-gold);
   color: var(--gz-gold);
   box-shadow: 0 0 20px rgba(255, 215, 0, 0.35);
+}
+
+/* ══════════════════════════════════════════════════════════
+   LOBBY & GAME CARDS GRID
+   ══════════════════════════════════════════════════════════ */
+.gz-lobby-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.gz-lobby-card {
+  background: linear-gradient(145deg, rgba(25, 30, 45, 0.7) 0%, rgba(10, 13, 22, 0.95) 100%);
+  border: 1.5px solid rgba(255, 215, 0, 0.25);
+  border-radius: 20px;
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.gz-lobby-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  border-color: var(--gz-gold);
+  box-shadow: 0 20px 40px rgba(255, 215, 0, 0.25);
+}
+
+.gz-lobby-badge {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 99px;
+}
+
+.gz-play-btn {
+  border: none;
+  color: #fff;
+  padding: 8px 18px;
+  border-radius: 10px;
+  font-weight: 800;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: 'Cairo', sans-serif;
+}
+
+.gz-play-btn:hover {
+  transform: scale(1.05);
+}
+
+/* Setup Modal */
+.gz-setup-modal {
+  background: radial-gradient(circle at center, #182032 0%, #0c0f18 100%);
+  border: 2px solid var(--gz-gold);
+  border-radius: 24px;
+  padding: 28px;
+  max-width: 650px;
+  margin: 0 auto;
+  box-shadow: 0 0 50px rgba(255, 215, 0, 0.25);
+}
+
+.gz-mode-option {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 18px 14px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.gz-mode-option:hover {
+  border-color: rgba(255, 215, 0, 0.4);
+  background: rgba(255, 215, 0, 0.05);
+}
+
+.gz-mode-option.active {
+  border-color: var(--gz-gold);
+  background: rgba(255, 215, 0, 0.12);
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.25);
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -220,8 +314,8 @@
 
 /* Card Styling in Gwent */
 .gwent-card {
-  width: 75px;
-  height: 110px;
+  width: 80px;
+  height: 118px;
   border-radius: 10px;
   background: linear-gradient(145deg, #1f293d 0%, #0d131f 100%);
   border: 1px solid rgba(255, 215, 0, 0.3);
@@ -271,6 +365,7 @@
   align-items: center;
   justify-content: center;
   font-family: 'Cinzel', sans-serif;
+  z-index: 3;
 }
 
 .gwent-card.peak .gwent-card-power {
@@ -300,6 +395,7 @@
   top: 3px;
   right: 3px;
   font-size: 11px;
+  z-index: 3;
 }
 
 /* Hand Section */
@@ -397,32 +493,11 @@
   font-size: 14px;
   cursor: pointer;
   transition: all 0.15s ease;
+  font-family: 'Cairo', sans-serif;
 }
 
 .bid-btn-action:active {
   transform: scale(0.95);
-}
-
-/* ══════════════════════════════════════════════════════════
-   3. ROULETTE & WHEEL STYLES
-   ══════════════════════════════════════════════════════════ */
-.roulette-wheel-wrap {
-  width: 240px;
-  height: 240px;
-  border-radius: 50%;
-  border: 6px solid var(--gz-gold);
-  box-shadow: 0 0 40px rgba(255, 215, 0, 0.4);
-  margin: 0 auto 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  background: radial-gradient(circle, #2d2006 0%, #0a0802 100%);
-}
-
-.roulette-center-spin {
-  font-size: 50px;
-  transition: transform 3s cubic-bezier(0.15, 0.9, 0.25, 1);
 }
 
 /* Responsive constraints for phones */
@@ -433,12 +508,12 @@
     min-height: 75px;
   }
   .gwent-card {
-    width: 60px;
-    height: 88px;
+    width: 65px;
+    height: 96px;
   }
   .gwent-card-icon {
     font-size: 20px;
-    margin-top: 10px;
+    margin-top: 8px;
   }
   .gwent-card-power {
     width: 20px;
@@ -447,5 +522,8 @@
   }
   .gwent-card-name {
     font-size: 8px;
+  }
+  .gz-mode-option {
+    padding: 12px 8px;
   }
 }
